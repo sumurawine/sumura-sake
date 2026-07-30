@@ -34,6 +34,17 @@ label{display:block;margin-top:10px;color:#ffd9a0}
 ul.dots{list-style:none;padding-left:0}ul.dots li{margin:6px 0}ul.dots li:before{content:"► ";color:#ffb000}
 .clock{position:fixed;right:5px;top:5px;background:#000;color:#0f0;border:2px inset #444;padding:2px 7px;font-size:14px;z-index:9;font-family:"DotGothic16",monospace}
 .hint{color:#9a8f7c;font-size:13px}
+.photo-ph{width:90px;height:130px;background:#0a0705;border:2px inset #5a3a1e;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#4a3520;font-size:11px;text-align:center;flex-shrink:0;line-height:1.8;letter-spacing:1px}
+.modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center}
+.modal-ov.open{display:flex}
+.modal-box{background:#0c0908;border:5px ridge #b8860b;max-width:520px;width:92%;padding:22px 20px;box-shadow:0 0 0 2px #000,8px 8px 0 #000;position:relative;max-height:82vh;overflow-y:auto}
+.modal-close{position:absolute;top:8px;right:10px;background:#5a5a5a;border:3px outset #cfcfcf;color:#fff;padding:3px 10px;cursor:pointer;font-family:inherit;font-size:14px}
+.modal-close:active{border-style:inset}
+.modal-title{color:#ffb000;font-size:19px;text-shadow:1px 1px 0 #000;margin:0 32px 6px 0;line-height:1.4}
+.modal-sub{color:#ff7bff;font-size:13px;margin:0 0 10px}
+.modal-body{color:#e9e0cf;font-size:14px;line-height:2}
+.modal-price{color:#ffe14d;font-size:16px;margin:12px 0 0;border-top:1px solid #3a2a1a;padding-top:10px}
+.modal-photo-ph{width:100%;height:140px;background:#0a0705;border:2px inset #5a3a1e;display:flex;align-items:center;justify-content:center;color:#4a3520;font-size:13px;margin-bottom:12px;letter-spacing:2px}
 </style></head><body><div class="clock" id="clk">--:--:--</div><script>function T(){var d=new Date();document.getElementById("clk").textContent=("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)+":"+("0"+d.getSeconds()).slice(-2)}setInterval(T,1000);T();</script><div class="wrap">
 <div style="text-align:center;padding-top:8px">
   <a href="home.html"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAjAAAAB4CAYAAADsZchHAAAEPUlEQVR4nO3cy5EUMRAE0IHACk6YhKmYxAk3wAGxoUFCqqx+7747rd9shiK3Xy8AAAAAAAAAAAAA4KhPtx8AAHjPrx/ffv/rz379/rPF3/7Ptx8AAOBdAgwAEEeAAQDiCDAAQJwvtx/gNMWn/cxpH6O1tEZrZs+HeYb3uIEBAOIIMABAHAEGAIgjwAAAcR5X4gXes1LSnqXAemaen8a+6s0NDAAQR4ABAOIIMABAHAEGAIijxAtc523OVNO5VF19bLNn2g0MABBHgAEA4ggwAEAcAQYAiLNUfqteBOpspbjYed1m52V2DhRExyrtoS5rNJrTW2NbOR9dCtmV9vjTKPECAG0JMABAHAEGAIgjwAAAcbyJFz6g7Dt2YryVSq0ndB4b/A9uYACAOAIMABBHgAEA4ggwAECc8m/i3V1sS3y7ojnInIPqb1EdUSTNlHimT7j1xnJn/ww3MABAHAEGAIgjwAAAcQQYACDO0pt4E0s/K7qMt1Ih9tacjj5XEZJViWcBUrmBAQDiCDAAQBwBBgCII8AAAHGWSryVKGCySrGXm0Z77USxd2Xf7/7ZEWfwjErzPLs33MAAAHEEGAAgjgADAMQRYACAOOVLvJWKRU9j7udLit6iem+/VJr76kXwSnMFq9zAAABxBBgAII4AAwDEEWAAgDjlS7wrdhfqOpc3KxUNq+uy5rOq743q57J6sRder1pnZpYbGAAgjgADAMQRYACAOAIMABCnVIl3pdg2W0BSqNs/z0+bv866rGVisfeEE9+xJ54FXi83MABAIAEGAIgjwAAAcQQYACBOqRIvtShG8zeJJdTqxd4ufB9wihsYACCOAAMAxBFgAIA4AgwAEKdNiXe2oKdMtl+XOZ0dx9OKn5XG2/lMVyoZ7/7cld/XeX0rufV8K3vDDQwAEEeAAQDiCDAAQBwBBgCIU6rEu7ugV700VZ35G6tUtty9RpUKu53NrtuJvWbNSeUGBgCII8AAAHEEGAAgjgADAMQpVeId6fzmzadRFtxvdk4rFY+pxfdpfdXP6q095AYGAIgjwAAAcQQYACCOAAMAxClf4h1ZKS6e+NzqFKOfp8vetU+ppsvZSuQGBgCII8AAAHEEGAAgjgADAMSJLPGOKPetuVWMvqXLODrrUsJfGcfuZ04snJ44q74PMrmBAQDiCDAAQBwBBgCII8AAAHHKl3hvlasSy27VdSnKddkbXdaDeaM177KfeR43MABAHAEGAIgjwAAAcQQYACBOqRKvwm59o7nqXAa1N+qrtEaV3ro7q/P57cIajbmBAQDiCDAAQBwBBgCII8AAAHFKlXh3F0Qrlfs661Lsfdp+qb5uT1sP6rMna3EDAwDEEWAAgDgCDAAQR4ABAOIoJAGEmy1fJ5ZQb41t9Lkrn9H5H1JurZEbGAAgjgADAMQRYACAOAIMAAAAAAAAAAAAAAAA8LE/7I2zotUunZwAAAAASUVORK5CYII=" alt="すむら酒店" style="max-width:96%"></a>
@@ -46,38 +57,45 @@ ul.dots{list-style:none;padding-left:0}ul.dots li{margin:6px 0}ul.dots li:before
 <p class="sub">▼ 表示価格はすべて上代・税別です ▼</p>
 
 <div style="color:#ffb000;font-size:18px;margin-top:8px">［ ボルドー 2024 プリムール ］</div>
-<div class="card"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAB4CAYAAABCQPQeAAABpElEQVR4nO3cMUoDQRhHcSNWYilWYm1t7QFEJLXkCJ7Awko8g0cI1laeQiytLIKVWIqttgaWNPMNP2T+r9vAzj4eH+zuwGa2Vcz+yeFP9Zp/+Xx+n1Wut1252H8kAbSAJgG0gCYBtIBmp/cFdg/2ms7//vgqMplm+AlIAC2gKX2unuLo7Ljp3WD19NrVcfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gad5vO70+37jnt3p5a73ERlr3DIefgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApryb4bu54v1H+a161/c3pWuN/wEJIAW0CSAFtAkgBbQdP92eHnZdt9ePNwUmUwz/AQkgBbQJIAW0CSAFtB0fw7ofR9vZfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gKd8TvHpcrh33/v+AVoafgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaX+gcHqaX/em/AAAAAElFTkSuQmCC" alt="">
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
 <div style="flex:1"><b>シャトー マルゴー</b><br><span class="hint">マルゴー グラン・クリュ1級</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">83,600円</span><br>
-<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:6px">お問い合わせ</span></a></div></div>
-<div class="card"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAB4CAYAAABCQPQeAAABpElEQVR4nO3cMUoDQRhHcSNWYilWYm1t7QFEJLXkCJ7Awko8g0cI1laeQiytLIKVWIqttgaWNPMNP2T+r9vAzj4eH+zuwGa2Vcz+yeFP9Zp/+Xx+n1Wut1252H8kAbSAJgG0gCYBtIBmp/cFdg/2ms7//vgqMplm+AlIAC2gKX2unuLo7Ljp3WD19NrVcfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gad5vO70+37jnt3p5a73ERlr3DIefgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApryb4bu54v1H+a161/c3pWuN/wEJIAW0CSAFtAkgBbQdP92eHnZdt9ePNwUmUwz/AQkgBbQJIAW0CSAFtB0fw7ofR9vZfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gKd8TvHpcrh33/v+AVoafgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaX+gcHqaX/em/AAAAAElFTkSuQmCC" alt="">
+<button class="btn" onclick="showModal('margaux')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
 <div style="flex:1"><b>シャトー ラフィット ロートシルト</b><br><span class="hint">ポイヤック グラン・クリュ1級</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">85,600円</span><br>
-<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:6px">お問い合わせ</span></a></div></div>
-<div class="card"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAB4CAYAAABCQPQeAAABpElEQVR4nO3cMUoDQRhHcSNWYilWYm1t7QFEJLXkCJ7Awko8g0cI1laeQiytLIKVWIqttgaWNPMNP2T+r9vAzj4eH+zuwGa2Vcz+yeFP9Zp/+Xx+n1Wut1252H8kAbSAJgG0gCYBtIBmp/cFdg/2ms7//vgqMplm+AlIAC2gKX2unuLo7Ljp3WD19NrVcfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gad5vO70+37jnt3p5a73ERlr3DIefgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApryb4bu54v1H+a161/c3pWuN/wEJIAW0CSAFtAkgBbQdP92eHnZdt9ePNwUmUwz/AQkgBbQJIAW0CSAFtB0fw7ofR9vZfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gKd8TvHpcrh33/v+AVoafgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaX+gcHqaX/em/AAAAAElFTkSuQmCC" alt="">
+<button class="btn" onclick="showModal('lafite')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
 <div style="flex:1"><b>シャトー オー ブリオン</b><br><span class="hint">ペサック・レオニャン 1級</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">71,300円</span><br>
-<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:6px">お問い合わせ</span></a></div></div>
+<button class="btn" onclick="showModal('hbrion')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
 
 <div style="color:#ffb000;font-size:18px;margin-top:12px">［ シャンパーニュ ］</div>
-<div class="card"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAB4CAYAAABCQPQeAAABpElEQVR4nO3cMUoDQRhHcSNWYilWYm1t7QFEJLXkCJ7Awko8g0cI1laeQiytLIKVWIqttgaWNPMNP2T+r9vAzj4eH+zuwGa2Vcz+yeFP9Zp/+Xx+n1Wut1252H8kAbSAJgG0gCYBtIBmp/cFdg/2ms7//vgqMplm+AlIAC2gKX2unuLo7Ljp3WD19NrVcfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gad5vO70+37jnt3p5a73ERlr3DIefgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApryb4bu54v1H+a161/c3pWuN/wEJIAW0CSAFtAkgBbQdP92eHnZdt9ePNwUmUwz/AQkgBbQJIAW0CSAFtB0fw7ofR9vZfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gKd8TvHpcrh33/v+AVoafgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaX+gcHqaX/em/AAAAAElFTkSuQmCC" alt="">
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
 <div style="flex:1"><b>1996 デュヴァル ルロワ ファム・ド・シャンパーニュ GC</b><br><span class="hint">30年熟成のグラン・クリュ</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">45,000円</span><br>
-<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:6px">お問い合わせ</span></a></div></div>
-<div class="card"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAB4CAYAAABCQPQeAAABpElEQVR4nO3cMUoDQRhHcSNWYilWYm1t7QFEJLXkCJ7Awko8g0cI1laeQiytLIKVWIqttgaWNPMNP2T+r9vAzj4eH+zuwGa2Vcz+yeFP9Zp/+Xx+n1Wut1252H8kAbSAJgG0gCYBtIBmp/cFdg/2ms7//vgqMplm+AlIAC2gKX2unuLo7Ljp3WD19NrVcfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gad5vO70+37jnt3p5a73ERlr3DIefgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApryb4bu54v1H+a161/c3pWuN/wEJIAW0CSAFtAkgBbQdP92eHnZdt9ePNwUmUwz/AQkgBbQJIAW0CSAFtB0fw7ofR9vZfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gKd8TvHpcrh33/v+AVoafgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaX+gcHqaX/em/AAAAAElFTkSuQmCC" alt="">
+<button class="btn" onclick="showModal('duval')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
 <div style="flex:1"><b>フランシス オルバン ブリュット レゼルヴ V.V. NV</b><br><span class="hint">ムニエ91%の名手（2026.3 新規取扱い）</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">7,500円</span><br>
-<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:6px">お問い合わせ</span></a></div></div>
+<button class="btn" onclick="showModal('orban')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
 
 <div style="color:#ffb000;font-size:18px;margin-top:12px">［ オーストラリア ヴィンテージ ］</div>
-<div class="card"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAB4CAYAAABCQPQeAAABpElEQVR4nO3cMUoDQRhHcSNWYilWYm1t7QFEJLXkCJ7Awko8g0cI1laeQiytLIKVWIqttgaWNPMNP2T+r9vAzj4eH+zuwGa2Vcz+yeFP9Zp/+Xx+n1Wut1252H8kAbSAJgG0gCYBtIBmp/cFdg/2ms7//vgqMplm+AlIAC2gKX2unuLo7Ljp3WD19NrVcfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gad5vO70+37jnt3p5a73ERlr3DIefgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApryb4bu54v1H+a161/c3pWuN/wEJIAW0CSAFtAkgBbQdP92eHnZdt9ePNwUmUwz/AQkgBbQJIAW0CSAFtB0fw7ofR9vZfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gKd8TvHpcrh33/v+AVoafgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaX+gcHqaX/em/AAAAAElFTkSuQmCC" alt="">
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
 <div style="flex:1"><b>1999 ピエロ カベルネ・ソーヴィニヨン メルロ</b><br><span class="hint">マーガレット・リヴァー グレート・ヴィンテージ</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">17,000円</span><br>
-<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:6px">お問い合わせ</span></a></div></div>
-<div class="card"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAB4CAYAAABCQPQeAAABpElEQVR4nO3cMUoDQRhHcSNWYilWYm1t7QFEJLXkCJ7Awko8g0cI1laeQiytLIKVWIqttgaWNPMNP2T+r9vAzj4eH+zuwGa2Vcz+yeFP9Zp/+Xx+n1Wut1252H8kAbSAJgG0gCYBtIBmp/cFdg/2ms7//vgqMplm+AlIAC2gKX2unuLo7Ljp3WD19NrVcfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gad5vO70+37jnt3p5a73ERlr3DIefgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApryb4bu54v1H+a161/c3pWuN/wEJIAW0CSAFtAkgBbQdP92eHnZdt9ePNwUmUwz/AQkgBbQJIAW0CSAFtB0fw7ofR9vZfgJSAAtoEkALaBJAC2gSQAtoEkALaBJAC2gSQAtoEkALaBJAC2gKd8TvHpcrh33/v+AVoafgATQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaBNACmgTQApoE0AKaX+gcHqaX/em/AAAAAElFTkSuQmCC" alt="">
+<button class="btn" onclick="showModal('pierro')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
 <div style="flex:1"><b>1999 グロセット ガイア</b><br><span class="hint">クレア・ヴァレー『ポイヤック最高峰の…』</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">16,200円</span><br>
-<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:6px">お問い合わせ</span></a></div></div>
+<button class="btn" onclick="showModal('grosset')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
 
 <p class="hint">※ ご注文・在庫のお問い合わせは <a href="contact.html">問い合わせページ</a> よりお願いいたします。</p>
 </div>
@@ -88,4 +106,12 @@ ul.dots{list-style:none;padding-left:0}ul.dots li{margin:6px 0}ul.dots li:before
   <div style="margin:8px 0">あなたは <span class="counter">0 1 2 7<span class="blink">4</span> 1</span> 人目の来客です</div>
   <div><span class="badge">EST. 1990</span><span class="badge">Made with Notepad</span><span class="badge">HTML 3.2</span><span class="badge">800×600</span></div>
   <div style="margin-top:10px">Copyright (C) 1990-2026 すむら酒店 ／ SUMURA CELLAR. All Rights Reserved.</div>
-</div></div></body></html>
+</div></div>
+<div id="modal-ov" class="modal-ov" onclick="if(event.target===this)closeModal()"><div class="modal-box"><button class="modal-close" onclick="closeModal()">✕ 閉じる</button><div id="modal-content"></div></div></div>
+<script>
+var WINES={margaux:{title:'シャトー マルゴー',sub:'マルゴー グラン・クリュ1級 ／ 2024年 プリムール',body:'格付け1級の最高峰。カベルネ・ソーヴィニヨン主体。2024年ヴィンテージは香りの優雅さと果実の凝縮感に優れ、長期熟成が期待できる一本。正規輸入・定温輸送でお届けします。',price:'83,600円（上代・税別）'},lafite:{title:'シャトー ラフィット ロートシルト',sub:'ポイヤック グラン・クリュ1級 ／ 2024年 プリムール',body:'ポイヤックが誇る格付け最高峰。鉛筆の芯を思わせるミネラルと黒果実・バイオレットの香りが調和。2024年は近年でも特に出来の良いヴィンテージ。世界中のコレクターが求める一本。',price:'85,600円（上代・税別）'},hbrion:{title:'シャトー オー ブリオン',sub:'ペサック・レオニャン グラン・クリュ1級 ／ 2024年 プリムール',body:'1855年の格付けでメドック以外から唯一選ばれた偉大なシャトー。スモーキーなミネラルとタバコ、黒いベリーが複雑に絡み合う独自のテロワール。',price:'71,300円（上代・税別）'},duval:{title:'1996 デュヴァル ルロワ ファム・ド・シャンパーニュ GC',sub:'シャンパーニュ グラン・クリュ ／ 約30年の瓶内熟成',body:'1996年はシャンパーニュ史に残る偉大なヴィンテージ。白トリュフ・ローストアーモンド・蜂蜜が複雑に絡み合う香り。残本数わずか。',price:'45,000円（上代・税別）'},orban:{title:'フランシス オルバン ブリュット レゼルヴ V.V. NV',sub:'シャンパーニュ ／ 2026年3月 新規取扱開始',body:'ピノ・ムニエ91%という稀有な構成。古樹から収穫した果実の厚みとシルキーな泡が特徴。ナチュラルな造りで料理との相性が幅広い。',price:'7,500円（上代・税別）'},pierro:{title:'1999 ピエロ カベルネ・ソーヴィニヨン メルロ',sub:'マーガレット・リヴァー（西オーストラリア）',body:'西オーストラリアを代表するピエロワイナリーの旗艦赤ワイン。1999年は屈指の大当たり年。四半世紀超の熟成を経た今が飲み頃。',price:'17,000円（上代・税別）'},grosset:{title:'1999 グロセット ガイア',sub:'クレア・ヴァレー（南オーストラリア）',body:'鬼才ジェフ・グロセットによるカベルネ主体のフラッグシップ。「ポイヤック最高峰の香り」と称される独自のスタイル。1999年の骨格と四半世紀の熟成が今、美しく調和。',price:'16,200円（上代・税別）'}};
+function showModal(id){var w=WINES[id];if(!w)return;document.getElementById('modal-content').innerHTML='<div class="modal-photo-ph">[ 写 真 準 備 中 ]</div><div class="modal-title">'+w.title+'</div><div class="modal-sub">'+w.sub+'</div><hr class="rainbow" style="margin:8px 0"><div class="modal-body">'+w.body+'</div><div class="modal-price">'+w.price+'</div><div style="text-align:center;margin-top:14px"><a href="contact.html"><span class="btn" style="font-size:15px;padding:8px 20px">■ お問い合わせはこちら</span></a></div>';document.getElementById('modal-ov').classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('modal-ov').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+</script>
+</body></html>
