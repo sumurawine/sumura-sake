@@ -106,6 +106,7 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
 function nameOf(it){var l=L();if(l==='jp')return it.name;var e=I18N&&I18N.items&&I18N.items[it.id];return (e&&e.name&&e.name[l])||it.name;}
 function descOf(it){if(!it.desc)return '';var l=L();if(l==='jp')return it.desc;var d=I18N&&I18N.descs&&I18N.descs[dkey(it.desc)];return (d&&d[l])||it.desc;}
 function notesOf(it){var l=L();var ns=it.notes||[];if(!ns.length)return [];if(l==='jp')return ns;var N=I18N&&I18N.notes;return ns.map(function(k){return (N&&N[k]&&N[k][l])||k;});}
+function prodOf(it){if(!it.prod)return '';var l=L();if(l==='jp')return it.prod;var P=I18N&&I18N.producers;return (P&&P[it.prod]&&P[it.prod][l])||it.prod;}
 function isOut(it){return String(it.stock).trim()==='0';}
 function render(){
   var box=document.getElementById('catalogue');if(!box||!DATA)return;
@@ -121,7 +122,7 @@ function render(){
       html+='<div class="card" style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px'+(out?';opacity:.62':'')+'">'+
         '<div style="flex:0 0 62px"><img src="'+esc(it.img)+'" alt="" loading="lazy" style="width:62px;height:auto;border:1px solid #5a4626;background:#1a0a00"></div>'+
         '<div style="flex:1;min-width:0"><b>'+esc(nameOf(it))+'</b>'+
-        (it.prod?'<br><span class="hint">'+esc(it.prod)+'</span>':'')+
+        (it.prod?'<br><span class="hint">'+esc(prodOf(it))+'</span>':'')+
         '</div>'+
         '<div style="text-align:right;white-space:nowrap"><span class="price">'+esc(it.price)+'</span>'+
         (out?'<br><span class="hint">'+(UI.soldout[l]||UI.soldout.jp)+'</span>':'')+
@@ -140,7 +141,7 @@ function showModal(id){
   document.getElementById('modal-content').innerHTML=
     '<div style="text-align:center"><img src="'+esc(it.img)+'" alt="" style="max-width:200px;height:auto;border:1px solid #5a4626;background:#1a0a00"></div>'+
     '<div class="modal-title">'+esc(nameOf(it))+'</div>'+
-    (it.prod?'<div class="modal-sub">'+(UI.prod[l]||UI.prod.jp)+'： '+esc(it.prod)+'</div>':'')+
+    (it.prod?'<div class="modal-sub">'+(UI.prod[l]||UI.prod.jp)+'： '+esc(prodOf(it))+'</div>':'')+
     '<hr class="rainbow" style="margin:8px 0">'+
     (d?'<div class="modal-body">'+esc(d)+'</div>':'')+
     (ns.length?'<div class="hint" style="margin-top:8px">'+ns.map(esc).join('<br>')+'</div>':'')+
