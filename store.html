@@ -1,4 +1,6 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8">
+
+  // Update wine card titles/subs
+  if(typeof WINES!=='undefined'){Object.keys(WINES).forEach(function(id){var w=WINES[id];var tl=lang==='jp'?w.title.jp:w.title[lang]||w.title.jp;var sl=lang==='jp'?w.sub.jp:w.sub[lang]||w.sub.jp;var te=document.getElementById('wt-'+id);var se=document.getElementById('ws-'+id);if(te)te.textContent=tl;if(se)se.textContent=sl;});}<!doctype html><html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>すむら酒店 ｜ Liquor Shop Sumura</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet"><style>
 *{box-sizing:border-box}
@@ -58,41 +60,41 @@ ul.dots{list-style:none;padding-left:0}ul.dots li{margin:6px 0}ul.dots li:before
 
 <div style="color:#ffb000;font-size:18px;margin-top:8px">［ ボルドー 2024 プリムール ］</div>
 <div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
-<div style="flex:1"><b>シャトー マルゴー</b><br><span class="hint">マルゴー グラン・クリュ1級</span></div>
+<div style="flex:1"><b id="wt-margaux">シャトー マルゴー</b><br><span class="hint" id="ws-margaux">マルゴー グラン・クリュ1級</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">83,600円</span><br>
 <button class="btn" onclick="showModal('margaux')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
 <a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
 <div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
-<div style="flex:1"><b>シャトー ラフィット ロートシルト</b><br><span class="hint">ポイヤック グラン・クリュ1級</span></div>
+<div style="flex:1"><b id="wt-lafite">シャトー ラフィット ロートシルト</b><br><span class="hint" id="ws-lafite">ポイヤック グラン・クリュ1級</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">85,600円</span><br>
 <button class="btn" onclick="showModal('lafite')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
 <a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
 <div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
-<div style="flex:1"><b>シャトー オー ブリオン</b><br><span class="hint">ペサック・レオニャン 1級</span></div>
+<div style="flex:1"><b id="wt-hbrion">シャトー オー ブリオン</b><br><span class="hint" id="ws-hbrion">ペサック・レオニャン 1級</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">71,300円</span><br>
 <button class="btn" onclick="showModal('hbrion')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
 <a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
 
 <div style="color:#ffb000;font-size:18px;margin-top:12px">［ シャンパーニュ ］</div>
 <div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
-<div style="flex:1"><b>1996 デュヴァル ルロワ ファム・ド・シャンパーニュ GC</b><br><span class="hint">30年熟成のグラン・クリュ</span></div>
+<div style="flex:1"><b id="wt-duval">1996 デュヴァル ルロワ ファム・ド・シャンパーニュ GC</b><br><span class="hint" id="ws-duval">30年熟成のグラン・クリュ</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">45,000円</span><br>
 <button class="btn" onclick="showModal('duval')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
 <a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
 <div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
-<div style="flex:1"><b>フランシス オルバン ブリュット レゼルヴ V.V. NV</b><br><span class="hint">ムニエ91%の名手（2026.3 新規取扱い）</span></div>
+<div style="flex:1"><b id="wt-orban">フランシス オルバン ブリュット レゼルヴ V.V. NV</b><br><span class="hint" id="ws-orban">ムニエ91%の名手（2026.3 新規取扱い）</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">7,500円</span><br>
 <button class="btn" onclick="showModal('orban')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
 <a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
 
 <div style="color:#ffb000;font-size:18px;margin-top:12px">［ オーストラリア ヴィンテージ ］</div>
 <div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
-<div style="flex:1"><b>1999 ピエロ カベルネ・ソーヴィニヨン メルロ</b><br><span class="hint">マーガレット・リヴァー グレート・ヴィンテージ</span></div>
+<div style="flex:1"><b id="wt-pierro">1999 ピエロ カベルネ・ソーヴィニヨン メルロ</b><br><span class="hint" id="ws-pierro">マーガレット・リヴァー グレート・ヴィンテージ</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">17,000円</span><br>
 <button class="btn" onclick="showModal('pierro')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
 <a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
 <div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
-<div style="flex:1"><b>1999 グロセット ガイア</b><br><span class="hint">クレア・ヴァレー『ポイヤック最高峰の…』</span></div>
+<div style="flex:1"><b id="wt-grosset">1999 グロセット ガイア</b><br><span class="hint" id="ws-grosset">クレア・ヴァレー『ポイヤック最高峰の…』</span></div>
 <div style="text-align:right;white-space:nowrap"><span class="price">16,200円</span><br>
 <button class="btn" onclick="showModal('grosset')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
 <a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
@@ -104,12 +106,204 @@ ul.dots{list-style:none;padding-left:0}ul.dots li{margin:6px 0}ul.dots li:before
   <div>[ <a href="home.html">HOME</a> ｜ <a href="store.html">STORE</a> ｜ <a href="blog.html">BLOG</a> ｜ <a href="contact.html">CONTACT</a> ]</div>
   <div style="margin:8px 0">◆ 地下ワインWEBRING ◆ &lt; <a href="#">PREV</a> ｜ <a href="#">RANDOM</a> ｜ <a href="#">NEXT</a> &gt;</div>
   <div style="margin:8px 0">あなたは <span class="counter">0 1 2 7<span class="blink">4</span> 1</span> 人目の来客です</div>
-  <div><span class="badge">EST. 1990</span><span class="badge">Made with Notepad</span><span class="badge">HTML 3.2</span><span class="badge">800×600</span></div>
-  <div style="margin-top:10px">Copyright (C) 1990-2026 すむら酒店 ／ Liquor Shop Sumura. All Rights Reserved.</div>
+  <div><span class="badge">Made with Notepad</span><span class="badge">HTML 3.2</span><span class="badge">800×600</span></div>
+  <div style="margin-top:10px">Copyright (C) 2026 すむら酒店 Sumura. All Rights Reserved.</div>
 </div></div>
 <div id="modal-ov" class="modal-ov" onclick="if(event.target===this)closeModal()"><div class="modal-box"><button class="modal-close" onclick="closeModal()">✕ 閉じる</button><div id="modal-content"></div></div></div>
 <script>
-var WINES={margaux:{title:'シャトー マルゴー',sub:'マルゴー グラン・クリュ1級 ／ 2024年 プリムール',body:'格付け1級の最高峰。カベルネ・ソーヴィニヨン主体。2024年ヴィンテージは香りの優雅さと果実の凝縮感に優れ、長期熟成が期待できる一本。正規輸入・定温輸送でお届けします。',price:'83,600円（上代・税別）'},lafite:{title:'シャトー ラフィット ロートシルト',sub:'ポイヤック グラン・クリュ1級 ／ 2024年 プリムール',body:'ポイヤックが誇る格付け最高峰。鉛筆の芯を思わせるミネラルと黒果実・バイオレットの香りが調和。2024年は近年でも特に出来の良いヴィンテージ。世界中のコレクターが求める一本。',price:'85,600円（上代・税別）'},hbrion:{title:'シャトー オー ブリオン',sub:'ペサック・レオニャン グラン・クリュ1級 ／ 2024年 プリムール',body:'1855年の格付けでメドック以外から唯一選ばれた偉大なシャトー。スモーキーなミネラルとタバコ、黒いベリーが複雑に絡み合う独自のテロワール。',price:'71,300円（上代・税別）'},duval:{title:'1996 デュヴァル ルロワ ファム・ド・シャンパーニュ GC',sub:'シャンパーニュ グラン・クリュ ／ 約30年の瓶内熟成',body:'1996年はシャンパーニュ史に残る偉大なヴィンテージ。白トリュフ・ローストアーモンド・蜂蜜が複雑に絡み合う香り。残本数わずか。',price:'45,000円（上代・税別）'},orban:{title:'フランシス オルバン ブリュット レゼルヴ V.V. NV',sub:'シャンパーニュ ／ 2026年3月 新規取扱開始',body:'ピノ・ムニエ91%という稀有な構成。古樹から収穫した果実の厚みとシルキーな泡が特徴。ナチュラルな造りで料理との相性が幅広い。',price:'7,500円（上代・税別）'},pierro:{title:'1999 ピエロ カベルネ・ソーヴィニヨン メルロ',sub:'マーガレット・リヴァー（西オーストラリア）',body:'西オーストラリアを代表するピエロワイナリーの旗艦赤ワイン。1999年は屈指の大当たり年。四半世紀超の熟成を経た今が飲み頃。',price:'17,000円（上代・税別）'},grosset:{title:'1999 グロセット ガイア',sub:'クレア・ヴァレー（南オーストラリア）',body:'鬼才ジェフ・グロセットによるカベルネ主体のフラッグシップ。「ポイヤック最高峰の香り」と称される独自のスタイル。1999年の骨格と四半世紀の熟成が今、美しく調和。',price:'16,200円（上代・税別）'}};
+var WINES={
+  margaux:{
+    title:{jp:'シャトー マルゴー',en:'Château Margaux',fr:'Château Margaux',zh:'玛歌酒庄',ko:'샤토 마르고'},
+    sub:{jp:'マルゴー グラン・クリュ1級 ／ 2024年 プリムール',en:'Margaux Grand Cru 1st Growth / 2024 Primeur',fr:'Margaux Grand Cru 1er Cru / Primeur 2024',zh:'玛歌 特级一等庄 / 2024年期酒',ko:'마르고 그랑 크뤼 1등급 / 2024 프리뫼르'},
+    body:{jp:'格付け1級の最高峰。カベルネ・ソーヴィニヨン主体。2024年ヴィンテージは香りの優雅さと果実の凝縮感に優れ、長期熟成が期待できる一本。正規輸入・定温輸送でお届けします。',en:'The pinnacle of 1st growth classification, Cabernet Sauvignon dominant. The 2024 vintage excels in aromatic elegance and fruit concentration, promising exceptional long-term aging. Delivered via official import and temperature-controlled shipping.',fr:'Le sommet des 1ers Grands Crus Classés, dominé par le Cabernet Sauvignon. Le millésime 2024 brille par son élégance aromatique et sa concentration en fruits. Livraison en importation officielle, transport à température contrôlée.',zh:'格级一等庄最高峰。以赤霞珠为主。2024年份香气优雅，果实浓缩，具有极佳的长期陈年潜力。官方进口，全程恒温运输。',ko:'1등급 최고봉. 카베르네 소비뇽 주체. 2024 빈티지는 향의 우아함과 과실 농축미가 뛰어나 장기 숙성이 기대됩니다. 정식 수입·정온 운송.'},
+    price:'83,600円（上代・税別）'},
+  lafite:{
+    title:{jp:'シャトー ラフィット ロートシルト',en:'Château Lafite Rothschild',fr:'Château Lafite Rothschild',zh:'拉菲古堡',ko:'샤토 라피트 로칠드'},
+    sub:{jp:'ポイヤック グラン・クリュ1級 ／ 2024年 プリムール',en:'Pauillac Grand Cru 1st Growth / 2024 Primeur',fr:'Pauillac Grand Cru 1er Cru / Primeur 2024',zh:'波亚克 特级一等庄 / 2024年期酒',ko:'포이약 그랑 크뤼 1등급 / 2024 프리뫼르'},
+    body:{jp:'ポイヤックが誇る格付け最高峰。鉛筆の芯を思わせるミネラルと黒果実・バイオレットの香りが調和。2024年は近年でも特に出来の良いヴィンテージ。世界中のコレクターが求める一本。',en:'The ultimate Pauillac 1st growth. Harmonious pencil-lead mineral notes with dark fruit and violet. 2024 is among the finest recent vintages, sought by collectors worldwide.',fr:'Le fleuron de Pauillac. Notes minérales de crayon, fruits noirs et violette en harmonie. 2024, l'un des meilleurs millésimes récents, recherché par les collectionneurs.',zh:'波亚克分级最高峰。铅笔芯般的矿物感与黑色果实、紫罗兰的香气完美融合。2024年份近年来质量最为出色，受到全球收藏家的追捧。',ko:'포이약 최고봉. 연필심의 미네랄과 블랙 프루트·바이올렛의 향이 조화롭게 어우러짐. 2024년은 근래 특히 출중한 빈티지. 전세계 컬렉터가 구하는 한 병.'},
+    price:'85,600円（上代・税別）'},
+  hbrion:{
+    title:{jp:'シャトー オー ブリオン',en:'Château Haut-Brion',fr:'Château Haut-Brion',zh:'侯伯王庄园',ko:'샤토 오 브리옹'},
+    sub:{jp:'ペサック・レオニャン グラン・クリュ1級 ／ 2024年 プリムール',en:'Pessac-Léognan Grand Cru 1st Growth / 2024 Primeur',fr:'Pessac-Léognan Grand Cru 1er Cru / Primeur 2024',zh:'佩萨克-雷奥良 特级一等庄 / 2024年期酒',ko:'페삭 레오냥 그랑 크뤼 1등급 / 2024 프리뫼르'},
+    body:{jp:'1855年の格付けでメドック以外から唯一選ばれた偉大なシャトー。スモーキーなミネラルとタバコ、黒いベリーが複雑に絡み合う独自のテロワール。',en:'The only château outside the Médoc selected in the 1855 classification. Smoky minerals, tobacco and dark berries intertwine in a uniquely distinctive terroir.',fr:'Le seul château hors du Médoc retenu dans le classement de 1855. Minéral fumé, tabac et baies noires s'entrelacent dans un terroir unique.',zh:'1855年分级中唯一入选的梅多克以外的酒庄。烟熏矿物感与烟草、黑莓复杂交织，展现独特风土。',ko:'1855년 분류에서 메독 외 유일하게 선정된 위대한 샤토. 스모키 미네랄과 담배, 블랙베리가 복잡하게 얽히는 독자적인 테루아르.'},
+    price:'71,300円（上代・税別）'},
+  duval:{
+    title:{jp:'1996 デュヴァル ルロワ ファム・ド・シャンパーニュ GC',en:'1996 Duval-Leroy Femme de Champagne GC',fr:'1996 Duval-Leroy Femme de Champagne GC',zh:'1996 杜瓦勒罗亚 女性香槟 GC',ko:'1996 뒤발 르루아 팜 드 샴페인 GC'},
+    sub:{jp:'シャンパーニュ グラン・クリュ ／ 約30年の瓶内熟成',en:'Champagne Grand Cru / ~30 years of bottle aging',fr:'Champagne Grand Cru / ~30 ans de vieillissement en bouteille',zh:'香槟 特级园 / 约30年瓶中陈酿',ko:'샴페인 그랑 크뤼 / 약 30년 병내 숙성'},
+    body:{jp:'1996年はシャンパーニュ史に残る偉大なヴィンテージ。白トリュフ・ローストアーモンド・蜂蜜が複雑に絡み合う香り。残本数わずか。',en:'1996 stands as one of the greatest Champagne vintages ever. White truffle, roasted almond and honey interweave in breathtaking complexity. Very few bottles remain.',fr:'1996 reste l'un des plus grands millésimes de l'histoire du Champagne. Truffe blanche, amande grillée et miel d'une complexité époustouflante. Très peu de bouteilles disponibles.',zh:'1996年是香槟史上最伟大的年份之一。白松露、烤杏仁与蜂蜜复杂交织，令人叹为观止。现存数量极少。',ko:'1996년은 샴페인 역사에 남는 위대한 빈티지. 화이트 트러플·로스트 아몬드·꿀이 복잡하게 어우러지는 향. 잔여 수량 극소.'},
+    price:'45,000円（上代・税別）'},
+  orban:{
+    title:{jp:'フランシス オルバン ブリュット レゼルヴ V.V. NV',en:'Francis Orban Brut Réserve V.V. NV',fr:'Francis Orban Brut Réserve V.V. NV',zh:'弗朗西斯·奥班 天然珍藏 V.V. NV',ko:'프란시스 오르반 브뤼 레제르브 V.V. NV'},
+    sub:{jp:'シャンパーニュ ／ 2026年3月 新規取扱開始',en:'Champagne / New arrival March 2026',fr:'Champagne / Nouveauté mars 2026',zh:'香槟 / 2026年3月新品上市',ko:'샴페인 / 2026년 3월 신규 취급 시작'},
+    body:{jp:'ピノ・ムニエ91%という稀有な構成。古樹から収穫した果実の厚みとシルキーな泡が特徴。ナチュラルな造りで料理との相性が幅広い。',en:'A rare 91% Pinot Meunier composition. Old-vine fruit lends richness and silky bubbles. Natural winemaking pairs beautifully with a wide range of cuisine.',fr:'Une composition rare à 91% de Pinot Meunier. Les vieilles vignes apportent richesse et bulles soyeuses. Une vinification naturelle s'accordant avec de nombreux plats.',zh:'稀有的91%黑比诺穆尼耶配比。老藤果实赋予丰厚酒体与丝滑气泡。天然酿造，与各类菜肴搭配广泛。',ko:'피노 뫼니에 91%라는 희귀한 구성. 고수령 나무의 과실이 두께와 실키한 거품을 선사. 자연 양조로 음식과의 매칭이 폭넓음.'},
+    price:'7,500円（上代・税別）'},
+  pierro:{
+    title:{jp:'1999 ピエロ カベルネ・ソーヴィニヨン メルロ',en:'1999 Pierro Cabernet Sauvignon Merlot',fr:'1999 Pierro Cabernet Sauvignon Merlot',zh:'1999 彼埃洛 赤霞珠美乐',ko:'1999 피에로 카베르네 소비뇽 메를로'},
+    sub:{jp:'マーガレット・リヴァー（西オーストラリア）',en:'Margaret River (Western Australia)',fr:'Margaret River (Australie-Occidentale)',zh:'玛格丽特河（西澳大利亚）',ko:'마거릿 리버 (서호주)'},
+    body:{jp:'西オーストラリアを代表するピエロワイナリーの旗艦赤ワイン。1999年は屈指の大当たり年。四半世紀超の熟成を経た今が飲み頃。',en:'The flagship red from Pierro, Western Australia's premier winery. 1999 is an outstanding year. Now in its prime after more than a quarter-century of aging.',fr:'Le rouge phare de Pierro, domaine emblématique d'Australie-Occidentale. 1999, une année d'exception. À son apogée après plus d'un quart de siècle de garde.',zh:'西澳大利亚代表性彼埃洛酒庄的旗舰红葡萄酒。1999年是最佳丰收年。历经四分之一世纪以上的陈酿，现正是饮用佳期。',ko:'서호주를 대표하는 피에로 와이너리의 플래그십 레드 와인. 1999년은 최고의 대풍년. 25년 이상 숙성을 거쳐 지금이 마시기 적기.'},
+    price:'17,000円（上代・税別）'},
+  grosset:{
+    title:{jp:'1999 グロセット ガイア',en:'1999 Grosset Gaia',fr:'1999 Grosset Gaia',zh:'1999 格罗塞特 盖亚',ko:'1999 그로세 가이아'},
+    sub:{jp:'クレア・ヴァレー（南オーストラリア）',en:'Clare Valley (South Australia)',fr:'Clare Valley (Australie-Méridionale)',zh:'克莱尔谷（南澳大利亚）',ko:'클레어 밸리 (남호주)'},
+    body:{jp:'鬼才ジェフ・グロセットによるカベルネ主体のフラッグシップ。「ポイヤック最高峰の香り」と称される独自のスタイル。1999年の骨格と四半世紀の熟成が今、美しく調和。',en:'The Cabernet-based flagship from maverick Jeff Grosset. Praised as having "the finest aromas of Pauillac" in its own unique style. The structure of 1999 and 25 years of aging now harmonize beautifully.',fr:'Le fleuron à base de Cabernet du maître Jeff Grosset. Salué pour ses «arômes des plus grands Pauillacs». Le millésime 1999 et 25 ans de garde s'harmonisent magnifiquement.',zh:'鬼才杰夫·格罗塞特以赤霞珠为主的旗舰之作。被誉为"拥有波亚克最高峰的香气"，风格独树一帜。1999年的骨架与四分之一世纪的陈酿如今完美交融。',ko:'귀재 제프 그로세의 카베르네 주체 플래그십. "포이약 최고봉의 향기"로 칭해지는 독자적인 스타일. 1999년의 골격과 25년의 숙성이 지금 아름답게 조화.'},
+    price:'16,200円（上代・税別）'}
+};
+function showModal(id){
+  var lang=localStorage.getItem('lang')||'jp';
+  var w=WINES[id];if(!w)return;
+  var t=w.title[lang]||w.title.jp;
+  var s=w.sub[lang]||w.sub.jp;
+  var b=w.body[lang]||w.body.jp;
+  document.getElementById('modal-content').innerHTML='<div class="modal-photo-ph">[ 写 真 準 備 中 ]</div><div class="modal-title">'+t+'</div><div class="modal-sub">'+s+'</div><hr class="rainbow" style="margin:8px 0"><div class="modal-body">'+b+'</div><div class="modal-price">'+w.price+'</div>';
+  document.getElementById('modal-overlay').style.display='flex';
+}!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>すむら酒店 ｜ Liquor Shop Sumura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box}
+body{margin:0;background:#150f0c url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABICAIAAACGBWc0AAACHElEQVR4nO2cUWvCMBSFVYr0QfowRhky/P+/S8YeZIwiPojI2EPlFrySc28a03Q731NZXRMP5yTpTXD51m4XM6HZNP3F8XTM1ugqW0szhQIBKrlqX1v7v9V13V+cz+ck/ZDnSHwC/ZHWM0AHASgQoNq97/orV1hSJUuQ1OScoTTyvaQ/dBCAAgGq/ce+v3LNYnPEMvPq+ZEOAlAgQIU/8lfQydJzloYOAlAgwD+KmMbyTkcHASgQ4EHELGN7suZ/bm9e11Xz7LZciAh0EIACAR5EbGSyXKkpLVkCyx1WKBAg/UKx2NRY0OMDHQSgQIAhYjnXhxaSb71Z0OMDHQSgQIAhYoUkS7AkK8OwQAcBKBAg2UJxksJFhmGBDgJQIMBSn1Hcvtx8+/ntWKFNcoAwOfq700EACgQYImY5ExhYvB2+DvA5LkZOi6n6QwcBKBDAtFDMWXAQCqlM0kEACgQwRazYDeIM0EEACgQwRcyVrNKK/0KgY4FbdBCAAgHSbz3nTJZEY7O+9BeB0SDQMbnFrWc3FAjwxGPArr3juLWoNHFd4Fxb+sOtZzcUCGCKmDanJRGuIol+jjRxuqzvuhFHXNLpIAAFAkRWFEfWPSwJlVvJF56ut0U6CECBAJE/LDCSVJXJuHOMgWRxoeiGAgEif1ggMA2Jgbuuu/tLcgLJktMmI6GDABQIEFnusLyCTVu0l3NclmJjADoIQIEAv7R3vVQuqz0PAAAAAElFTkSuQmCC') repeat;color:#e9e0cf;
+ font-family:"DotGothic16","MS Gothic","Osaka-Mono","Courier New",monospace;font-size:16px;line-height:1.85;
+ cursor:crosshair;}
+img{image-rendering:pixelated}
+a{color:#5fefff;text-decoration:underline}a:visited{color:#ff7bff}a:hover{background:#ffe14d;color:#000}
+.wrap{max-width:780px;margin:0 auto;padding:6px 8px 34px}
+.panel{border:5px ridge #b8860b;background:rgba(8,6,5,.88);padding:16px;margin:16px 0;box-shadow:0 0 0 2px #000,6px 6px 0 #000}
+.blink{animation:bl 1s steps(1,end) infinite}@keyframes bl{50%{visibility:hidden}}
+.marquee{overflow:hidden;white-space:nowrap;border:3px inset #777;background:#000;color:#7CFC00;padding:4px 0;margin:6px 0}
+.marquee b{display:inline-block;padding-left:100%;animation:mq 20s linear infinite;font-weight:normal}@keyframes mq{to{transform:translateX(-100%)}}
+hr.rainbow{height:7px;border:0;margin:10px 0;background:linear-gradient(90deg,red,orange,#ff0,#0f0,#0ff,#00f,#f0f,red);background-size:200% 100%;animation:rb 5s linear infinite}@keyframes rb{to{background-position:200% 0}}
+.nav{text-align:center;margin:8px 0}
+.nav a{display:inline-block;border:3px outset #cfcfcf;background:#5a5a5a;color:#fff!important;padding:6px 10px;margin:3px;text-decoration:none}
+.nav a:hover{border-style:inset;background:#333;color:#ff0!important}
+.nav a.on{border-style:inset;background:#7a1f2b;color:#ffd!important}
+.counter{display:inline-block;background:#000;color:#25ff25;border:2px inset #555;padding:2px 7px;letter-spacing:5px}
+.badge{display:inline-block;border:2px solid #777;background:#0a0a0a;color:#6cf;font-size:13px;padding:2px 6px;margin:3px;letter-spacing:1px}
+.pixhead{color:#ffb000;text-shadow:2px 2px 0 #000,4px 4px 0 #5a3a00;letter-spacing:2px;font-size:22px;margin:4px 0 10px}
+.sub{color:#ff7bff;letter-spacing:1px}
+table.retro{border:4px ridge #b8860b;background:#0a0806;width:100%;border-collapse:collapse;margin:10px 0}
+table.retro th{background:#5a3a1e;color:#ffe;padding:9px;border:2px groove #333;text-align:left;white-space:nowrap;vertical-align:top}
+table.retro td{padding:9px;border:1px solid #4a3a2a;color:#e9e0cf;vertical-align:top}
+.btn{border:3px outset #cfcfcf;background:#6a6a6a;color:#fff;padding:6px 14px;font-family:inherit;font-size:15px;cursor:pointer}
+.btn:active{border-style:inset}
+.new{color:#ff3}
+.card{border:3px double #8a6a2a;background:#0c0908;padding:10px;margin:10px 0;display:flex;gap:12px;align-items:center}
+.price{color:#ffe14d}
+label{display:block;margin-top:10px;color:#ffd9a0}
+.field{width:100%;background:#000;color:#25ff25;border:2px inset #666;font-family:inherit;font-size:16px;padding:7px;margin:3px 0}
+ul.dots{list-style:none;padding-left:0}ul.dots li{margin:6px 0}ul.dots li:before{content:"► ";color:#ffb000}
+.clock{position:fixed;right:5px;top:5px;background:#000;color:#0f0;border:2px inset #444;padding:2px 7px;font-size:14px;z-index:9;font-family:"DotGothic16",monospace}
+.hint{color:#9a8f7c;font-size:13px}
+.photo-ph{width:90px;height:130px;background:#0a0705;border:2px inset #5a3a1e;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#4a3520;font-size:11px;text-align:center;flex-shrink:0;line-height:1.8;letter-spacing:1px}
+.modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center}
+.modal-ov.open{display:flex}
+.modal-box{background:#0c0908;border:5px ridge #b8860b;max-width:520px;width:92%;padding:22px 20px;box-shadow:0 0 0 2px #000,8px 8px 0 #000;position:relative;max-height:82vh;overflow-y:auto}
+.modal-close{position:absolute;top:8px;right:10px;background:#5a5a5a;border:3px outset #cfcfcf;color:#fff;padding:3px 10px;cursor:pointer;font-family:inherit;font-size:14px}
+.modal-close:active{border-style:inset}
+.modal-title{color:#ffb000;font-size:19px;text-shadow:1px 1px 0 #000;margin:0 32px 6px 0;line-height:1.4}
+.modal-sub{color:#ff7bff;font-size:13px;margin:0 0 10px}
+.modal-body{color:#e9e0cf;font-size:14px;line-height:2}
+.modal-price{color:#ffe14d;font-size:16px;margin:12px 0 0;border-top:1px solid #3a2a1a;padding-top:10px}
+.modal-photo-ph{width:100%;height:140px;background:#0a0705;border:2px inset #5a3a1e;display:flex;align-items:center;justify-content:center;color:#4a3520;font-size:13px;margin-bottom:12px;letter-spacing:2px}
+</style></head><body><div class="clock" id="clk">--:--:--</div><script>function T(){var d=new Date();document.getElementById("clk").textContent=("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)+":"+("0"+d.getSeconds()).slice(-2)}setInterval(T,1000);T();</script><div class="wrap">
+<div style="text-align:center;padding-top:8px">
+  <a href="home.html"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAjAAAAB4CAYAAADsZchHAAAEPUlEQVR4nO3cy5EUMRAE0IHACk6YhKmYxAk3wAGxoUFCqqx+7747rd9shiK3Xy8AAAAAAAAAAAAA4KhPtx8AAHjPrx/ffv/rz379/rPF3/7Ptx8AAOBdAgwAEEeAAQDiCDAAQJwvtx/gNMWn/cxpH6O1tEZrZs+HeYb3uIEBAOIIMABAHAEGAIgjwAAAcR5X4gXes1LSnqXAemaen8a+6s0NDAAQR4ABAOIIMABAHAEGAIijxAtc523OVNO5VF19bLNn2g0MABBHgAEA4ggwAEAcAQYAiLNUfqteBOpspbjYed1m52V2DhRExyrtoS5rNJrTW2NbOR9dCtmV9vjTKPECAG0JMABAHAEGAIgjwAAAcbyJFz6g7Dt2YryVSq0ndB4b/A9uYACAOAIMABBHgAEA4ggwAECc8m/i3V1sS3y7ojnInIPqb1EdUSTNlHimT7j1xnJn/ww3MABAHAEGAIgjwAAAcQQYACDO0pt4E0s/K7qMt1Ih9tacjj5XEZJViWcBUrmBAQDiCDAAQBwBBgCII8AAAHGWSryVKGCySrGXm0Z77USxd2Xf7/7ZEWfwjErzPLs33MAAAHEEGAAgjgADAMQRYACAOOVLvJWKRU9j7udLit6iem+/VJr76kXwSnMFq9zAAABxBBgAII4AAwDEEWAAgDjlS7wrdhfqOpc3KxUNq+uy5rOq743q57J6sRder1pnZpYbGAAgjgADAMQRYACAOAIMABCnVIl3pdg2W0BSqNs/z0+bv866rGVisfeEE9+xJ54FXi83MABAIAEGAIgjwAAAcQQYACBOqRIvtShG8zeJJdTqxd4ufB9wihsYACCOAAMAxBFgAIA4AgwAEKdNiXe2oKdMtl+XOZ0dx9OKn5XG2/lMVyoZ7/7cld/XeX0rufV8K3vDDQwAEEeAAQDiCDAAQBwBBgCIU6rEu7ugV700VZ35G6tUtty9RpUKu53NrtuJvWbNSeUGBgCII8AAAHEEGAAgjgADAMQpVeId6fzmzadRFtxvdk4rFY+pxfdpfdXP6q095AYGAIgjwAAAcQQYACCOAAMAxClf4h1ZKS6e+NzqFKOfp8vetU+ppsvZSuQGBgCII8AAAHEEGAAgjgADAMSJLPGOKPetuVWMvqXLODrrUsJfGcfuZ04snJ44q74PMrmBAQDiCDAAQBwBBgCII8AAAHHKl3hvlasSy27VdSnKddkbXdaDeaM177KfeR43MABAHAEGAIgjwAAAcQQYACBOqRKvwm59o7nqXAa1N+qrtEaV3ro7q/P57cIajbmBAQDiCDAAQBwBBgCII8AAAHFKlXh3F0Qrlfs661Lsfdp+qb5uT1sP6rMna3EDAwDEEWAAgDgCDAAQR4ABAOIoJAGEmy1fJ5ZQb41t9Lkrn9H5H1JurZEbGAAgjgADAMQRYACAOAIMAAAAAAAAAAAAAAAA8LE/7I2zotUunZwAAAAASUVORK5CYII=" alt="すむら酒店" style="max-width:96%"></a>
+  <div class="sub" style="margin-top:6px">☆ Liquor Shop Sumura ☆ 山口・宇部 ☆ 地下より、時をおすそわけ ☆</div>
+</div>
+<div class="marquee"><b>★☆★ ようこそ「すむら酒店」へ ★ 一本のワインは、土地の歴史と、造り手の手仕事と、瓶の中で過ぎた歳月の結晶です ★ ヴィンテージ・シャンパーニュ 入荷 ★ ボルドー2024 プリムール 予約受付中 ★ 記念日の一本、承ります ★☆★</b></div>
+<div class="nav"><a href="home.html" class="">ホーム</a><a href="about.html" class="">会社概要</a><a href="store.html" class="on">オンラインストア</a><a href="blog.html" class="">ブログ</a><a href="contact.html" class="">問い合わせ</a></div><hr class="rainbow">
+<div class="panel">
+<div class="pixhead">■ オンラインストア ■</div>
+<p class="sub">▼ 表示価格はすべて上代・税別です ▼</p>
+
+<div style="color:#ffb000;font-size:18px;margin-top:8px">［ ボルドー 2024 プリムール ］</div>
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
+<div style="flex:1"><b id="wt-margaux">シャトー マルゴー</b><br><span class="hint" id="ws-margaux">マルゴー グラン・クリュ1級</span></div>
+<div style="text-align:right;white-space:nowrap"><span class="price">83,600円</span><br>
+<button class="btn" onclick="showModal('margaux')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
+<div style="flex:1"><b id="wt-lafite">シャトー ラフィット ロートシルト</b><br><span class="hint" id="ws-lafite">ポイヤック グラン・クリュ1級</span></div>
+<div style="text-align:right;white-space:nowrap"><span class="price">85,600円</span><br>
+<button class="btn" onclick="showModal('lafite')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
+<div style="flex:1"><b id="wt-hbrion">シャトー オー ブリオン</b><br><span class="hint" id="ws-hbrion">ペサック・レオニャン 1級</span></div>
+<div style="text-align:right;white-space:nowrap"><span class="price">71,300円</span><br>
+<button class="btn" onclick="showModal('hbrion')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
+
+<div style="color:#ffb000;font-size:18px;margin-top:12px">［ シャンパーニュ ］</div>
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
+<div style="flex:1"><b id="wt-duval">1996 デュヴァル ルロワ ファム・ド・シャンパーニュ GC</b><br><span class="hint" id="ws-duval">30年熟成のグラン・クリュ</span></div>
+<div style="text-align:right;white-space:nowrap"><span class="price">45,000円</span><br>
+<button class="btn" onclick="showModal('duval')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
+<div style="flex:1"><b id="wt-orban">フランシス オルバン ブリュット レゼルヴ V.V. NV</b><br><span class="hint" id="ws-orban">ムニエ91%の名手（2026.3 新規取扱い）</span></div>
+<div style="text-align:right;white-space:nowrap"><span class="price">7,500円</span><br>
+<button class="btn" onclick="showModal('orban')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
+
+<div style="color:#ffb000;font-size:18px;margin-top:12px">［ オーストラリア ヴィンテージ ］</div>
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
+<div style="flex:1"><b id="wt-pierro">1999 ピエロ カベルネ・ソーヴィニヨン メルロ</b><br><span class="hint" id="ws-pierro">マーガレット・リヴァー グレート・ヴィンテージ</span></div>
+<div style="text-align:right;white-space:nowrap"><span class="price">17,000円</span><br>
+<button class="btn" onclick="showModal('pierro')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
+<div class="card"><div class="photo-ph">▒▒▒<br>写 真<br>準備中<br>▒▒▒</div>
+<div style="flex:1"><b id="wt-grosset">1999 グロセット ガイア</b><br><span class="hint" id="ws-grosset">クレア・ヴァレー『ポイヤック最高峰の…』</span></div>
+<div style="text-align:right;white-space:nowrap"><span class="price">16,200円</span><br>
+<button class="btn" onclick="showModal('grosset')" style="margin-top:5px;width:100%;display:block">▼ 詳　細</button>
+<a href="contact.html"><span class="btn" style="display:inline-block;margin-top:5px">お問い合わせ</span></a></div></div>
+
+<p class="hint">※ ご注文・在庫のお問い合わせは <a href="contact.html">問い合わせページ</a> よりお願いいたします。</p>
+</div>
+<hr class="rainbow">
+<div style="text-align:center;font-size:14px;color:#b3a894;margin:14px 0">
+  <div>[ <a href="home.html">HOME</a> ｜ <a href="store.html">STORE</a> ｜ <a href="blog.html">BLOG</a> ｜ <a href="contact.html">CONTACT</a> ]</div>
+  <div style="margin:8px 0">◆ 地下ワインWEBRING ◆ &lt; <a href="#">PREV</a> ｜ <a href="#">RANDOM</a> ｜ <a href="#">NEXT</a> &gt;</div>
+  <div style="margin:8px 0">あなたは <span class="counter">0 1 2 7<span class="blink">4</span> 1</span> 人目の来客です</div>
+  <div><span class="badge">Made with Notepad</span><span class="badge">HTML 3.2</span><span class="badge">800×600</span></div>
+  <div style="margin-top:10px">Copyright (C) 2026 すむら酒店 Sumura. All Rights Reserved.</div>
+</div></div>
+<div id="modal-ov" class="modal-ov" onclick="if(event.target===this)closeModal()"><div class="modal-box"><button class="modal-close" onclick="closeModal()">✕ 閉じる</button><div id="modal-content"></div></div></div>
+<script>
+var WINES={
+  margaux:{
+    title:{jp:'シャトー マルゴー',en:'Château Margaux',fr:'Château Margaux',zh:'玛歌酒庄',ko:'샤토 마르고'},
+    sub:{jp:'マルゴー グラン・クリュ1級 ／ 2024年 プリムール',en:'Margaux Grand Cru 1st Growth / 2024 Primeur',fr:'Margaux Grand Cru 1er Cru / Primeur 2024',zh:'玛歌 特级一等庄 / 2024年期酒',ko:'마르고 그랑 크뤼 1등급 / 2024 프리뫼르'},
+    body:{jp:'格付け1級の最高峰。カベルネ・ソーヴィニヨン主体。2024年ヴィンテージは香りの優雅さと果実の凝縮感に優れ、長期熟成が期待できる一本。正規輸入・定温輸送でお届けします。',en:'The pinnacle of 1st growth classification, Cabernet Sauvignon dominant. The 2024 vintage excels in aromatic elegance and fruit concentration, promising exceptional long-term aging. Delivered via official import and temperature-controlled shipping.',fr:'Le sommet des 1ers Grands Crus Classés, dominé par le Cabernet Sauvignon. Le millésime 2024 brille par son élégance aromatique et sa concentration en fruits. Livraison en importation officielle, transport à température contrôlée.',zh:'格级一等庄最高峰。以赤霞珠为主。2024年份香气优雅，果实浓缩，具有极佳的长期陈年潜力。官方进口，全程恒温运输。',ko:'1등급 최고봉. 카베르네 소비뇽 주체. 2024 빈티지는 향의 우아함과 과실 농축미가 뛰어나 장기 숙성이 기대됩니다. 정식 수입·정온 운송.'},
+    price:'83,600円（上代・税別）'},
+  lafite:{
+    title:{jp:'シャトー ラフィット ロートシルト',en:'Château Lafite Rothschild',fr:'Château Lafite Rothschild',zh:'拉菲古堡',ko:'샤토 라피트 로칠드'},
+    sub:{jp:'ポイヤック グラン・クリュ1級 ／ 2024年 プリムール',en:'Pauillac Grand Cru 1st Growth / 2024 Primeur',fr:'Pauillac Grand Cru 1er Cru / Primeur 2024',zh:'波亚克 特级一等庄 / 2024年期酒',ko:'포이약 그랑 크뤼 1등급 / 2024 프리뫼르'},
+    body:{jp:'ポイヤックが誇る格付け最高峰。鉛筆の芯を思わせるミネラルと黒果実・バイオレットの香りが調和。2024年は近年でも特に出来の良いヴィンテージ。世界中のコレクターが求める一本。',en:'The ultimate Pauillac 1st growth. Harmonious pencil-lead mineral notes with dark fruit and violet. 2024 is among the finest recent vintages, sought by collectors worldwide.',fr:'Le fleuron de Pauillac. Notes minérales de crayon, fruits noirs et violette en harmonie. 2024, l'un des meilleurs millésimes récents, recherché par les collectionneurs.',zh:'波亚克分级最高峰。铅笔芯般的矿物感与黑色果实、紫罗兰的香气完美融合。2024年份近年来质量最为出色，受到全球收藏家的追捧。',ko:'포이약 최고봉. 연필심의 미네랄과 블랙 프루트·바이올렛의 향이 조화롭게 어우러짐. 2024년은 근래 특히 출중한 빈티지. 전세계 컬렉터가 구하는 한 병.'},
+    price:'85,600円（上代・税別）'},
+  hbrion:{
+    title:{jp:'シャトー オー ブリオン',en:'Château Haut-Brion',fr:'Château Haut-Brion',zh:'侯伯王庄园',ko:'샤토 오 브리옹'},
+    sub:{jp:'ペサック・レオニャン グラン・クリュ1級 ／ 2024年 プリムール',en:'Pessac-Léognan Grand Cru 1st Growth / 2024 Primeur',fr:'Pessac-Léognan Grand Cru 1er Cru / Primeur 2024',zh:'佩萨克-雷奥良 特级一等庄 / 2024年期酒',ko:'페삭 레오냥 그랑 크뤼 1등급 / 2024 프리뫼르'},
+    body:{jp:'1855年の格付けでメドック以外から唯一選ばれた偉大なシャトー。スモーキーなミネラルとタバコ、黒いベリーが複雑に絡み合う独自のテロワール。',en:'The only château outside the Médoc selected in the 1855 classification. Smoky minerals, tobacco and dark berries intertwine in a uniquely distinctive terroir.',fr:'Le seul château hors du Médoc retenu dans le classement de 1855. Minéral fumé, tabac et baies noires s'entrelacent dans un terroir unique.',zh:'1855年分级中唯一入选的梅多克以外的酒庄。烟熏矿物感与烟草、黑莓复杂交织，展现独特风土。',ko:'1855년 분류에서 메독 외 유일하게 선정된 위대한 샤토. 스모키 미네랄과 담배, 블랙베리가 복잡하게 얽히는 독자적인 테루아르.'},
+    price:'71,300円（上代・税別）'},
+  duval:{
+    title:{jp:'1996 デュヴァル ルロワ ファム・ド・シャンパーニュ GC',en:'1996 Duval-Leroy Femme de Champagne GC',fr:'1996 Duval-Leroy Femme de Champagne GC',zh:'1996 杜瓦勒罗亚 女性香槟 GC',ko:'1996 뒤발 르루아 팜 드 샴페인 GC'},
+    sub:{jp:'シャンパーニュ グラン・クリュ ／ 約30年の瓶内熟成',en:'Champagne Grand Cru / ~30 years of bottle aging',fr:'Champagne Grand Cru / ~30 ans de vieillissement en bouteille',zh:'香槟 特级园 / 约30年瓶中陈酿',ko:'샴페인 그랑 크뤼 / 약 30년 병내 숙성'},
+    body:{jp:'1996年はシャンパーニュ史に残る偉大なヴィンテージ。白トリュフ・ローストアーモンド・蜂蜜が複雑に絡み合う香り。残本数わずか。',en:'1996 stands as one of the greatest Champagne vintages ever. White truffle, roasted almond and honey interweave in breathtaking complexity. Very few bottles remain.',fr:'1996 reste l'un des plus grands millésimes de l'histoire du Champagne. Truffe blanche, amande grillée et miel d'une complexité époustouflante. Très peu de bouteilles disponibles.',zh:'1996年是香槟史上最伟大的年份之一。白松露、烤杏仁与蜂蜜复杂交织，令人叹为观止。现存数量极少。',ko:'1996년은 샴페인 역사에 남는 위대한 빈티지. 화이트 트러플·로스트 아몬드·꿀이 복잡하게 어우러지는 향. 잔여 수량 극소.'},
+    price:'45,000円（上代・税別）'},
+  orban:{
+    title:{jp:'フランシス オルバン ブリュット レゼルヴ V.V. NV',en:'Francis Orban Brut Réserve V.V. NV',fr:'Francis Orban Brut Réserve V.V. NV',zh:'弗朗西斯·奥班 天然珍藏 V.V. NV',ko:'프란시스 오르반 브뤼 레제르브 V.V. NV'},
+    sub:{jp:'シャンパーニュ ／ 2026年3月 新規取扱開始',en:'Champagne / New arrival March 2026',fr:'Champagne / Nouveauté mars 2026',zh:'香槟 / 2026年3月新品上市',ko:'샴페인 / 2026년 3월 신규 취급 시작'},
+    body:{jp:'ピノ・ムニエ91%という稀有な構成。古樹から収穫した果実の厚みとシルキーな泡が特徴。ナチュラルな造りで料理との相性が幅広い。',en:'A rare 91% Pinot Meunier composition. Old-vine fruit lends richness and silky bubbles. Natural winemaking pairs beautifully with a wide range of cuisine.',fr:'Une composition rare à 91% de Pinot Meunier. Les vieilles vignes apportent richesse et bulles soyeuses. Une vinification naturelle s'accordant avec de nombreux plats.',zh:'稀有的91%黑比诺穆尼耶配比。老藤果实赋予丰厚酒体与丝滑气泡。天然酿造，与各类菜肴搭配广泛。',ko:'피노 뫼니에 91%라는 희귀한 구성. 고수령 나무의 과실이 두께와 실키한 거품을 선사. 자연 양조로 음식과의 매칭이 폭넓음.'},
+    price:'7,500円（上代・税別）'},
+  pierro:{
+    title:{jp:'1999 ピエロ カベルネ・ソーヴィニヨン メルロ',en:'1999 Pierro Cabernet Sauvignon Merlot',fr:'1999 Pierro Cabernet Sauvignon Merlot',zh:'1999 彼埃洛 赤霞珠美乐',ko:'1999 피에로 카베르네 소비뇽 메를로'},
+    sub:{jp:'マーガレット・リヴァー（西オーストラリア）',en:'Margaret River (Western Australia)',fr:'Margaret River (Australie-Occidentale)',zh:'玛格丽特河（西澳大利亚）',ko:'마거릿 리버 (서호주)'},
+    body:{jp:'西オーストラリアを代表するピエロワイナリーの旗艦赤ワイン。1999年は屈指の大当たり年。四半世紀超の熟成を経た今が飲み頃。',en:'The flagship red from Pierro, Western Australia's premier winery. 1999 is an outstanding year. Now in its prime after more than a quarter-century of aging.',fr:'Le rouge phare de Pierro, domaine emblématique d'Australie-Occidentale. 1999, une année d'exception. À son apogée après plus d'un quart de siècle de garde.',zh:'西澳大利亚代表性彼埃洛酒庄的旗舰红葡萄酒。1999年是最佳丰收年。历经四分之一世纪以上的陈酿，现正是饮用佳期。',ko:'서호주를 대표하는 피에로 와이너리의 플래그십 레드 와인. 1999년은 최고의 대풍년. 25년 이상 숙성을 거쳐 지금이 마시기 적기.'},
+    price:'17,000円（上代・税別）'},
+  grosset:{
+    title:{jp:'1999 グロセット ガイア',en:'1999 Grosset Gaia',fr:'1999 Grosset Gaia',zh:'1999 格罗塞特 盖亚',ko:'1999 그로세 가이아'},
+    sub:{jp:'クレア・ヴァレー（南オーストラリア）',en:'Clare Valley (South Australia)',fr:'Clare Valley (Australie-Méridionale)',zh:'克莱尔谷（南澳大利亚）',ko:'클레어 밸리 (남호주)'},
+    body:{jp:'鬼才ジェフ・グロセットによるカベルネ主体のフラッグシップ。「ポイヤック最高峰の香り」と称される独自のスタイル。1999年の骨格と四半世紀の熟成が今、美しく調和。',en:'The Cabernet-based flagship from maverick Jeff Grosset. Praised as having "the finest aromas of Pauillac" in its own unique style. The structure of 1999 and 25 years of aging now harmonize beautifully.',fr:'Le fleuron à base de Cabernet du maître Jeff Grosset. Salué pour ses «arômes des plus grands Pauillacs». Le millésime 1999 et 25 ans de garde s'harmonisent magnifiquement.',zh:'鬼才杰夫·格罗塞特以赤霞珠为主的旗舰之作。被誉为"拥有波亚克最高峰的香气"，风格独树一帜。1999年的骨架与四分之一世纪的陈酿如今完美交融。',ko:'귀재 제프 그로세의 카베르네 주체 플래그십. "포이약 최고봉의 향기"로 칭해지는 독자적인 스타일. 1999년의 골격과 25년의 숙성이 지금 아름답게 조화.'},
+    price:'16,200円（上代・税別）'}
+};
 function showModal(id){var w=WINES[id];if(!w)return;document.getElementById('modal-content').innerHTML='<div class="modal-photo-ph">[ 写 真 準 備 中 ]</div><div class="modal-title">'+w.title+'</div><div class="modal-sub">'+w.sub+'</div><hr class="rainbow" style="margin:8px 0"><div class="modal-body">'+w.body+'</div><div class="modal-price">'+w.price+'</div><div style="text-align:center;margin-top:14px"><a href="contact.html"><span class="btn" style="font-size:15px;padding:8px 20px">■ お問い合わせはこちら</span></a></div>';document.getElementById('modal-ov').classList.add('open');document.body.style.overflow='hidden';}
 function closeModal(){document.getElementById('modal-ov').classList.remove('open');document.body.style.overflow='';}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
