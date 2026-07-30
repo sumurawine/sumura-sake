@@ -151,8 +151,9 @@ function showModal(id){
 }
 function closeModal(){document.getElementById('modal-ov').classList.remove('open');document.body.style.overflow='';}
 (function(){
-  Promise.all([fetch('products.json').then(function(r){return r.json();}),
-               fetch('products.i18n.json').then(function(r){return r.json();}).catch(function(){return null;})])
+  var _v='?v='+(new Date().toISOString().slice(0,13));
+  Promise.all([fetch('products.json'+_v).then(function(r){return r.json();}),
+               fetch('products.i18n.json'+_v).then(function(r){return r.json();}).catch(function(){return null;})])
    .then(function(a){DATA=a[0];I18N=a[1];window.__renderCat=render;render();})
    .catch(function(){var b=document.getElementById('catalogue');if(b)b.innerHTML='<p class="hint">'+(UI.err[L()]||UI.err.jp)+'</p>';});
 })();
