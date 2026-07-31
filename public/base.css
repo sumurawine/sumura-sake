@@ -156,3 +156,14 @@ body:has(.mk-wrap) #lang-bar button.active{opacity:1;border-color:#a8977c;backgr
 .x-thumb{border:1px solid #5a4626;background:#1a0a00}
 .x-dash{border-bottom:1px dashed #6b4b18}
 .x-frame{border:3px double #8a6a2a;background:#1a0a00}
+
+/* ブロックくずし（2000年代のホーム） */
+.bk-wrap{ margin-top:18px }
+.bk-stage{ position:relative; display:inline-block; margin:10px auto 6px; line-height:0 }
+.bk-canvas{ display:block; max-width:100%; height:auto; image-rendering:pixelated;
+  border:4px ridge #ff44aa; border-radius:8px; background:#1a0033; box-shadow:0 0 0 2px #55e0ff, 4px 4px 0 #000 }
+.bk-cover{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:12px; background:rgba(26,0,51,.82); border-radius:6px; line-height:1.6 }
+.bk-msg{ color:#ffd23f; font-size:17px; font-weight:bold; text-shadow:2px 2px 0 #ff0066 }
+.bk-score{ margin-top:6px; font-size:14px; letter-spacing:1px }
+.bk-score b{ color:#ffd23f; font-size:17px }

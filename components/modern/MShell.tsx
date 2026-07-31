@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { tr } from '@/lib/i18n';
 import { MODERN } from '@/lib/decor';
+import { LEGAL_TITLE } from '@/lib/modernCopy';
 import { useSite } from '@/components/Providers';
 import { VisitCounter } from '@/components/VisitCounter';
 import { LeaveOverlay, leaveLabel } from '@/components/LeaveOverlay';
@@ -43,7 +44,8 @@ export function MShell({ children }: { children: React.ReactNode }) {
     return () => { document.documentElement.removeAttribute('data-mx'); };
   }, []);
 
-  const label = (k: string) => (k === 'nav:secret' ? MODERN[lang].priv : tr(lang, k));
+  const label = (k: string) =>
+    k === 'nav:secret' ? MODERN[lang].priv : k === 'nav:legal' ? LEGAL_TITLE[lang] : tr(lang, k);
   const on = (href: string) => path === href || path === href + '/';
 
   return (
