@@ -417,3 +417,94 @@ html[data-era="now"]{ background:var(--mx-ink); }
   transition:opacity .6s ease;
 }
 .mx-head.is-stuck::before{ opacity:0; }
+
+/* =========================================================
+   既存ページ（ホーム以外）を「黒の画廊」で包んだときの体裁
+   ========================================================= */
+.mx-legacy{ padding:clamp(120px,16vh,190px) 0 40px; }
+.mx-legacy .panel{
+  background:transparent !important; border:0 !important; box-shadow:none !important;
+  padding:0 !important; margin:0 0 clamp(72px,10vh,120px) !important; color:var(--mx-paper) !important;
+  animation:none !important;
+}
+.mx-legacy .pixhead{
+  font-family:var(--mx-jp) !important; font-weight:400 !important;
+  font-size:clamp(26px,3.4vw,42px) !important; letter-spacing:.06em !important;
+  line-height:1.34 !important; color:var(--mx-paper) !important;
+  margin:0 0 26px !important; text-shadow:none !important;
+}
+.mx-legacy .sub{
+  font-family:var(--mx-sans) !important; font-size:11px !important; letter-spacing:.32em !important;
+  text-transform:uppercase; color:var(--mx-faint) !important; font-weight:400 !important;
+  margin:0 0 30px !important; line-height:1.9 !important;
+}
+.mx-legacy p{ font-size:15.5px !important; line-height:2.3 !important; letter-spacing:.055em !important;
+  color:var(--mx-dim) !important; margin:0 0 20px !important; font-feature-settings:"palt" 1; }
+.mx-legacy li{ font-size:15px !important; line-height:2.2 !important; letter-spacing:.05em !important; color:var(--mx-dim) !important; }
+.mx-legacy .hint{ font-size:12.5px !important; letter-spacing:.06em !important; color:var(--mx-faint) !important; line-height:1.9 !important; }
+.mx-legacy b, .mx-legacy strong{ color:var(--mx-paper) !important; font-weight:600 !important; }
+.mx-legacy a{ color:var(--mx-paper) !important; text-decoration:none !important; }
+.mx-legacy .panel > a, .mx-legacy p a{ border-bottom:1px solid var(--mx-line); }
+
+/* 釦 */
+.mx-legacy .btn{
+  display:inline-block; padding:15px 36px !important; border:1px solid var(--mx-line) !important; border-radius:1px !important;
+  background:transparent !important; color:var(--mx-paper) !important; box-shadow:none !important;
+  font-family:var(--mx-sans) !important; font-size:12px !important; letter-spacing:.24em !important;
+  transition:background .5s ease, color .5s ease, border-color .5s ease; text-shadow:none !important;
+}
+.mx-legacy .btn:hover{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; }
+.mx-legacy button.btn[data-on="1"], .mx-legacy .btn[data-on="1"]{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; }
+
+/* 入力 */
+.mx-legacy .field{
+  width:100%; background:transparent !important; border:0 !important; border-bottom:1px solid var(--mx-line) !important;
+  border-radius:0 !important; color:var(--mx-paper) !important; font-family:var(--mx-jp) !important;
+  font-size:15.5px !important; letter-spacing:.05em !important; padding:14px 2px !important; box-shadow:none !important;
+}
+.mx-legacy .field:focus{ border-bottom-color:var(--mx-gold) !important; outline:none !important; }
+.mx-legacy select.field{ color:var(--mx-paper) !important; }
+.mx-legacy select.field option{ background:var(--mx-ink2); color:var(--mx-paper); }
+.mx-legacy label{ font-family:var(--mx-sans) !important; font-size:10.5px !important; letter-spacing:.26em !important; color:var(--mx-faint) !important; }
+
+/* 表 */
+.mx-legacy table{ width:100%; border-collapse:collapse; }
+.mx-legacy th, .mx-legacy td{
+  border:0 !important; border-bottom:1px solid var(--mx-line) !important;
+  padding:18px 4px !important; text-align:left; vertical-align:top;
+  background:transparent !important; color:var(--mx-paper) !important;
+}
+.mx-legacy th{ font-family:var(--mx-sans) !important; font-size:10.5px !important; letter-spacing:.24em !important;
+  color:var(--mx-faint) !important; font-weight:400 !important; white-space:nowrap; }
+
+/* 一覧 */
+.mx-legacy ul.dots{ list-style:none; padding:0; margin:0; }
+.mx-legacy ul.dots li{ border-top:1px solid var(--mx-line); padding:20px 0; }
+
+/* 商品の並び */
+.mx-legacy #catalogue > div[style]{ border:0 !important; background:transparent !important; box-shadow:none !important;
+  border-bottom:1px solid var(--mx-line) !important; padding:26px 0 !important; margin:0 !important; }
+.mx-legacy .thumb, .mx-legacy #catalogue img{
+  background:var(--mx-vit) !important; border:0 !important; border-radius:2px !important; padding:6px !important;
+  box-shadow:0 0 0 1px rgba(244,236,228,.12), 0 18px 40px -22px rgba(0,0,0,.7) !important;
+}
+.mx-legacy hr, .mx-legacy .rainbow{ display:none !important; }
+
+/* 石の扉まわりは現代では出しません */
+.mx-legacy #door-wrap, .mx-legacy #stone-door{ display:none !important; }
+.mx-legacy #modern-lock{ display:block; text-align:center; margin:10px 0 34px; }
+.mx-legacy #modern-lock .ml-key{ font-size:34px; opacity:.5; }
+.mx-legacy #modern-lock .ml-t{ width:44px; height:1px; background:var(--mx-line); margin:22px auto 0; }
+
+/* 表紙の写真は静かに入れ替わります ---------------------------- */
+.mx-hero-bg{ opacity:0; transition:opacity 1.9s ease; }
+.mx-hero-bg.is-on{ opacity:1; }
+@media (prefers-reduced-motion:reduce){
+  .mx-hero-bg{ opacity:0 !important; transition:none !important; }
+  .mx-hero-bg.is-on{ opacity:1 !important; }
+}
+
+/* 表紙の写真は静かに入れ替わります */
+.mx-hero-bg{ opacity:0; transition:opacity 1.9s ease; }
+.mx-hero-bg.is-on{ opacity:1; }
+@media (prefers-reduced-motion:reduce){ .mx-hero-bg{ opacity:0 !important; transition:none !important; } .mx-hero-bg.is-on{ opacity:1 !important; } }
