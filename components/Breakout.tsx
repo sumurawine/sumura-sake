@@ -27,12 +27,32 @@ const L: Record<Lang, Record<string, string>> = {
 };
 
 export const GAME_WORD = 'monozukidesune';
+
+type Skin = {
+  bg: string; grid: string; ball: string; paddle: string;
+  bricks: string[]; steel: string; tough: string; shade: string; round: number;
+};
+const SKINS: Record<string, Skin> = {
+  // 1995：黒地に蛍光グリーン。ドットの粗さをそのままに
+  '1995': { bg: '#000000', grid: 'rgba(37,255,37,.07)', ball: '#25ff25', paddle: '#25ff25',
+    bricks: ['#25ff25', '#00c000', '#ffb000', '#c0c0c0', '#00a0a0', '#8b6914', '#25ff25'],
+    steel: '#5a5a5a', tough: '#ffffff', shade: 'rgba(0,0,0,.5)', round: 0 },
+  // 2000年代：ネオンとパステル。にぎやかに
+  '2005': { bg: '#1a0033', grid: 'rgba(255,255,255,.03)', ball: '#ffd23f', paddle: '#ffffff',
+    bricks: ['#ff4d94', '#ffd23f', '#55e0ff', '#8bff6b', '#c58bff', '#ff8a3d', '#7ad7ff'],
+    steel: '#9aa4b0', tough: '#ffffff', shade: 'rgba(255,255,255,.45)', round: 0 },
+  // 2010年代：白地にすっきり。角を丸く
+  '2010': { bg: '#f7f7f7', grid: 'rgba(0,0,0,.03)', ball: '#4d90fe', paddle: '#4d90fe',
+    bricks: ['#4d90fe', '#5bb974', '#f4b400', '#db4437', '#7e57c2', '#00acc1', '#8d6e63'],
+    steel: '#b7b7b7', tough: '#3c4043', shade: 'rgba(255,255,255,.5)', round: 3 },
+};
+const skinOf = (era: string) => SKINS[era] || SKINS['2005'];
 const MAX_LEVEL = 25;
 const W = 420, H = 320, COLS = 8, BW = 46, BH = 13, GAP = 4, TOP = 26, LEFT = 16;
-const COLORS = ['#ff4d94', '#ffd23f', '#55e0ff', '#8bff6b', '#c58bff', '#ff8a3d', '#7ad7ff'];
+
 
 /** レベルごとの盤面。進むほど段が増え、固い煉瓦と鉄の煉瓦が混ざります */
-function layout(level: number) {
+function layout(level: number, colors: string[]) {
   const rows = Math.min(3 + Math.floor((level - 1) / 3), 8);
   const cells: Array<{ x: number; y: number; hp: number; c: string; steel: boolean }> = [];
   for (let r = 0; r < rows; r++) {
@@ -41,14 +61,15 @@ function layout(level: number) {
       if (level >= 8 && (r + c) % 7 === 0 && level % 2 === 0) continue;
       const steel = level >= 12 && r === 0 && c % 4 === 1;
       const hp = steel ? 99 : level >= 5 && r < Math.floor(level / 7) ? 2 : 1;
-      cells.push({ x: LEFT + c * (BW + GAP), y: TOP + r * (BH + GAP), hp, c: COLORS[r % COLORS.length], steel });
+      cells.push({ x: LEFT + c * (BW + GAP), y: TOP + r * (BH + GAP), hp, c: colors[r % colors.length], steel });
     }
   }
   return cells;
 }
 const speedOf = (level: number) => 2.7 + Math.min(level - 1, 24) * 0.12;
 
-export function Breakout({ lang }: { lang: Lang }) {
+export function Breakout({ lang, era = '2005' }: { lang: Lang; era?: string }) {
+  const sk = skinOf(era);
   const ref = useRef<HTMLCanvasElement>(null);
   const [phase, setPhase] = useState<'idle' | 'play' | 'clear' | 'over' | 'all'>('idle');
   const [level, setLevel] = useState(1);
@@ -73,7 +94,7 @@ export function Breakout({ lang }: { lang: Lang }) {
     const sp = speedOf(level);
     let bx = W / 2, by = H - 46, vx = sp * 0.62, vy = -sp, r = 5;
     let sc = score, lf = life, done = false, raf = 0;
-    const bricks = layout(level);
+    const bricks = layout(level, sk.bricks);
 
     let left = false, right = false;
     const kd = (e: KeyboardEvent) => {
@@ -115,17 +136,20 @@ export function Breakout({ lang }: { lang: Lang }) {
           break;
         }
       }
-      g.fillStyle = '#1a0033'; g.fillRect(0, 0, W, H);
-      for (let i = 0; i < W; i += 20) { g.fillStyle = 'rgba(255,255,255,.03)'; g.fillRect(i, 0, 1, H); }
+      g.fillStyle = sk.bg; g.fillRect(0, 0, W, H);
+      for (let i = 0; i < W; i += 20) { g.fillStyle = sk.grid; g.fillRect(i, 0, 1, H); }
       for (const b of bricks) {
         if (b.hp <= 0) continue;
-        g.fillStyle = b.steel ? '#9aa4b0' : b.hp > 1 ? '#ffffff' : b.c;
-        g.fillRect(b.x, b.y, BW, BH);
-        g.fillStyle = 'rgba(255,255,255,.45)'; g.fillRect(b.x, b.y, BW, 3);
+        g.fillStyle = b.steel ? sk.steel : b.hp > 1 ? sk.tough : b.c;
+        if (sk.round) { g.beginPath(); (g as any).roundRect(b.x, b.y, BW, BH, sk.round); g.fill(); }
+        else g.fillRect(b.x, b.y, BW, BH);
+        g.fillStyle = sk.shade; g.fillRect(b.x, b.y, BW, sk.round ? 2 : 3);
         if (b.steel) { g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(b.x + 4, b.y + 5, BW - 8, 3); }
       }
-      g.fillStyle = '#fff'; g.fillRect(px, H - 18 - ph, pw, ph);
-      g.fillStyle = '#ffd23f'; g.beginPath(); g.arc(bx, by, r, 0, Math.PI * 2); g.fill();
+      g.fillStyle = sk.paddle;
+      if (sk.round) { g.beginPath(); (g as any).roundRect(px, H - 18 - ph, pw, ph, ph / 2); g.fill(); }
+      else g.fillRect(px, H - 18 - ph, pw, ph);
+      g.fillStyle = sk.ball; g.beginPath(); g.arc(bx, by, r, 0, Math.PI * 2); g.fill();
 
       if (!bricks.some((b) => b.hp > 0 && !b.steel)) {
         done = true;
@@ -146,10 +170,10 @@ export function Breakout({ lang }: { lang: Lang }) {
       cv.removeEventListener('touchstart', tv);
       cv.removeEventListener('touchmove', tv);
     };
-  }, [phase, level]);
+  }, [phase, level, era]);
 
   return (
-    <div className="panel bk-wrap" style={{ textAlign: 'center' }}>
+    <div className={`panel bk-wrap bk-e${era}`} style={{ textAlign: 'center' }}>
       <div className="pixhead">{t.title}</div>
       <div className="bk-stage">
         <canvas ref={ref} width={W} height={H} className="bk-canvas" />
