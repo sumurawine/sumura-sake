@@ -294,7 +294,6 @@ html[data-era="2010"] #modern-lock,html[data-era="now"] #modern-lock{display:blo
 #modern-entrance .me-en{}
 #modern-entrance .me-sub{}
 #modern-entrance .me-btn{display:inline-block;text-decoration:none}
-html[data-era="now"] body{display:flex}
 html[data-era="now"] #modern-entrance .me-jp{font-size:clamp(40px,7vw,68px);letter-spacing:-.04em;color:#1d1d1f}
 html[data-era="now"] #modern-entrance .me-en{margin-top:14px;font-size:13px;letter-spacing:.34em;color:#86868b;text-transform:uppercase}
 html[data-era="now"] #modern-entrance .me-sub{margin-top:26px;font-size:19px;color:#6e6e73;letter-spacing:-.01em;line-height:1.5}
