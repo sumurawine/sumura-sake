@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { asset } from '@/lib/paths';
 import { useSite } from '@/components/Providers';
@@ -50,6 +50,8 @@ function creak() {
   o.start(); o.stop(c.currentTime + 1);
 }
 
+const DOOR_SHOTS = ['/images/shop-sign.webp', '/images/showa30.webp'];
+
 export function DoorPage() {
   const { lang, eraView } = useSite();
   const router = useRouter();
@@ -58,6 +60,12 @@ export function DoorPage() {
   const [knocking, setKnocking] = useState(false);
   const [opening, setOpening] = useState(false);
   const [flash, setFlash] = useState(false);
+  const [doorShot, setDoorShot] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const t = setInterval(() => setDoorShot((n) => (n + 1) % DOOR_SHOTS.length), 4200);
+    return () => clearInterval(t);
+  }, []);
   const [txt, setTxt] = useState('');
   const [txtKey, setTxtKey] = useState(0);
   const busy = useRef(false);
@@ -118,6 +126,16 @@ export function DoorPage() {
       <div id="pixbadge" style={{ marginTop: 8 }}>
         <span className="badge blink" style={{ color: '#ff0', borderColor: '#ff0' }}>ENTER</span>
       </div>
+
+      {modern ? (
+        <div className="mx-door-bg" aria-hidden>
+          {DOOR_SHOTS.map((src, i) => (
+            <div key={src} className={`mx-door-shot${i === doorShot ? ' is-on' : ''}`}
+                 style={{ backgroundImage: `url(${asset(src)})` }} />
+          ))}
+          <div className="mx-door-veil" />
+        </div>
+      ) : null}
 
       <div id="modern-entrance">
         <div className="me-jp">すむら酒店</div>
