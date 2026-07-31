@@ -35,6 +35,9 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
 
   const marquee = tr(lang, 'tk-marquee');
 
+  /** フッターのリンク名。日本語のときは従来どおり英字のままにします。 */
+  const foot = (key: string, en: string) => (lang === 'jp' ? en : tr(lang, 'nav:' + key));
+
   return (
     <>
       <Clock />
@@ -83,7 +86,7 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
 
         <div style={{ textAlign: 'center', fontSize: 14, margin: '14px 0' }} className="x-muted">
           <div>
-            [ <A href="/home">HOME</A> ｜ <A href="/store">STORE</A> ｜ <A href="/blog">BLOG</A> ｜ <A href="/contact">CONTACT</A> ]
+            [ <A href="/home">{foot('home', 'HOME')}</A> ｜ <A href="/store">{foot('store', 'STORE')}</A> ｜ <A href="/blog">{foot('blog', 'BLOG')}</A> ｜ <A href="/contact">{foot('contact', 'CONTACT')}</A> ]
           </div>
           <div style={{ margin: '10px 0' }}>
             <a href="https://www.instagram.com/sumurasake" target="_blank" rel="noopener" style={{ textDecoration: 'none' }}>
