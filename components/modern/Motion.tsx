@@ -95,18 +95,24 @@ export function useStuck(px = 40) {
   return stuck;
 }
 
-/** 画面全体のスクロールに粘りを持たせます（PCのホイールのみ） */
+/** 画面全体のスクロールに粘りを持たせ、節目で気持ちよく止めます */
 export function useSmoothScroll(ease = 0.085) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const mm = window.matchMedia;
-    if (mm && (mm('(prefers-reduced-motion: reduce)').matches || mm('(max-width: 900px)').matches)) return;
-    if (!window.matchMedia('(pointer: fine)').matches) return;
+    if (mm && mm('(prefers-reduced-motion: reduce)').matches) return;
+
+    const SEL = '.mx-hero, .mx-sec, .mx-sec-tight, .mx-bleed, .mx-legacy, .mx-foot';
+    const maxY = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const tops = () => Array.from(document.querySelectorAll(SEL))
+      .map((el) => Math.round(window.scrollY + el.getBoundingClientRect().top))
+      .filter((y) => y >= 0 && y <= maxY())
+      .sort((a, b) => a - b);
 
     let target = window.scrollY;
     let current = target;
     let raf = 0;
-    const maxY = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    let idle = 0;
 
     const tick = () => {
       current += (target - current) * ease;
@@ -119,24 +125,45 @@ export function useSmoothScroll(ease = 0.085) {
       window.scrollTo(0, current);
       raf = requestAnimationFrame(tick);
     };
+    const run = () => { if (!raf) { current = window.scrollY; raf = requestAnimationFrame(tick); } };
 
+    /** 手を止めたら、近くの節目にそっと寄せます */
+    const settle = () => {
+      const y = target;
+      const list = tops();
+      if (!list.length) return;
+      let best = list[0];
+      for (const t of list) if (Math.abs(t - y) < Math.abs(best - y)) best = t;
+      const reach = window.innerHeight * 0.28;
+      if (Math.abs(best - y) < reach) { target = Math.max(0, Math.min(best, maxY())); run(); }
+    };
+    const queueSettle = () => { clearTimeout(idle); idle = window.setTimeout(settle, 170); };
+
+    const fine = !mm || mm('(pointer: fine)').matches;
     const onWheel = (e: WheelEvent) => {
       if (e.ctrlKey || e.metaKey) return;
       const el = e.target as HTMLElement | null;
-      if (el && el.closest('.mx-rail, select, textarea')) return;
+      if (el && el.closest('.mx-rail, select, textarea, .modal-ov')) return;
       e.preventDefault();
       target = Math.max(0, Math.min(target + e.deltaY, maxY()));
-      if (!raf) { current = window.scrollY; raf = requestAnimationFrame(tick); }
+      run();
+      queueSettle();
     };
+
+    // 指の操作：はじく勢いは端末に任せ、止まったところで節目に寄せます
+    const onTouchEnd = () => { target = window.scrollY; clearTimeout(idle); idle = window.setTimeout(() => { target = window.scrollY; settle(); }, 420); };
     const sync = () => { if (!raf) { target = window.scrollY; current = target; } };
 
-    window.addEventListener('wheel', onWheel, { passive: false });
+    if (fine) window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
     window.addEventListener('scroll', sync, { passive: true });
     window.addEventListener('resize', sync);
     return () => {
       window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('touchend', onTouchEnd);
       window.removeEventListener('scroll', sync);
       window.removeEventListener('resize', sync);
+      clearTimeout(idle);
       if (raf) cancelAnimationFrame(raf);
     };
   }, [ease]);
