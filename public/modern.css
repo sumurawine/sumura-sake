@@ -600,3 +600,8 @@ html[data-mx="1"] #tw-leave-ov .tw-door{ background:var(--mx-ink2) !important; }
 /* 念のため：mx 表示中に白系の背景が残っていたら暗く落とします */
 html[data-mx="1"] .mx-legacy [style*="background:#fff"],
 html[data-mx="1"] .mx-legacy [style*="background:#f5f5f7"]{ background:transparent !important; }
+
+/* 選ばれていない釦の下地 */
+html[data-era="now"][data-mx="1"] .btn[data-on="0"]{ background:transparent !important; color:var(--mx-paper) !important; border:1px solid var(--mx-line) !important; opacity:.62 !important; }
+html[data-era="now"][data-mx="1"] .btn[data-on="1"]{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; opacity:1 !important; }
+html[data-era="now"][data-mx="1"] .btn{ background:transparent !important; }
