@@ -26,10 +26,14 @@ jobs:
 
       - run: npm install --no-audit --no-fund
 
-      - name: 背景ビジュアルを生成
+      - name: 背景ビジュアルを生成（スクリプトがあるときだけ）
         run: |
-          pip install --quiet --disable-pip-version-check pillow numpy
-          python3 scripts/make-visuals.py
+          if [ -f scripts/make-visuals.py ]; then
+            pip install --quiet --disable-pip-version-check --break-system-packages pillow numpy || pip install --quiet pillow numpy
+            python3 scripts/make-visuals.py
+          else
+            echo "スクリプトなし。生成をとばします。"
+          fi
 
       - name: ビルド
         env:
@@ -46,6 +50,7 @@ jobs:
           git clone --depth 1 -b next https://github.com/${{ github.repository }}.git /tmp/nextsrc || exit 0
           cd /tmp/nextsrc
           npm install --no-audit --no-fund
+          pip install --quiet --break-system-packages pillow numpy || pip install --quiet pillow numpy || true
           python3 scripts/make-visuals.py || true
           BASE_PATH=/sumura-sake/preview ASSET_BASE=/sumura-sake/preview npm run build
           mkdir -p "$GITHUB_WORKSPACE/out/preview"
