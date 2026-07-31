@@ -8,7 +8,7 @@ import { useSite } from '@/components/Providers';
 import { VisitCounter } from '@/components/VisitCounter';
 import { LeaveOverlay, leaveLabel } from '@/components/LeaveOverlay';
 import { Atmosphere, useStuck } from './Motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const NAV: Array<[string, string]> = [
   ['/store', 'nav:store'],
@@ -32,6 +32,12 @@ export function MShell({ children }: { children: React.ReactNode }) {
   const path = usePathname() || '';
   const stuck = useStuck(40);
   const [leaving, setLeaving] = useState(false);
+
+  // 旧「現在」用のCSSを打ち消すための目印
+  useEffect(() => {
+    document.documentElement.setAttribute('data-mx', '1');
+    return () => { document.documentElement.removeAttribute('data-mx'); };
+  }, []);
 
   const label = (k: string) => (k === 'nav:secret' ? MODERN[lang].priv : tr(lang, k));
   const on = (href: string) => path === href || path === href + '/';
