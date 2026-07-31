@@ -112,11 +112,42 @@
     });
   }
 
+
+  /* ---------- 2010 / 現在 では飾り文字を落として上品にする ---------- */
+  var EDGE = /^[\s■◆▒▼▲★☆▶◀▶◁［］\[\]｜|・･]+|[\s■◆▒▼▲★☆▶◀▶◁［］\[\]｜|・･]+$/g;
+  function clean(el, opts) {
+    if (!el || el.getAttribute('data-tw-done') === '1') return;
+    if (el.querySelector && el.querySelector('img,svg,canvas,input,select,button')) return;
+    var s = el.innerHTML;
+    if (opts && opts.mid) s = s.replace(/[★☆]/g, '·');
+    var t = s.replace(EDGE, '').replace(/\s{2,}/g, ' ').trim();
+    t = t.replace(/^(·\s*)+/, '').replace(/(\s*·)+$/, '');
+    if (t && t !== s) { el.innerHTML = t; }
+    el.setAttribute('data-tw-done', '1');
+  }
+  function tidy() {
+    var era = get();
+    if (era !== '2010' && era !== 'now') return;
+    [].forEach.call(document.querySelectorAll('.pixhead'), function (e) { clean(e); });
+    [].forEach.call(document.querySelectorAll('.sub'), function (e) { clean(e, { mid: 1 }); });
+    [].forEach.call(document.querySelectorAll('.btn'), function (e) {
+      if (e.id === 'stock-btn') return;
+      clean(e);
+    });
+    [].forEach.call(document.querySelectorAll('#catalogue > div[style]'), function (e) { clean(e); });
+    [].forEach.call(document.querySelectorAll('#pr-list .pixhead'), function (e) { clean(e); });
+  }
+  window.__twTidy = tidy;
+
   function boot() {
     panel();
     var era = get();
     if (era === '2000') decorate2000();
-    if (era === '2010' || era === 'now') textLogo(era);
+    if (era === '2010' || era === 'now') { textLogo(era); tidy(); setTimeout(tidy, 400); setTimeout(tidy, 1500); }
+    if (window.sumuraOnLang) window.sumuraOnLang(function () {
+      [].forEach.call(document.querySelectorAll('[data-tw-done]'), function (e) { e.removeAttribute('data-tw-done'); });
+      setTimeout(tidy, 60);
+    });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
