@@ -24,6 +24,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="stylesheet" href={`${BP}/base.css`} />
         <link rel="stylesheet" href={`${BP}/eras.css`} />
+        <link rel="stylesheet" href={`${BP}/modern.css`} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Shippori+Mincho:wght@400;600&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" />
         <script dangerouslySetInnerHTML={{ __html: eraInit }} />
       </head>
       <body>
