@@ -413,3 +413,13 @@ body:has(#tw-leave-ov) #tw-ticker{display:none !important}
 html[data-era="now"] #tw-leave-ov .tw-bye-a{color:#1d1d1f !important}
 html[data-era="2010"] #tw-leave-ov .tw-bye-a{color:#444 !important}
 #tw-leave-ov .tw-bye-a:hover{text-decoration:none !important}
+
+/* ---------- 昔日ページ ---------- */
+html[data-era="mukashi"] #timewarp{background:#fbf8f1 !important;border:1px solid #c9bda6 !important;
+ border-radius:3px !important;box-shadow:0 2px 12px rgba(60,45,25,.16) !important;color:#8b7c64 !important;
+ font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif !important;padding:7px !important}
+html[data-era="mukashi"] #timewarp .tw-t{color:#8b7c64 !important;letter-spacing:.16em !important}
+html[data-era="mukashi"] #timewarp button{border:1px solid #d5cab4 !important;background:#f4efe4 !important;
+ color:#5a4a33 !important;border-radius:2px !important;letter-spacing:.06em}
+html[data-era="mukashi"] #timewarp button:hover{background:#ece4d4 !important}
+html[data-era="mukashi"] #timewarp button.on{background:#5a4a33 !important;color:#fbf8f1 !important;border-color:#5a4a33 !important}
