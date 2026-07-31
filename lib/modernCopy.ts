@@ -197,3 +197,12 @@ export const BLOG_TITLE: Record<Lang, string> = {
   zh: 'すむら酒店 博客',
   ko: '스무라 주점 블로그',
 };
+
+/** 2010年代・2020年代では略さず正式名称で示します */
+export const LEGAL_TITLE: Record<Lang, string> = {
+  jp: '特定商取引法に基づく表記',
+  en: 'Legal notice (Act on Specified Commercial Transactions)',
+  fr: 'Mentions légales (loi sur les transactions commerciales spécifiées)',
+  zh: '基于特定商业交易法的表示',
+  ko: '특정상거래법에 근거한 표기',
+};
