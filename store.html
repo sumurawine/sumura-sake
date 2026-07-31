@@ -148,6 +148,9 @@ function prodOf(it){if(!it.prod)return '';var l=L();if(l==='jp')return it.prod;v
 function apOf(it){var k=it.ap||'other';var o=I18N&&I18N.aps&&I18N.aps[k];return (o&&(o[L()]||o.jp))||k;}
 function catOf(c){var o=CATS[c]||CATS.other;return o[L()]||o.jp;}
 function isOut(it){return String(it.stock).trim()==='0';}
+function plain(){var e=document.documentElement.getAttribute('data-era');return e==='2010'||e==='now';}
+function brk(s){return plain()?s:'['+s+']';}
+function brk2(s){return plain()?s:'［ '+s+' ］';}
 
 function pool(){
   if(!DATA)return [];
@@ -194,7 +197,7 @@ function render(){
   if(MODE==='area'&&CAT==='all')keys=ORDER.filter(function(k){return t.m[k];});
   else keys.sort(function(a,b){return t.m[b]-t.m[a];});
   keys.forEach(function(k){
-    html+='<div style="color:#ffb000;font-size:18px;margin:18px 0 6px;border-bottom:1px dashed #6b4b18;padding-bottom:4px">［ '+esc(groupLabel(k))+' ］ <span class="hint" style="font-size:13px">'+t.m[k]+(UI.items[L()]||UI.items.jp)+'</span></div>';
+    html+='<div style="color:#ffb000;font-size:18px;margin:18px 0 6px;border-bottom:1px dashed #6b4b18;padding-bottom:4px">'+brk2(esc(groupLabel(k)))+' <span class="hint" style="font-size:13px">'+t.m[k]+(UI.items[L()]||UI.items.jp)+'</span></div>';
     list.forEach(function(it){if(groupKey(it)===k)html+=card(it);});
   });
   box.innerHTML=html;
@@ -205,10 +208,10 @@ function buildCatNav(){
   if(MODE!=='area'){nv.innerHTML='';return;}
   var base=DATA.items.filter(function(it){return !(INSTOCK&&isOut(it));});
   var t=tally(base,function(it){return it.cat;});
-  var h='<a href="#" data-cat="all" style="margin:0 6px'+(CAT==='all'?';color:#ffd479;font-weight:bold':'')+'">['+esc(u('allCat'))+' '+base.length+']</a>';
+  var h='<a href="#" data-cat="all" style="margin:0 6px'+(CAT==='all'?';color:#ffd479;font-weight:bold':'')+'">'+brk(esc(u('allCat'))+' '+base.length)+'</a>';
   ORDER.forEach(function(c){
     if(!t.m[c])return;
-    h+='<a href="#" data-cat="'+c+'" style="margin:0 6px'+(CAT===c?';color:#ffd479;font-weight:bold':'')+'">['+esc(catOf(c))+' '+t.m[c]+']</a>';
+    h+='<a href="#" data-cat="'+c+'" style="margin:0 6px'+(CAT===c?';color:#ffd479;font-weight:bold':'')+'">'+brk(esc(catOf(c))+' '+t.m[c])+'</a>';
   });
   nv.innerHTML=h;
   [].forEach.call(nv.querySelectorAll('a'),function(a){
