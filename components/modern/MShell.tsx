@@ -9,7 +9,7 @@ import { useSite } from '@/components/Providers';
 import { VisitCounter } from '@/components/VisitCounter';
 import { LeaveOverlay, leaveLabel } from '@/components/LeaveOverlay';
 import { asset } from '@/lib/paths';
-import { Atmosphere, useStuck, useSmoothScroll } from './Motion';
+import { Atmosphere, useStuck } from './Motion';
 import { useEffect, useState } from 'react';
 
 const NAV: Array<[string, string]> = [
@@ -33,8 +33,6 @@ export function MShell({ children }: { children: React.ReactNode }) {
   const { lang } = useSite();
   const path = usePathname() || '';
   const stuck = useStuck(40);
-  const isHome = path === '/home' || path === '/home/' || path === '/';
-  useSmoothScroll(isHome);
   const [leaving, setLeaving] = useState(false);
   const [menu, setMenu] = useState(false);
 
