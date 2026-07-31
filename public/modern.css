@@ -396,3 +396,24 @@ html[data-era="now"]{ background:var(--mx-ink); }
 .mx-wide .mx-photo{ aspect-ratio:16/9; }
 .mx-tall .mx-photo{ aspect-ratio:3/4; }
 @media (max-width:860px){ .mx-duo{ grid-template-columns:1fr; } }
+
+/* 表紙に実写を敷いたときの調整 ------------------------------ */
+.mx-hero-bg{ background-position:72% 46%; inset:-3%; }
+@keyframes mx-breathe{ from{transform:scale(1.02) translate3d(0,0,0)} to{transform:scale(1.07) translate3d(-.8%,-1%,0)} }
+.mx-hero-shade{
+  background:
+    linear-gradient(100deg, rgba(30,20,17,.90) 0%, rgba(30,20,17,.78) 26%, rgba(30,20,17,.34) 52%, rgba(30,20,17,.16) 72%, rgba(30,20,17,.30) 100%),
+    linear-gradient(to bottom, rgba(30,20,17,.62) 0%, rgba(30,20,17,.10) 30%, rgba(30,20,17,.52) 82%, var(--mx-ink) 100%);
+}
+.mx-hero .mx-in{ max-width:1180px; }
+.mx-hero-in{ z-index:2; }
+.mx-hero .mx-h1{ text-shadow:0 2px 60px rgba(20,12,10,.85); }
+.mx-hero-sub, .mx-hero .mx-kicker{ text-shadow:0 1px 24px rgba(20,12,10,.9); }
+
+/* 天の帯は、下地が明るくても読めるように薄い覆いを敷きます */
+.mx-head::before{
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:linear-gradient(to bottom, rgba(30,20,17,.72), rgba(30,20,17,0));
+  transition:opacity .6s ease;
+}
+.mx-head.is-stuck::before{ opacity:0; }
