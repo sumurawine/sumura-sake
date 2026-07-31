@@ -14,6 +14,7 @@ const ROOMS: Record<string, [string, string]> = {
   a86a7c940fe3e2310fc84c96f941e24a93a9c1f67382dc1b71ce069c74279cf1: ['/room-cellar', 'cellar'],
   '21025feae1cad394b34b1d49ead42fbb08fa7a0c75876c988ee7b8c7306b8c9a': ['/room-primeur', 'primeur'],
   b4a1a978cd0c687ad9761fe81d8051edc5eff0b1be680926f9dd91158e06861b: ['/room-note', 'note'],
+  '53772198d0676245365817688d71eb1704040daaf33dfdaf2a528ba56494cf2a': ['/room-game', 'game'],
 };
 
 const M: Record<Lang, Record<string, string>> = {
