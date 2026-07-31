@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Providers } from '@/components/Providers';
 import { LangBar } from '@/components/LangBar';
+import { Tidy } from '@/components/Tidy';
 import { TimeTravel } from '@/components/TimeTravel';
 
 const BP = process.env.NEXT_PUBLIC_BASE_PATH || '';
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <LangBar />
           <TimeTravel />
+          <Tidy />
         </Providers>
       </body>
     </html>
