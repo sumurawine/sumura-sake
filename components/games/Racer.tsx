@@ -138,12 +138,15 @@ export function Racer({ lang, era = '2005' }: { lang: Lang; era?: string }) {
       // 描く
       g.fillStyle = era === '2010' ? '#e8f0e8' : sk.bg;
       g.fillRect(0, 0, W, H);
-      // 路肩
-      g.fillStyle = era === '1995' ? '#003c00' : era === '2010' ? '#dbe7db' : '#26124d';
+      // 路肩（道とはっきり分かれるように、暗く沈ませます）
+      g.fillStyle = era === '1995' ? '#002800' : era === '2010' ? '#c8ddc8' : '#150029';
       g.fillRect(0, 0, ROAD_L, H); g.fillRect(ROAD_R, 0, W - ROAD_R, H);
       // 道
-      g.fillStyle = era === '2010' ? '#5f6368' : era === '1995' ? '#101010' : '#241245';
+      g.fillStyle = era === '2010' ? '#6b7075' : era === '1995' ? '#242424' : '#3d2a63';
       g.fillRect(ROAD_L, 0, ROAD_R - ROAD_L, H);
+      // 道のふちに落ちる影。立体感が出ます
+      g.fillStyle = 'rgba(0,0,0,.28)';
+      g.fillRect(ROAD_L, 0, 5, H); g.fillRect(ROAD_R - 5, 0, 5, H);
       // 白線（ドット風の点線）
       g.fillStyle = sk.wall;
       for (let l = 1; l < LANES; l++) {
