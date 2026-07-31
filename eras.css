@@ -211,3 +211,14 @@ html[data-era="now"] #timewarp .tw-t{color:#86868b !important;letter-spacing:0 !
 html[data-era="now"] #timewarp button{border:0 !important;border-radius:980px !important;background:#f5f5f7 !important;color:#1d1d1f !important;padding:6px 4px !important}
 html[data-era="now"] #timewarp button:hover{background:#ebebed !important}
 html[data-era="now"] #timewarp button.on{background:#0071e3 !important;color:#fff !important}
+
+/* ---------- 絞り込みボタンの選択状態 ---------- */
+.btn[data-on="0"]{opacity:.55}
+.btn[data-on="1"]{opacity:1;box-shadow:0 0 0 2px #c8a84b}
+html[data-era="2000"] .btn[data-on="1"]{box-shadow:0 0 0 3px #ff33aa !important}
+html[data-era="2010"] .btn[data-on="1"]{background:#4d90fe !important;color:#fff !important;border-color:#3079ed !important;box-shadow:none !important}
+html[data-era="2010"] .btn[data-on="0"]{opacity:1;background:linear-gradient(#f9f9f9,#e8e8e8) !important;color:#777 !important;box-shadow:none !important}
+html[data-era="now"] .btn[data-on="1"]{background:#0071e3 !important;color:#fff !important;box-shadow:none !important;opacity:1}
+html[data-era="now"] .btn[data-on="0"]{background:#f5f5f7 !important;color:#1d1d1f !important;box-shadow:none !important;opacity:1}
+html[data-era="now"] .btn{background:#f5f5f7 !important;color:#1d1d1f !important}
+html[data-era="now"] a .btn,html[data-era="now"] a > span.btn{background:#0071e3 !important;color:#fff !important}
