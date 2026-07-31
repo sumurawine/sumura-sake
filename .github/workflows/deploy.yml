@@ -26,6 +26,11 @@ jobs:
 
       - run: npm install --no-audit --no-fund
 
+      - name: 背景ビジュアルを生成
+        run: |
+          pip install --quiet --disable-pip-version-check pillow numpy
+          python3 scripts/make-visuals.py
+
       - name: ビルド
         env:
           BASE_PATH: /sumura-sake
@@ -34,6 +39,17 @@ jobs:
 
       - name: Jekyll を無効化（_next/ を配信するため）
         run: touch out/.nojekyll
+
+      - name: 検討中の版を /preview/ にも出す（next ブランチ）
+        continue-on-error: true
+        run: |
+          git clone --depth 1 -b next https://github.com/${{ github.repository }}.git /tmp/nextsrc || exit 0
+          cd /tmp/nextsrc
+          npm install --no-audit --no-fund
+          python3 scripts/make-visuals.py || true
+          BASE_PATH=/sumura-sake/preview ASSET_BASE=/sumura-sake/preview npm run build
+          mkdir -p "$GITHUB_WORKSPACE/out/preview"
+          cp -r out/. "$GITHUB_WORKSPACE/out/preview/"
 
       - uses: actions/upload-pages-artifact@v3
         with:
