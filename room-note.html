@@ -34,7 +34,7 @@ label{display:block;margin-top:10px;color:#ffd9a0}
 ul.dots{list-style:none;padding-left:0}ul.dots li{margin:6px 0}ul.dots li:before{content:"► ";color:#ffb000}
 .clock{position:fixed;right:5px;top:5px;background:#000;color:#0f0;border:2px inset #444;padding:2px 7px;font-size:14px;z-index:9;font-family:"DotGothic16",monospace}
 .hint{color:#9a8f7c;font-size:13px}
-</style><script src="api.js?v=2"></script>
+</style><script src="api.js?v=3"></script>
 <script>(function(){try{if(sessionStorage.getItem("sumura-room-note")!=="1"){location.replace("secret.html?locked=1");}}catch(e){}})();</script>
 </head><body><div class="clock" id="clk">--:--:--</div><script>function T(){var d=new Date();document.getElementById("clk").textContent=("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)+":"+("0"+d.getSeconds()).slice(-2)}setInterval(T,1000);T();</script><div class="wrap">
 <div style="text-align:center;padding-top:8px">
