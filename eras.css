@@ -37,13 +37,13 @@ html[data-era="2000"] .wrap{max-width:780px !important;background:#fffdf2 !impor
  padding:10px 14px 34px !important;margin:14px auto !important}
 html[data-era="2000"] .panel{
  border:4px ridge #ff33aa !important;border-radius:0 !important;
- background:#ffffff url(gif/line.gif) repeat-x top left !important;
+ background:#ffffff url(gif/line.gif?v=2) repeat-x top left !important;
  box-shadow:5px 5px 0 #55e0ff !important;color:#101040 !important;
  padding:24px 16px 16px !important;margin:18px 0 !important}
 html[data-era="2000"] .pixhead{
  color:#ff0066 !important;text-shadow:1px 1px 0 #ffee00,2px 2px 0 #00ccff !important;
  letter-spacing:0 !important;font-size:22px !important;
- background:url(gif/star.gif) no-repeat left center !important;padding-left:24px !important;
+ background:url(gif/star.gif?v=2) no-repeat left center !important;padding-left:24px !important;
  animation:tw2000hue 7s linear infinite}
 @keyframes tw2000hue{to{filter:hue-rotate(360deg)}}
 html[data-era="2000"] .sub{color:#0066ff !important;font-weight:bold !important}
@@ -60,7 +60,7 @@ html[data-era="2000"] .nav a{border:3px outset #77d7ff !important;background:lin
 html[data-era="2000"] .nav a:hover{background:linear-gradient(#fffbc0,#ffe14d) !important;color:#cc0000 !important;border-style:inset !important}
 html[data-era="2000"] .nav a.on{background:linear-gradient(#ffd9f2,#ff8fd6) !important;color:#a3006b !important;border-style:inset !important}
 html[data-era="2000"] .marquee{background:#000080 !important;color:#ffff33 !important;border:4px ridge #ff66cc !important;font-weight:bold !important}
-html[data-era="2000"] hr.rainbow{height:10px !important;background:url(gif/line.gif) repeat-x !important;animation:none !important}
+html[data-era="2000"] hr.rainbow{height:10px !important;background:url(gif/line.gif?v=2) repeat-x !important;animation:none !important}
 html[data-era="2000"] table,html[data-era="2000"] table.retro{border:4px ridge #55d0ff !important;background:#fff !important}
 html[data-era="2000"] table th{background:linear-gradient(#ffd6ef,#ff9ad9) !important;color:#66005c !important;border:2px groove #ff9ad9 !important}
 html[data-era="2000"] table td{border:1px solid #cfeaff !important;color:#101040 !important}
