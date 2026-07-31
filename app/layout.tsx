@@ -6,7 +6,7 @@ import { TimeTravel } from '@/components/TimeTravel';
 
 const BP = process.env.NEXT_PUBLIC_BASE_PATH || '';
 /** CSSを変えたら数字を上げてください（ブラウザのキャッシュ対策） */
-const CSSV = '4';
+const CSSV = process.env.NEXT_PUBLIC_CSSV || String(Date.now());
 
 export const metadata: Metadata = {
   title: 'すむら酒店 ｜ Liquor Shop Sumura',
