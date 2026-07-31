@@ -789,3 +789,25 @@ html[data-mx="1"] #tw-leave-ov .tw-bye-a{
 }
 html[data-mx="1"] #tw-leave-ov .tw-bye-a:hover{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; }
 html[data-mx="1"] #tw-leave-ov .tw-door{ background:var(--mx-ink2) !important; }
+
+/* 携帯：上の道具どうしがぶつからないように --------------------- */
+@media (max-width:860px){
+  /* 時間旅行は左下へ */
+  html[data-mx="1"] #timewarp, html[data-era="now"] #timewarp{
+    top:auto !important; bottom:14px !important; left:14px !important; z-index:45 !important;
+  }
+  /* 言語は右下へ（開閉ボタンとぶつからない位置） */
+  html[data-era="now"] #lang-bar.lb-quiet{
+    top:auto !important; bottom:14px !important; right:14px !important; left:auto !important; z-index:45 !important;
+  }
+  html[data-era="now"] #lang-bar.lb-quiet button{ padding:8px 10px !important; font-size:10px !important; letter-spacing:.16em !important; }
+  /* 天の帯は店名と開閉ボタンだけ */
+  .mx-head{ padding:14px 18px !important; }
+  .mx-brand{ font-size:17px !important; }
+  .mx-brand small{ font-size:8.5px !important; letter-spacing:.28em !important; }
+  .mx-nav.is-open{ padding-bottom:90px; }
+}
+@media (max-width:520px){
+  html[data-era="now"] #lang-bar.lb-quiet button{ padding:7px 8px !important; }
+  html[data-mx="1"] #timewarp.tw-closed{ width:36px !important; }
+}
