@@ -244,3 +244,63 @@ textarea.mx-field{ min-height:150px; resize:vertical; line-height:2; }
   .mx-hero-bg{ animation:none !important; }
   .mx-grain{ animation:none !important; }
 }
+
+/* =========================================================
+   旧「現在」用の指定（eras.css の !important）を打ち消します。
+   mx レイアウトを描いているときだけ効きます。
+   ========================================================= */
+html[data-era="now"][data-mx="1"] body{
+  background:var(--mx-ink) !important; color:var(--mx-paper) !important;
+  font-family:var(--mx-jp) !important; font-size:16px !important;
+  line-height:1.9 !important; letter-spacing:.04em !important;
+}
+html[data-era="now"][data-mx="1"] a{ color:inherit !important; text-decoration:none !important; }
+html[data-era="now"][data-mx="1"] p{ font-size:inherit !important; line-height:inherit !important; color:inherit !important; margin:0 0 20px !important; }
+html[data-era="now"][data-mx="1"] li{ line-height:inherit !important; }
+html[data-era="now"][data-mx="1"] .mx-p{ font-size:15.5px !important; line-height:2.3 !important; color:var(--mx-dim) !important; }
+html[data-era="now"][data-mx="1"] .mx-lead{ font-size:17px !important; line-height:2.15 !important; color:var(--mx-dim) !important; }
+html[data-era="now"][data-mx="1"] .mx-h1,
+html[data-era="now"][data-mx="1"] .mx-h2,
+html[data-era="now"][data-mx="1"] .mx-h3{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-note,
+html[data-era="now"][data-mx="1"] .mx-cap,
+html[data-era="now"][data-mx="1"] .mx-kicker{ color:var(--mx-faint) !important; }
+html[data-era="now"][data-mx="1"] .mx-link{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-btn{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-btn:hover{ color:var(--mx-ink) !important; }
+html[data-era="now"][data-mx="1"] .mx-btn-solid{ color:var(--mx-ink) !important; }
+html[data-era="now"][data-mx="1"] .mx-btn-solid:hover{ color:#fff !important; }
+html[data-era="now"][data-mx="1"] .mx-nav a{ color:var(--mx-dim) !important; }
+html[data-era="now"][data-mx="1"] .mx-nav a:hover,
+html[data-era="now"][data-mx="1"] .mx-nav a.on{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-foot a{ color:var(--mx-dim) !important; }
+html[data-era="now"][data-mx="1"] .mx-foot a:hover{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-vitrine img{ image-rendering:auto !important; }
+
+/* 時間旅行・言語バーも暗い画面に合わせます */
+html[data-mx="1"] #lang-bar{
+  background:rgba(18,16,20,.72) !important; border:1px solid rgba(239,234,226,.16) !important;
+  backdrop-filter:saturate(1.2) blur(14px); box-shadow:none !important; border-radius:2px !important;
+}
+html[data-mx="1"] #lang-bar button{ opacity:.45 !important; }
+html[data-mx="1"] #lang-bar button.active{ opacity:1 !important; background:transparent !important; border-color:rgba(239,234,226,.4) !important; }
+html[data-mx="1"] #tw-panel, html[data-mx="1"] .tw-panel{
+  background:rgba(18,16,20,.72) !important; border:1px solid rgba(239,234,226,.16) !important;
+  backdrop-filter:saturate(1.2) blur(14px); box-shadow:none !important; color:var(--mx-paper) !important;
+}
+
+/* 上の帯は、左上の時間旅行と右上の言語バーを避けます */
+@media (min-width:1100px){
+  .mx-head{ padding-left:240px; padding-right:230px; }
+  .mx-head.is-stuck{ padding-left:240px; padding-right:230px; }
+}
+@media (min-width:861px) and (max-width:1099px){
+  .mx-head{ padding-top:70px; }
+  .mx-head.is-stuck{ padding-top:60px; }
+}
+@media (max-width:860px){
+  .mx-head{ padding-top:64px; }
+}
+
+/* 表紙は帯のぶん下げます */
+.mx-hero .mx-in{ padding-top:40px; }
