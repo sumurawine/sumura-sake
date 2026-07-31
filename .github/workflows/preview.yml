@@ -38,7 +38,8 @@ jobs:
           rm -rf /tmp/mainwt/preview
           mkdir -p /tmp/mainwt/preview
           cp -r out/. /tmp/mainwt/preview/
+          touch /tmp/mainwt/.nojekyll /tmp/mainwt/preview/.nojekyll
           cd /tmp/mainwt
-          git add -A preview
+          git add -A preview .nojekyll
           git commit -m "preview: Next.js版のビルド" || echo "変更なし"
           git push origin HEAD:main
