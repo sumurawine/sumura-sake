@@ -580,3 +580,5 @@ html[data-mx="1"] .counter{ color:var(--mx-paper) !important; }
 
 /* 小さな見出しをもう少し読みやすく */
 html[data-era="now"]{ --mx-faint:rgba(244,236,228,.58); }
+
+html[data-mx="1"] #cat-nav a.is-on{ color:var(--mx-gold) !important; }
