@@ -170,4 +170,5 @@ body:has(.mk-wrap) #lang-bar button.active{opacity:1;border-color:#a8977c;backgr
 
 .bk-word{ color:#fff; font-size:13px; line-height:1.9; margin:2px 14px; text-shadow:1px 1px 0 #000 }
 .bk-word b{ color:#ffd23f; font-size:16px; letter-spacing:2px; display:inline-block; margin:0 4px }
-.bk-canvas{ touch-action:none }
+.bk-canvas{ touch-action:none; width:100%; max-width:420px }
+@media (max-width:520px){ .bk-stage{ width:100% } .bk-score{ font-size:13px } }
