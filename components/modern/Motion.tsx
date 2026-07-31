@@ -16,9 +16,11 @@ export function Reveal({
     if (!('IntersectionObserver' in window)) { setSeen(true); return; }
     const io = new IntersectionObserver((es) => {
       es.forEach((e) => { if (e.isIntersecting) { setSeen(true); io.disconnect(); } });
-    }, { threshold, rootMargin: '0px 0px -8% 0px' });
+    }, { threshold: 0, rootMargin: '0px 0px 26% 0px' });
     io.observe(el);
-    return () => io.disconnect();
+    // 速く動かしても取り残されないよう、少し経ったら必ず出します
+    const t = setTimeout(() => setSeen(true), 2600);
+    return () => { io.disconnect(); clearTimeout(t); };
   }, [threshold]);
   return (
     <Tag ref={ref as any} className={`mx-rv${seen ? ' is-in' : ''}${className ? ' ' + className : ''}`} data-d={delay || undefined} {...rest}>
@@ -37,9 +39,10 @@ export function Chars({ text, className = '', step = 34 }: { text: string; class
     if (!('IntersectionObserver' in window)) { setSeen(true); return; }
     const io = new IntersectionObserver((es) => {
       es.forEach((e) => { if (e.isIntersecting) { setSeen(true); io.disconnect(); } });
-    }, { threshold: 0.3 });
+    }, { threshold: 0, rootMargin: '0px 0px 26% 0px' });
     io.observe(el);
-    return () => io.disconnect();
+    const t = setTimeout(() => setSeen(true), 2600);
+    return () => { io.disconnect(); clearTimeout(t); };
   }, []);
   return (
     <span ref={ref} className={`${seen ? 'is-in ' : ''}${className}`}>
