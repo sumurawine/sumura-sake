@@ -50,7 +50,13 @@ function creak() {
   o.start(); o.stop(c.currentTime + 1);
 }
 
-const DOOR_SHOTS = ['/images/shop-sign.webp', '/images/showa30.webp'];
+const DOOR_SHOTS = [
+  '/images/shop-sign.webp',
+  '/images/photos/gillet.jpg',
+  '/images/showa30.webp',
+  '/images/photos/rouget.jpg',
+  '/images/photos/roch.jpg',
+];
 
 export function DoorPage() {
   const { lang, eraView } = useSite();
@@ -63,7 +69,7 @@ export function DoorPage() {
   const [doorShot, setDoorShot] = useState(0);
   useEffect(() => {
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const t = setInterval(() => setDoorShot((n) => (n + 1) % DOOR_SHOTS.length), 4200);
+    const t = setInterval(() => setDoorShot((n) => (n + 1) % DOOR_SHOTS.length), 3000);
     return () => clearInterval(t);
   }, []);
   const [txt, setTxt] = useState('');
