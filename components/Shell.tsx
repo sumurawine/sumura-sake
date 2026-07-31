@@ -123,7 +123,7 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
       </div>
 
       <Ticker text={marquee} />
-      <LeaveOverlay open={leaving} lang={lang} />
+      <LeaveOverlay open={leaving} lang={lang} onClose={() => setLeaving(false)} />
     </>
   );
 }
