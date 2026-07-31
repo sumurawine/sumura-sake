@@ -94,3 +94,50 @@ export function useStuck(px = 40) {
   }, [px]);
   return stuck;
 }
+
+/** 画面全体のスクロールに粘りを持たせます（PCのホイールのみ） */
+export function useSmoothScroll(ease = 0.085) {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mm = window.matchMedia;
+    if (mm && (mm('(prefers-reduced-motion: reduce)').matches || mm('(max-width: 900px)').matches)) return;
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+
+    let target = window.scrollY;
+    let current = target;
+    let raf = 0;
+    const maxY = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+
+    const tick = () => {
+      current += (target - current) * ease;
+      if (Math.abs(target - current) < 0.5) {
+        current = target;
+        window.scrollTo(0, current);
+        raf = 0;
+        return;
+      }
+      window.scrollTo(0, current);
+      raf = requestAnimationFrame(tick);
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) return;
+      const el = e.target as HTMLElement | null;
+      if (el && el.closest('.mx-rail, select, textarea')) return;
+      e.preventDefault();
+      target = Math.max(0, Math.min(target + e.deltaY, maxY()));
+      if (!raf) { current = window.scrollY; raf = requestAnimationFrame(tick); }
+    };
+    const sync = () => { if (!raf) { target = window.scrollY; current = target; } };
+
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    return () => {
+      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('scroll', sync);
+      window.removeEventListener('resize', sync);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [ease]);
+}
