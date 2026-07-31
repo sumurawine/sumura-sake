@@ -508,3 +508,46 @@ html[data-era="now"]{ background:var(--mx-ink); }
 .mx-hero-bg{ opacity:0; transition:opacity 1.9s ease; }
 .mx-hero-bg.is-on{ opacity:1; }
 @media (prefers-reduced-motion:reduce){ .mx-hero-bg{ opacity:0 !important; transition:none !important; } .mx-hero-bg.is-on{ opacity:1 !important; } }
+
+/* 取りこぼしを潰す：現代の画面では、どの文字も地に沈まないように ---- */
+html[data-era="now"][data-mx="1"] .mx-legacy .pixhead,
+html[data-era="now"][data-mx="1"] .mx-legacy th,
+html[data-era="now"][data-mx="1"] .mx-legacy td,
+html[data-era="now"][data-mx="1"] .mx-legacy dt,
+html[data-era="now"][data-mx="1"] .mx-legacy dd,
+html[data-era="now"][data-mx="1"] .mx-legacy h1,
+html[data-era="now"][data-mx="1"] .mx-legacy h2,
+html[data-era="now"][data-mx="1"] .mx-legacy h3,
+html[data-era="now"][data-mx="1"] .mx-legacy b,
+html[data-era="now"][data-mx="1"] .mx-legacy strong,
+html[data-era="now"][data-mx="1"] .mx-legacy span,
+html[data-era="now"][data-mx="1"] .mx-legacy div,
+html[data-era="now"][data-mx="1"] .mx-legacy li,
+html[data-era="now"][data-mx="1"] .mx-legacy label{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy p,
+html[data-era="now"][data-mx="1"] .mx-legacy .hint,
+html[data-era="now"][data-mx="1"] .mx-legacy .note,
+html[data-era="now"][data-mx="1"] .mx-legacy small{ color:var(--mx-dim) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy .hint,
+html[data-era="now"][data-mx="1"] .mx-legacy small{ color:var(--mx-faint) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy th,
+html[data-era="now"][data-mx="1"] .mx-legacy dt,
+html[data-era="now"][data-mx="1"] .mx-legacy label{ color:var(--mx-faint) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy a{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy input,
+html[data-era="now"][data-mx="1"] .mx-legacy textarea,
+html[data-era="now"][data-mx="1"] .mx-legacy select{ color:var(--mx-paper) !important; }
+
+/* 文字の大きさを揃えます */
+html[data-era="now"][data-mx="1"] .mx-legacy .pixhead{ font-size:clamp(24px,2.9vw,34px) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy p,
+html[data-era="now"][data-mx="1"] .mx-legacy li,
+html[data-era="now"][data-mx="1"] .mx-legacy td{ font-size:15.5px !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy .hint,
+html[data-era="now"][data-mx="1"] .mx-legacy small{ font-size:12.5px !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy th,
+html[data-era="now"][data-mx="1"] .mx-legacy label{ font-size:10.5px !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy .btn{ font-size:12px !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy .field{ font-size:15.5px !important; }
+/* 本文の幅を読みやすく */
+.mx-legacy .mx-in{ max-width:900px; }
