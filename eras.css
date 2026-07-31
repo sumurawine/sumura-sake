@@ -284,7 +284,8 @@ html[data-era="2010"] #pixtitle,html[data-era="now"] #pixtitle,
 html[data-era="2010"] #stage,html[data-era="now"] #stage,
 html[data-era="2010"] .enter,html[data-era="now"] .enter,
 html[data-era="2010"] .torch,html[data-era="now"] .torch,
-html[data-era="2010"] .note,html[data-era="now"] .note{display:none !important}
+html[data-era="2010"] .note,html[data-era="now"] .note,
+html[data-era="2010"] #pixbadge,html[data-era="now"] #pixbadge{display:none !important}
 html[data-era="2010"] #modern-entrance,html[data-era="now"] #modern-entrance{display:block !important}
 html[data-era="2010"] #door-wrap,html[data-era="now"] #door-wrap{display:none !important}
 html[data-era="2010"] #modern-lock,html[data-era="now"] #modern-lock{display:block !important}
