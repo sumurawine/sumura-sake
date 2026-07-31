@@ -6,7 +6,7 @@
    中身だけを差し替えてください（行ごと消さないでください）。
    ============================================================= */
 
-window.SUMURA_API = 'https://script.google.com/macros/s/AKfycbxqVr1P1WfiXsPJNWV8tH_IcQY7XH6Wr_kpsoWOZtwc2V--MYQieZOD5wj5mCWDeTlmrQ/exec';
+window.SUMURA_API = 'https://script.google.com/macros/s/AKfycbxbPAsUhQpvzxheNel3k91juYk8d4zpR1GPwubMGQT_FJmT6LZa7nWbC9awZryaX8Ubzg/exec';
 
 /* ============================================================= */
 
