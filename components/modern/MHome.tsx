@@ -14,7 +14,7 @@ function Hero({ lang }: { lang: Lang }) {
   const c = MC[lang];
   return (
     <section className="mx-hero">
-      <div className="mx-hero-bg" style={{ backgroundImage: `url(${asset('/images/modern/hero.jpg')})` }} />
+      <div className="mx-hero-bg" style={{ backgroundImage: `url(${asset('/images/photos/gillet.jpg')})` }} />
       <div className="mx-hero-shade" />
       <div className="mx-hero-in">
         <div className="mx-in">
@@ -68,6 +68,33 @@ function About({ lang }: { lang: Lang }) {
   );
 }
 
+
+function Gallery({ lang }: { lang: Lang }) {
+  const c = MC[lang];
+  return (
+    <section className="mx-sec-tight">
+      <div className="mx-in">
+        <Reveal as="p" className="mx-kicker">{c.gallery}</Reveal>
+        <Reveal as="h2" delay={1} className="mx-h2">{c.galleryHead}</Reveal>
+        <div className="mx-duo">
+          <div>
+            <Reveal className="mx-photo" threshold={0.2}>
+              <img src={asset('/images/photos/rouget.jpg')} alt="" loading="lazy" />
+            </Reveal>
+            <Reveal as="p" delay={1} className="mx-cap">{c.capRouget}</Reveal>
+          </div>
+          <div>
+            <Reveal delay={2} className="mx-photo" threshold={0.2}>
+              <img src={asset('/images/photos/roch.jpg')} alt="" loading="lazy" />
+            </Reveal>
+            <Reveal as="p" delay={3} className="mx-cap">{c.capRoch}</Reveal>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Selection({ lang }: { lang: Lang }) {
   const c = MC[lang];
   const [data, setData] = useState<ProductData | null>(null);
@@ -89,6 +116,11 @@ function Selection({ lang }: { lang: Lang }) {
       <div className="mx-in">
         <Reveal as="p" className="mx-kicker">{c.ch2}</Reveal>
         <Reveal as="h2" delay={1} className="mx-h2">{c.ch2Head}</Reveal>
+        <Reveal delay={2} className="mx-wide" style={{ margin: '18px 0 46px' }}>
+          <div className="mx-photo" style={{ aspectRatio: '16 / 9' }}>
+            <img src={asset('/images/photos/roch.jpg')} alt="" loading="lazy" />
+          </div>
+        </Reveal>
       </div>
       <div className="mx-rail">
         {pick.map((it, i) => (
@@ -126,7 +158,6 @@ function Facts({ lang, data }: { lang: Lang; data: ProductData | null }) {
           <div><dt>{c.fItems}</dt><dd><span className="mx-num">{n}</span></dd></div>
           <div><dt>{c.fAreas}</dt><dd><span className="mx-num">{areas}</span></dd></div>
           <div><dt>{c.fMakers}</dt><dd><span className="mx-num">{makers}</span></dd></div>
-          <div><dt>{c.fHours}</dt><dd style={{ paddingTop: 10 }}>{tr(lang, 'ac-v-hours')}<br />{tr(lang, 'ac-l-close')}：{tr(lang, 'ac-v-close')}</dd></div>
         </Reveal>
       </div>
     </section>
@@ -138,7 +169,7 @@ function Cellar({ lang }: { lang: Lang }) {
   const bg = useParallax(0.12);
   return (
     <section className="mx-bleed">
-      <div ref={bg} className="mx-bleed-bg" style={{ backgroundImage: `url(${asset('/images/modern/veil-cellar.jpg')})` }} />
+      <div ref={bg} className="mx-bleed-bg" style={{ backgroundImage: `url(${asset('/images/photos/rouget.jpg')})` }} />
       <div className="mx-bleed-shade" />
       <div className="mx-in">
         <div style={{ maxWidth: 620 }}>
@@ -227,6 +258,7 @@ export function MHome() {
     <MShell>
       <Hero lang={lang} />
       <About lang={lang} />
+      <Gallery lang={lang} />
       <Quote lang={lang} />
       <Selection lang={lang} />
       <Facts lang={lang} data={data} />
