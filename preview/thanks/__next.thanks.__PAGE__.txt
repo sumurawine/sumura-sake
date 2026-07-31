@@ -1,6 +1,0 @@
-1:"$Sreact.fragment"
-2:I[6029,["/sumura-sake/preview/_next/static/chunks/2s3esq1aj-2c7.js","/sumura-sake/preview/_next/static/chunks/14mrh2-p_w84d.js","/sumura-sake/preview/_next/static/chunks/09pb9jdsqe6s3.js","/sumura-sake/preview/_next/static/chunks/0v3deqv6-hzm6.js"],"ThanksPage"]
-3:I[97367,["/sumura-sake/preview/_next/static/chunks/2s3esq1aj-2c7.js","/sumura-sake/preview/_next/static/chunks/14mrh2-p_w84d.js","/sumura-sake/preview/_next/static/chunks/09pb9jdsqe6s3.js"],"OutletBoundary"]
-4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],[["$","script","script-0",{"src":"/sumura-sake/preview/_next/static/chunks/0v3deqv6-hzm6.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"cDrCRt5ZhLIiSoh3LLXYH"}
-5:null
