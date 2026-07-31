@@ -90,7 +90,7 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
           </div>
           <div style={{ margin: '10px 0' }}>
             <a href="https://www.instagram.com/sumurasake" target="_blank" rel="noopener" style={{ textDecoration: 'none' }}>
-              <T k="tk-ig" as="span" className="btn" style={{ fontSize: 13, padding: '4px 14px' }} />
+              <T k="tk-ig" as="span" kind="btn" className="btn" style={{ fontSize: 13, padding: '4px 14px' }} />
             </a>
             <T k="tk-ig-note" as="div" className="hint" style={{ marginTop: 4 }} />
           </div>
