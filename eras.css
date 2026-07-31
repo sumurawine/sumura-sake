@@ -404,3 +404,12 @@ html[data-era="now"] #tw-leave-ov .tw-bye-a{background:#f5f5f7;color:#1d1d1f;bor
  padding:11px 26px;font-size:15px;letter-spacing:-.01em;
  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Hiragino Sans",sans-serif;transition:background .2s}
 html[data-era="now"] #tw-leave-ov .tw-bye-a:hover{background:#ebebed}
+
+/* 退店中は他のUIを隠す */
+body:has(#tw-leave-ov) #lang-bar,
+body:has(#tw-leave-ov) #timewarp,
+body:has(#tw-leave-ov) .clock,
+body:has(#tw-leave-ov) #tw-ticker{display:none !important}
+html[data-era="now"] #tw-leave-ov .tw-bye-a{color:#1d1d1f !important}
+html[data-era="2010"] #tw-leave-ov .tw-bye-a{color:#444 !important}
+#tw-leave-ov .tw-bye-a:hover{text-decoration:none !important}
