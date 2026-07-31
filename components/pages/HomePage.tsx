@@ -4,10 +4,9 @@ import { Shell } from '@/components/Shell';
 import { T } from '@/components/T';
 import { useSite } from '@/components/Providers';
 import { MHome } from '@/components/modern/MHome';
-import { Breakout } from '@/components/Breakout';
 
 export function HomePage() {
-  const { eraView, lang } = useSite();
+  const { eraView } = useSite();
   if (eraView === 'now') return <MHome />;
   return (
     <Shell>
@@ -28,8 +27,6 @@ export function HomePage() {
         <T k="home-p2" as="p" />
         <T k="home-p3" as="p" />
       </div>
-
-      {eraView === '2005' ? <Breakout lang={lang} /> : null}
 
       <div className="panel">
         <T k="home-hist-head" as="div" kind="head" className="pixhead" />
