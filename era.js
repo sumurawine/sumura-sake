@@ -18,19 +18,24 @@
 
   var T = {
     jp: { t:'時間旅行', a:'1990年代へ', b:'2000年代へ', c:'2010年代へ', d:'2020年代（現代）へ戻る',
-          priv:'非公開在庫', ask:'こちらは非公開のページです。合言葉をご入力ください。', back:'← 戻る', enter:'入店する',
+          priv:'非公開在庫', ask:'こちらは非公開のページです。パスワードをご入力ください。', back:'← 戻る', enter:'入店する',
+          leave:'退店', bye:'またのお越しをお待ちしております。', again:'入口へ戻る', drop:'時をおすそわけ',
           sub:'山口・宇部　フランス銘醸ワインの店' },
     en: { t:'TIME TRAVEL', a:'To the 1990s', b:'To the 2000s', c:'To the 2010s', d:'Back to the 2020s',
-          priv:'Private Cellar', ask:'This page is private. Please enter the passphrase.', back:'← Back', enter:'Enter',
+          priv:'Private Cellar', ask:'This page is private. Please enter the password.', back:'← Back', enter:'Enter',
+          leave:'LEAVE', bye:'We look forward to welcoming you again.', again:'Back to the entrance', drop:'Sharing a Little Time',
           sub:'Fine French wines · Ube, Yamaguchi' },
     fr: { t:'VOYAGE TEMPOREL', a:'Vers les 1990s', b:'Vers les 2000s', c:'Vers les 2010s', d:'Retour aux 2020s',
           priv:'Cave privée', ask:'Cette page est privée. Merci de saisir le mot de passe.', back:'← Retour', enter:'Entrer',
+          leave:'SORTIE', bye:'Au plaisir de vous revoir.', again:'Retour à l’entrée', drop:'Un peu de temps partagé',
           sub:'Grands vins de France · Ube, Yamaguchi' },
     zh: { t:'时光旅行', a:'回到 1990s', b:'回到 2000s', c:'回到 2010s', d:'回到 2020s（现代）',
-          priv:'非公开库存', ask:'此页面为非公开页面。请输入暗号。', back:'← 返回', enter:'进入',
+          priv:'非公开库存', ask:'此页面为非公开页面。请输入密码。', back:'← 返回', enter:'进入',
+          leave:'离店', bye:'期待您的再次光临。', again:'返回入口', drop:'与您分享时光',
           sub:'法国名酿葡萄酒 · 山口宇部' },
     ko: { t:'시간 여행', a:'1990s 로', b:'2000s 로', c:'2010s 로', d:'2020s(현재)로 돌아가기',
-          priv:'비공개 재고', ask:'이 페이지는 비공개입니다. 암호를 입력해 주세요.', back:'← 돌아가기', enter:'입장하기',
+          priv:'비공개 재고', ask:'이 페이지는 비공개입니다. 비밀번호를 입력해 주세요.', back:'← 돌아가기', enter:'입장하기',
+          leave:'퇴점', bye:'다음에 또 방문해 주시기를 기다리겠습니다.', again:'입구로 돌아가기', drop:'시간을 나눠 드립니다',
           sub:'프랑스 명양조 와인 · 야마구치 우베' }
   };
   function L() { try { return localStorage.getItem('lang') || 'jp'; } catch (x) { return 'jp'; } }
@@ -168,17 +173,71 @@
     if (btn) btn.textContent = t('enter');
   }
 
+
+  /* ---------- 退店 ---------- */
+  function thud() {
+    try {
+      var a = new (window.AudioContext || window.webkitAudioContext)();
+      var o = a.createOscillator(), gn = a.createGain(), f = a.createBiquadFilter();
+      o.type = 'sine'; o.frequency.setValueAtTime(150, a.currentTime);
+      o.frequency.exponentialRampToValueAtTime(48, a.currentTime + 0.4);
+      f.type = 'lowpass'; f.frequency.value = 700;
+      gn.gain.setValueAtTime(0.26, a.currentTime);
+      gn.gain.exponentialRampToValueAtTime(0.0008, a.currentTime + 0.45);
+      o.connect(f); f.connect(gn); gn.connect(a.destination);
+      o.start(); o.stop(a.currentTime + 0.5);
+    } catch (e) {}
+  }
+  function leave(e) {
+    if (e) e.preventDefault();
+    if (document.getElementById('tw-leave-ov')) return;
+    var era = get();
+    var ov = document.createElement('div');
+    ov.id = 'tw-leave-ov';
+    ov.innerHTML = '<div class="tw-door tw-door-l"></div><div class="tw-door tw-door-r"></div>' +
+                   '<div class="tw-bye"><div class="tw-bye-t"></div><a class="tw-bye-a" href="index.html"></a></div>';
+    document.body.appendChild(ov);
+    ov.querySelector('.tw-bye-t').textContent = t('bye');
+    ov.querySelector('.tw-bye-a').textContent = t('again');
+    requestAnimationFrame(function () {
+      ov.classList.add('go');
+      if (era === '1995' || era === '2005') setTimeout(thud, 900);
+    });
+  }
+  function leaveButton() {
+    var nav = document.querySelector('.nav');
+    if (!nav || document.getElementById('tw-leave')) return;
+    var a = document.createElement('a');
+    a.id = 'tw-leave'; a.href = '#'; a.textContent = t('leave');
+    a.addEventListener('click', leave);
+    nav.appendChild(a);
+  }
+
+  /* ---------- ヘッダーの見出しから一部を落とす（2010 / 現在） ---------- */
+  function trimHeader() {
+    var era = get();
+    if (era !== '2010' && era !== 'now') return;
+    var d = document.querySelector('div.sub');
+    if (!d) return;
+    var drop = t('drop');
+    var parts = d.textContent.split(/[☆★·]/).map(function (s) { return s.trim(); })
+                 .filter(function (s) { return s && s.indexOf(drop) < 0; });
+    var v = parts.join(' · ');
+    if (v && v !== d.textContent) d.textContent = v;
+  }
+
   function boot() {
     panel();
+    leaveButton();
     var era = get();
     if (era === '2005') decorate2005();
     if (era === '2010' || era === 'now') {
-      textLogo(era); entrance(era); tidy();
+      textLogo(era); entrance(era); tidy(); trimHeader();
       setTimeout(tidy, 400); setTimeout(tidy, 1500);
     }
     if (window.sumuraOnLang) window.sumuraOnLang(function () {
       [].forEach.call(document.querySelectorAll('[data-tw-done]'), function (e) { e.removeAttribute('data-tw-done'); });
-      setTimeout(function () { tidy(); entrance(get()); }, 60);
+      setTimeout(function () { tidy(); trimHeader(); entrance(get()); var lb = document.getElementById('tw-leave'); if (lb) lb.textContent = t('leave'); }, 60);
     });
   }
 
