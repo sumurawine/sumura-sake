@@ -120,7 +120,7 @@
     if (el.querySelector && el.querySelector('img,svg,canvas,input,select,button')) return;
     var s = el.innerHTML;
     if (opts && opts.mid) s = s.replace(/[★☆]/g, '·');
-    var t = s.replace(EDGE, '').replace(/\s{2,}/g, ' ').trim();
+    var t = s.replace(/[［］]/g, '').replace(EDGE, '').replace(/\s{2,}/g, ' ').trim();
     t = t.replace(/^(·\s*)+/, '').replace(/(\s*·)+$/, '');
     if (t && t !== s) { el.innerHTML = t; }
     el.setAttribute('data-tw-done', '1');
