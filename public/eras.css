@@ -473,3 +473,10 @@ body:has(#tw-leave-ov) #lang-bar{display:flex !important}
 body:has(#tw-leave-ov) #timewarp{display:block !important}
 #tw-leave-ov:not(.go){pointer-events:none !important}
 html[data-era="now"]{scroll-behavior:auto !important}
+
+/* 畳んでいるときは、必ず開くための印を出します（どの時代・どの画面でも） */
+#timewarp.tw-closed .tw-toggle{display:block !important;position:static !important;width:100% !important;height:auto !important;padding:2px 0 !important;margin:0 0 2px !important;font-size:14px !important;line-height:1.1 !important;cursor:pointer}
+#timewarp.tw-closed .tw-t{cursor:pointer}
+#timewarp.tw-closed{cursor:pointer}
+html[data-era="now"] #timewarp .tw-toggle{background:transparent !important;border:0 !important;color:rgba(244,236,228,.55) !important;box-shadow:none !important}
+html[data-era="2010"] #timewarp .tw-toggle{background:#fff !important;border:1px solid #dcdcdc !important;color:#666 !important}
