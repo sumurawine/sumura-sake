@@ -340,3 +340,67 @@ html[data-era="2010"] #lang-bar button.active{border-color:#4d90fe !important;ba
 
 /* 現在：入口ページを中央に */
 html[data-era="now"] #modern-entrance,html[data-era="2010"] #modern-entrance{animation:nowIn .9s cubic-bezier(.2,.7,.2,1) both}
+
+/* ---------- 入口の年齢表記 ---------- */
+#age-note{max-width:520px;margin:22px auto 0;text-align:center;font-size:12px;line-height:1.7;
+ color:#b3a894;letter-spacing:.02em;padding:0 16px}
+html[data-era="2005"] #age-note{color:#6a4a9a;font-weight:bold}
+html[data-era="2010"] #age-note{color:#888;font-size:12px}
+html[data-era="now"] #age-note{color:#86868b;font-size:12px;letter-spacing:.01em;margin-top:34px}
+
+/* ---------- 退店の演出 ---------- */
+#tw-leave-ov{position:fixed;left:0;right:0;top:0;bottom:0;z-index:200;display:flex;
+ align-items:center;justify-content:center;overflow:hidden}
+#tw-leave-ov .tw-door{position:absolute;top:0;bottom:0;width:51%;transition:transform 1.15s cubic-bezier(.45,0,.25,1)}
+#tw-leave-ov .tw-door-l{left:0;transform:translateX(-101%)}
+#tw-leave-ov .tw-door-r{right:0;transform:translateX(101%)}
+#tw-leave-ov.go .tw-door-l,#tw-leave-ov.go .tw-door-r{transform:translateX(0)}
+#tw-leave-ov .tw-bye{position:relative;z-index:3;text-align:center;opacity:0;transform:translateY(10px);
+ transition:opacity .7s 1.05s,transform .7s 1.05s;padding:0 20px}
+#tw-leave-ov.go .tw-bye{opacity:1;transform:none}
+#tw-leave-ov .tw-bye-t{margin-bottom:18px}
+#tw-leave-ov .tw-bye-a{display:inline-block;text-decoration:none;cursor:pointer}
+
+/* 1990年代：木の扉 */
+html[data-era="1995"] #tw-leave-ov{background:#0a0706}
+html[data-era="1995"] #tw-leave-ov .tw-door{
+ background:repeating-linear-gradient(90deg,#7a5326 0 22px,#5f3f1c 22px 26px),
+ linear-gradient(#8a6130,#4a3016);
+ box-shadow:inset 0 0 0 6px #2a1c0c,inset 0 12px 40px rgba(0,0,0,.6);image-rendering:pixelated}
+html[data-era="1995"] #tw-leave-ov .tw-door:before,
+html[data-era="1995"] #tw-leave-ov .tw-door:after{content:"";position:absolute;left:0;right:0;height:26px;
+ background:linear-gradient(#6a6252,#2f2a22 60%,#14110c);box-shadow:0 3px 8px rgba(0,0,0,.6)}
+html[data-era="1995"] #tw-leave-ov .tw-door:before{top:24%}
+html[data-era="1995"] #tw-leave-ov .tw-door:after{bottom:24%}
+html[data-era="1995"] #tw-leave-ov .tw-bye-t{color:#ffe14d;font-size:22px;text-shadow:2px 2px 0 #000;
+ font-family:"DotGothic16","MS Gothic",monospace;letter-spacing:2px}
+html[data-era="1995"] #tw-leave-ov .tw-bye-a{border:3px outset #cfcfcf;background:#5a5a5a;color:#fff;
+ padding:7px 16px;font-family:"DotGothic16","MS Gothic",monospace;font-size:14px}
+
+/* 2000年代：デコな扉 */
+html[data-era="2005"] #tw-leave-ov{background:#2a0044}
+html[data-era="2005"] #tw-leave-ov .tw-door{
+ background:url(gif/sparkle.gif?v=1) repeat,linear-gradient(160deg,#ff8ad4,#ff44aa 45%,#8a2be2);
+ box-shadow:inset 0 0 0 8px #ffe14d,inset 0 0 0 14px #55e0ff,inset 0 0 60px rgba(0,0,0,.35)}
+html[data-era="2005"] #tw-leave-ov .tw-bye-t{color:#ffff66;font-size:24px;font-weight:bold;
+ font-family:"Comic Sans MS","Hiragino Maru Gothic ProN",sans-serif;text-shadow:2px 2px 0 #ff0066,0 0 14px #ff66cc}
+html[data-era="2005"] #tw-leave-ov .tw-bye-a{border:4px outset #ffcc33;border-radius:12px;
+ background:linear-gradient(#fffdf0,#ffd24d);color:#c40000;padding:8px 20px;font-weight:bold;
+ font-family:"Comic Sans MS","Hiragino Maru Gothic ProN",sans-serif}
+
+/* 2010年代・2020年代：扉なし */
+html[data-era="2010"] #tw-leave-ov .tw-door,html[data-era="now"] #tw-leave-ov .tw-door{display:none}
+html[data-era="2010"] #tw-leave-ov,html[data-era="now"] #tw-leave-ov{background:#fff;opacity:0;transition:opacity .55s}
+html[data-era="2010"] #tw-leave-ov.go,html[data-era="now"] #tw-leave-ov.go{opacity:1}
+html[data-era="2010"] #tw-leave-ov .tw-bye,html[data-era="now"] #tw-leave-ov .tw-bye{transition:opacity .6s .35s,transform .6s .35s}
+html[data-era="2010"] #tw-leave-ov .tw-bye-t{color:#333;font-size:20px;
+ font-family:Arial,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif}
+html[data-era="2010"] #tw-leave-ov .tw-bye-a{border:1px solid #b7b7b7;border-radius:4px;
+ background:linear-gradient(#f9f9f9,#e8e8e8);color:#444;padding:9px 22px;font-size:13px;
+ font-family:Arial,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif}
+html[data-era="now"] #tw-leave-ov .tw-bye-t{color:#1d1d1f;font-size:clamp(24px,3.4vw,34px);font-weight:600;
+ letter-spacing:-.03em;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans",sans-serif}
+html[data-era="now"] #tw-leave-ov .tw-bye-a{background:#f5f5f7;color:#1d1d1f;border-radius:980px;
+ padding:11px 26px;font-size:15px;letter-spacing:-.01em;
+ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Hiragino Sans",sans-serif;transition:background .2s}
+html[data-era="now"] #tw-leave-ov .tw-bye-a:hover{background:#ebebed}
