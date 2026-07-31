@@ -740,3 +740,52 @@ html[data-mx="1"] #tw-leave-ov .tw-bye{ position:relative; z-index:2; }
 
 /* ブログの見出し画像は現代では出しません */
 html[data-mx="1"] .mx-legacy img[src*="blog-head"]{ display:none !important; }
+
+/* 言語の切り替えを、静かな文字に ------------------------------ */
+html[data-mx="1"] #lang-bar.lb-quiet, html[data-era="now"] #lang-bar.lb-quiet{
+  gap:0 !important; padding:0 !important;
+  background:rgba(20,13,11,.55) !important; border:1px solid rgba(244,236,228,.16) !important;
+  border-radius:2px !important; backdrop-filter:blur(16px) saturate(1.1); box-shadow:none !important;
+  overflow:hidden;
+}
+html[data-era="now"] #lang-bar.lb-quiet button{
+  font-family:var(--mx-sans) !important; font-size:10.5px !important; letter-spacing:.22em !important;
+  padding:9px 12px !important; color:rgba(244,236,228,.45) !important; opacity:1 !important;
+  background:transparent !important; border:0 !important; border-radius:0 !important;
+  border-left:1px solid rgba(244,236,228,.10) !important; line-height:1 !important;
+  transition:color .4s ease, background .4s ease; cursor:pointer;
+}
+html[data-era="now"] #lang-bar.lb-quiet button:first-child{ border-left:0 !important; }
+html[data-era="now"] #lang-bar.lb-quiet button:hover{ color:var(--mx-paper) !important; background:rgba(244,236,228,.06) !important; }
+html[data-era="now"] #lang-bar.lb-quiet button.active{
+  color:var(--mx-ink) !important; background:var(--mx-paper) !important; font-weight:600 !important;
+}
+
+/* 非公開のページ：鍵は出さず、静かに ---------------------------- */
+html[data-mx="1"] #modern-lock{ border:0 !important; background:transparent !important; padding:0 !important; margin:26px 0 44px !important; }
+html[data-mx="1"] #modern-lock .ml-key{ display:none !important; }
+html[data-mx="1"] #modern-lock .ml-t{ width:60px !important; height:1px !important; background:var(--mx-line) !important; margin:0 auto !important; }
+html[data-mx="1"] #sd-msg{ margin-top:20px !important; font-size:13px !important; letter-spacing:.06em !important; color:var(--mx-dim) !important; }
+html[data-mx="1"] #sd-msg.bad{ color:#d99a90 !important; }
+html[data-mx="1"] #sd-msg.good{ color:var(--mx-gold) !important; }
+html[data-mx="1"] #pw{ text-align:center !important; letter-spacing:.55em !important; font-size:17px !important; padding:16px 2px !important; }
+html[data-mx="1"] #sd-open{ margin-top:8px !important; border-radius:1px !important; padding:16px 44px !important; }
+
+/* 退店の画面：他のページと同じ組版に、上の道具も残します -------- */
+html[data-mx="1"] body:has(#tw-leave-ov) #lang-bar,
+html[data-mx="1"] body:has(#tw-leave-ov) #timewarp{ display:flex !important; z-index:260 !important; }
+html[data-mx="1"] body:has(#tw-leave-ov) #timewarp{ display:block !important; }
+html[data-mx="1"] #tw-leave-ov{ background:var(--mx-ink) !important; }
+html[data-mx="1"] #tw-leave-ov .tw-bye-t{
+  font-family:var(--mx-jp) !important; font-weight:400 !important;
+  font-size:clamp(24px,3.2vw,38px) !important; letter-spacing:.08em !important;
+  color:var(--mx-paper) !important; text-shadow:0 2px 40px rgba(18,10,8,.85) !important;
+}
+html[data-mx="1"] #tw-leave-ov .tw-bye-a{
+  font-family:var(--mx-sans) !important; font-size:12px !important; letter-spacing:.24em !important;
+  background:transparent !important; color:var(--mx-paper) !important;
+  border:1px solid rgba(244,236,228,.35) !important; border-radius:1px !important;
+  padding:15px 38px !important; margin-top:26px !important; backdrop-filter:blur(3px);
+}
+html[data-mx="1"] #tw-leave-ov .tw-bye-a:hover{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; }
+html[data-mx="1"] #tw-leave-ov .tw-door{ background:var(--mx-ink2) !important; }
