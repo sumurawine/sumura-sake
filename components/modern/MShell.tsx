@@ -98,7 +98,7 @@ export function MShell({ children }: { children: React.ReactNode }) {
         </div>
       </footer>
 
-      <LeaveOverlay open={leaving} lang={lang} />
+      <LeaveOverlay open={leaving} lang={lang} onClose={() => setLeaving(false)} />
     </>
   );
 }
