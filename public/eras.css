@@ -465,3 +465,11 @@ html[data-era="2010"] .bk-score{color:#666 !important}
 html[data-era="2010"] .bk-score b{color:#4d90fe !important}
 html[data-era="2010"] .bk-word{color:#3c4043 !important;text-shadow:none !important}
 html[data-era="2010"] .bk-word b{color:#4d90fe !important}
+
+/* 時間旅行と言語切替は、どんなときでも押せるようにします */
+#timewarp{z-index:320 !important}
+#lang-bar{z-index:320 !important}
+body:has(#tw-leave-ov) #lang-bar{display:flex !important}
+body:has(#tw-leave-ov) #timewarp{display:block !important}
+#tw-leave-ov:not(.go){pointer-events:none !important}
+html[data-era="now"]{scroll-behavior:auto !important}

@@ -25,7 +25,7 @@ html[data-era="now"] body{
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
 }
-html[data-era="now"]{ scroll-behavior:smooth; background:var(--mx-ink); }
+html[data-era="now"]{ scroll-behavior:auto; background:var(--mx-ink); }
 html[data-era="now"] ::selection{ background:rgba(124,20,40,.55); color:#fff; }
 
 /* 画面全体の粒子と周辺光量落ち ------------------------------------ */
@@ -817,3 +817,8 @@ html[data-mx="1"] #tw-leave-ov .tw-door{ background:var(--mx-ink2) !important; }
   border-color:var(--mx-paper) !important; backdrop-filter:none !important; }
 .mx-bleed .mx-btn-solid:hover{ background:var(--mx-wine) !important; color:#fff !important; border-color:var(--mx-wine) !important; }
 .mx-bleed .mx-btn-solid span{ color:inherit !important; }
+
+/* スクロールは端末そのままに。節での引っかかりをなくします */
+html[data-era="now"], html[data-mx="1"]{ scroll-behavior:auto !important; }
+html[data-mx="1"] .mx-sec, html[data-mx="1"] .mx-bleed{ scroll-margin-top:0 !important; }
+html[data-mx="1"] #timewarp, html[data-mx="1"] #lang-bar{ z-index:320 !important; }
