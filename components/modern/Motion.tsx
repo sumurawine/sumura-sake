@@ -113,10 +113,14 @@ export function useSmoothScroll(enabled = true, ease = 0.11) {
     let target = window.scrollY;
     let current = target;
     let raf = 0;
+    let gestureAt = 0;   // この一挙動が始まった時刻
+    let lastAt = 0;
     let idle = 0;
 
     const tick = () => {
-      current += (target - current) * ease;
+      // 動かしはじめは 0.18、0.4秒ほどで粘りが消えて 1 になります
+      const e = Math.min(1, 0.18 + (performance.now() - gestureAt) / 400);
+      current += (target - current) * e;
       if (Math.abs(target - current) < 0.5) {
         current = target;
         window.scrollTo(0, current);
@@ -147,6 +151,9 @@ export function useSmoothScroll(enabled = true, ease = 0.11) {
       const el = e.target as HTMLElement | null;
       if (el && el.closest('.mx-rail, select, textarea, .modal-ov')) return;
       e.preventDefault();
+      const now = performance.now();
+      if (now - lastAt > 420) gestureAt = now;   // 間があいたら、また新しい一挙動
+      lastAt = now;
       target = Math.max(0, Math.min(target + e.deltaY, maxY()));
       run();
       queueSettle();
@@ -164,5 +171,5 @@ export function useSmoothScroll(enabled = true, ease = 0.11) {
       clearTimeout(idle);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [enabled, ease]);
+  }, [enabled]);
 }
