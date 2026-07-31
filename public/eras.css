@@ -449,5 +449,19 @@ html[data-era="now"] .x-frame{border:0 !important;border-radius:18px !important;
  box-shadow:0 18px 46px rgba(0,0,0,.13) !important;padding:0 !important;overflow:hidden;background:#f5f5f7 !important}
 
 /* ブロックくずしは2000年代だけ */
-html:not([data-era="2005"]) .bk-wrap{display:none !important}
 html[data-era="2005"] .bk-score{color:#ff0066 !important;font-weight:bold}
+
+/* ゲームコーナー：時代ごとの遊び場のしつらえ */
+html[data-era="1995"] .bk-canvas{border:3px outset #cfcfcf !important;border-radius:0 !important;box-shadow:none !important;background:#000 !important}
+html[data-era="1995"] .bk-cover{background:rgba(0,0,0,.86) !important;border-radius:0 !important}
+html[data-era="1995"] .bk-msg{color:#25ff25 !important;text-shadow:1px 1px 0 #003c00 !important}
+html[data-era="1995"] .bk-score{color:#ffb000 !important}
+html[data-era="1995"] .bk-score b{color:#25ff25 !important}
+html[data-era="1995"] .bk-word b{color:#ffb000 !important}
+html[data-era="2010"] .bk-canvas{border:1px solid #dcdcdc !important;border-radius:6px !important;box-shadow:0 1px 4px rgba(0,0,0,.12) !important;background:#f7f7f7 !important}
+html[data-era="2010"] .bk-cover{background:rgba(255,255,255,.90) !important;border-radius:6px !important}
+html[data-era="2010"] .bk-msg{color:#3c4043 !important;text-shadow:none !important;font-weight:700 !important;animation:none !important}
+html[data-era="2010"] .bk-score{color:#666 !important}
+html[data-era="2010"] .bk-score b{color:#4d90fe !important}
+html[data-era="2010"] .bk-word{color:#3c4043 !important;text-shadow:none !important}
+html[data-era="2010"] .bk-word b{color:#4d90fe !important}
