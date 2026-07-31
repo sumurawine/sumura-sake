@@ -10,11 +10,22 @@ import { CATS, isOut, nameOf, type I18nData, type Item, type ProductData } from 
 import { MShell } from './MShell';
 import { Chars, Reveal, useParallax } from './Motion';
 
+const HERO_SHOTS = ['/images/photos/gillet.jpg', '/images/photos/rouget.jpg', '/images/photos/roch.jpg'];
+
 function Hero({ lang }: { lang: Lang }) {
   const c = MC[lang];
+  const [shot, setShot] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const t = setInterval(() => setShot((n) => (n + 1) % HERO_SHOTS.length), 3400);
+    return () => clearInterval(t);
+  }, []);
   return (
     <section className="mx-hero">
-      <div className="mx-hero-bg" style={{ backgroundImage: `url(${asset('/images/photos/gillet.jpg')})` }} />
+      {HERO_SHOTS.map((src, i) => (
+        <div key={src} className={`mx-hero-bg${i === shot ? ' is-on' : ''}`}
+             style={{ backgroundImage: `url(${asset(src)})` }} />
+      ))}
       <div className="mx-hero-shade" />
       <div className="mx-hero-in">
         <div className="mx-in">
