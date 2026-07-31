@@ -321,3 +321,22 @@ html[data-era="now"] #modern-lock .ml-t{margin-top:14px;font-size:19px;color:#6e
 html[data-era="2010"] #modern-lock{border:1px solid #e2e2e2;border-radius:6px;padding:24px;background:#fafafa}
 html[data-era="2010"] #modern-lock .ml-key{color:#999}
 html[data-era="2010"] #modern-lock .ml-t{margin-top:10px;font-size:13px;color:#666}
+
+/* 入店ボタンの文字色を確実に */
+html[data-era="now"] #modern-entrance .me-btn{color:#fff !important}
+html[data-era="2010"] #modern-entrance .me-btn{color:#444 !important}
+html[data-era="now"] #modern-entrance .me-btn:hover,html[data-era="2010"] #modern-entrance .me-btn:hover{text-decoration:none !important}
+
+/* 言語バーも時代に合わせる */
+html[data-era="2005"] #lang-bar{background:#fffdf5 !important;border:4px ridge #ff44aa !important;border-radius:12px !important;box-shadow:4px 4px 0 #55e0ff !important}
+html[data-era="2010"] #lang-bar{background:#fff !important;border:1px solid #dcdcdc !important;border-radius:6px !important;box-shadow:0 1px 4px rgba(0,0,0,.12) !important;padding:4px 6px !important}
+html[data-era="now"] #lang-bar{background:rgba(255,255,255,.80) !important;
+ -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+ border:1px solid rgba(0,0,0,.08) !important;border-radius:980px !important;
+ box-shadow:0 8px 30px rgba(0,0,0,.10) !important;padding:5px 9px !important}
+html[data-era="now"] #lang-bar button{opacity:.5}
+html[data-era="now"] #lang-bar button.active{opacity:1;border-color:transparent !important;background:transparent !important}
+html[data-era="2010"] #lang-bar button.active{border-color:#4d90fe !important;background:#eef3ff !important}
+
+/* 現在：入口ページを中央に */
+html[data-era="now"] #modern-entrance,html[data-era="2010"] #modern-entrance{animation:nowIn .9s cubic-bezier(.2,.7,.2,1) both}
