@@ -582,3 +582,21 @@ html[data-mx="1"] .counter{ color:var(--mx-paper) !important; }
 html[data-era="now"]{ --mx-faint:rgba(244,236,228,.58); }
 
 html[data-mx="1"] #cat-nav a.is-on{ color:var(--mx-gold) !important; }
+
+/* 旧「現在」の白い箱を、すべて暗い画面に合わせます -------------- */
+html[data-mx="1"] .btn[data-on="0"]{ background:transparent !important; }
+html[data-mx="1"] .field{ background:transparent !important; border:0 !important; border-bottom:1px solid var(--mx-line) !important; }
+html[data-mx="1"] .card img{ background:var(--mx-vit) !important; }
+html[data-mx="1"] [style*="#5a4626"]{ background:transparent !important; border:1px solid var(--mx-line) !important; border-radius:2px !important; }
+html[data-mx="1"] [style*="background:#1a0a00"]{ background:transparent !important; }
+html[data-mx="1"] #modern-lock{ background:transparent !important; border:1px solid var(--mx-line) !important; border-radius:2px !important; }
+html[data-mx="1"] .x-thumb{ background:var(--mx-vit) !important; border-radius:2px !important; }
+html[data-mx="1"] #tw-leave-ov{ background:var(--mx-ink) !important; }
+html[data-mx="1"] #tw-leave-ov .tw-bye-t{ color:var(--mx-paper) !important; }
+html[data-mx="1"] #tw-leave-ov .tw-bye-a{ background:transparent !important; color:var(--mx-paper) !important;
+  border:1px solid var(--mx-line) !important; border-radius:1px !important; }
+html[data-mx="1"] #tw-leave-ov .tw-bye-a:hover{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; }
+html[data-mx="1"] #tw-leave-ov .tw-door{ background:var(--mx-ink2) !important; }
+/* 念のため：mx 表示中に白系の背景が残っていたら暗く落とします */
+html[data-mx="1"] .mx-legacy [style*="background:#fff"],
+html[data-mx="1"] .mx-legacy [style*="background:#f5f5f7"]{ background:transparent !important; }
