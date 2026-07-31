@@ -7,7 +7,8 @@ import { MODERN } from '@/lib/decor';
 import { useSite } from '@/components/Providers';
 import { VisitCounter } from '@/components/VisitCounter';
 import { LeaveOverlay, leaveLabel } from '@/components/LeaveOverlay';
-import { Atmosphere, useStuck } from './Motion';
+import { asset } from '@/lib/paths';
+import { Atmosphere, useStuck, useSmoothScroll } from './Motion';
 import { useEffect, useState } from 'react';
 
 const NAV: Array<[string, string]> = [
@@ -31,6 +32,7 @@ export function MShell({ children }: { children: React.ReactNode }) {
   const { lang } = useSite();
   const path = usePathname() || '';
   const stuck = useStuck(40);
+  useSmoothScroll();
   const [leaving, setLeaving] = useState(false);
 
   // 旧「現在」用のCSSを打ち消すための目印
@@ -44,6 +46,7 @@ export function MShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <div className="mx-bg" aria-hidden style={{ backgroundImage: `url(${asset('/images/photos/rouget.jpg')})` }} />
       <Atmosphere />
 
       <header className={`mx-head${stuck ? ' is-stuck' : ''}`}>
