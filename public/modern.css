@@ -605,3 +605,45 @@ html[data-mx="1"] .mx-legacy [style*="background:#f5f5f7"]{ background:transpare
 html[data-era="now"][data-mx="1"] .btn[data-on="0"]{ background:transparent !important; color:var(--mx-paper) !important; border:1px solid var(--mx-line) !important; opacity:.62 !important; }
 html[data-era="now"][data-mx="1"] .btn[data-on="1"]{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; opacity:1 !important; }
 html[data-era="now"][data-mx="1"] .btn{ background:transparent !important; }
+
+/* 明るい写真の上でも読めるように ------------------------------ */
+.mx-bleed-shade{
+  background:
+    linear-gradient(100deg, rgba(28,18,15,.86) 0%, rgba(28,18,15,.70) 30%, rgba(28,18,15,.30) 58%, rgba(28,18,15,.18) 78%, rgba(28,18,15,.34) 100%),
+    linear-gradient(to bottom, var(--mx-ink) 0%, rgba(28,18,15,.24) 22%, rgba(28,18,15,.28) 74%, var(--mx-ink) 100%);
+}
+.mx-bleed .mx-h2, .mx-bleed .mx-h1{ text-shadow:0 2px 46px rgba(18,10,8,.92), 0 1px 3px rgba(18,10,8,.6); }
+.mx-bleed .mx-p, .mx-bleed .mx-kicker, .mx-bleed .mx-cap{ text-shadow:0 1px 22px rgba(18,10,8,.95); }
+.mx-bleed .mx-btn{ backdrop-filter:blur(3px); background:rgba(28,18,15,.30); }
+.mx-bleed .mx-btn:hover{ background:var(--mx-paper); }
+.mx-bleed .mx-in, .mx-bleed .mx-in-n{ position:relative; z-index:2; }
+
+/* ストアの絞り込みを、今どきの選択肢に -------------------------- */
+html[data-mx="1"] #cat-nav{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; line-height:1 !important; }
+html[data-mx="1"] #cat-nav a{
+  margin:0 !important; padding:9px 16px !important; border:1px solid var(--mx-line) !important; border-radius:999px !important;
+  font-family:var(--mx-sans) !important; font-size:12px !important; letter-spacing:.06em !important;
+  color:var(--mx-dim) !important; text-decoration:none !important; white-space:nowrap;
+  transition:background .35s ease, color .35s ease, border-color .35s ease;
+}
+html[data-mx="1"] #cat-nav a:hover{ color:var(--mx-paper) !important; border-color:rgba(244,236,228,.4) !important; background:rgba(244,236,228,.06) !important; }
+html[data-mx="1"] #cat-nav a.is-on{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; font-weight:600 !important; }
+html[data-mx="1"] #sub-wrap{ margin-top:22px !important; }
+html[data-mx="1"] select.field{
+  -webkit-appearance:none; appearance:none; border:1px solid var(--mx-line) !important; border-radius:999px !important;
+  padding:12px 42px 12px 18px !important; background-image:linear-gradient(45deg,transparent 50%,rgba(244,236,228,.5) 50%),linear-gradient(135deg,rgba(244,236,228,.5) 50%,transparent 50%) !important;
+  background-position:calc(100% - 22px) 50%, calc(100% - 16px) 50% !important;
+  background-size:6px 6px, 6px 6px !important; background-repeat:no-repeat !important;
+  font-size:13px !important; letter-spacing:.05em !important;
+}
+html[data-mx="1"] #stock-btn{ border-radius:999px !important; padding:11px 22px !important; }
+
+/* 営業カレンダー：休みの日をはっきり ---------------------------- */
+html[data-mx="1"] table.retro{ border-collapse:separate !important; border-spacing:3px !important; }
+html[data-mx="1"] table.retro td{ border:0 !important; border-radius:3px !important; padding:6px 7px !important; font-size:12.5px !important; }
+html[data-mx="1"] table.retro th{ border:0 !important; color:var(--mx-faint) !important; font-size:11px !important; letter-spacing:.1em !important; }
+html[data-mx="1"] table.retro td.cal-off{
+  background:rgba(143,64,56,.55) !important; color:#f7ded6 !important; font-weight:600 !important;
+  box-shadow:inset 0 0 0 1px rgba(211,169,138,.45) !important;
+}
+html[data-mx="1"] table.retro td.cal-today{ outline:1px solid var(--mx-gold) !important; outline-offset:-1px; }
