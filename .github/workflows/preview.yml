@@ -21,16 +21,14 @@ jobs:
 
       - run: npm install --no-audit --no-fund
 
-      - name: ビルド（/preview 配下・素材は既存のルートを参照）
+      - name: ビルド（/preview 配下に丸ごと出力）
         env:
           BASE_PATH: /sumura-sake/preview
-          ASSET_BASE: /sumura-sake
+          ASSET_BASE: /sumura-sake/preview
         run: npm run build
 
       - name: main の preview/ に配置（公開中のサイトはそのまま）
         run: |
-          rm -f out/products.json out/products.i18n.json out/api.js
-          rm -rf out/images out/gif
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin main
