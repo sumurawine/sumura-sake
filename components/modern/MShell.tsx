@@ -34,6 +34,7 @@ export function MShell({ children }: { children: React.ReactNode }) {
   const stuck = useStuck(40);
   useSmoothScroll();
   const [leaving, setLeaving] = useState(false);
+  const [menu, setMenu] = useState(false);
 
   // 旧「現在」用のCSSを打ち消すための目印
   useEffect(() => {
@@ -53,7 +54,9 @@ export function MShell({ children }: { children: React.ReactNode }) {
         <Link href="/home" className="mx-brand">
           すむら酒店<small>LIQUOR SHOP SUMURA</small>
         </Link>
-        <nav className="mx-nav">
+        <button type="button" className={`mx-burger${menu ? ' is-open' : ''}`} aria-label="メニュー"
+          onClick={() => setMenu((v) => !v)}><span /><span /><span /></button>
+        <nav className={`mx-nav${menu ? ' is-open' : ''}`} onClick={() => setMenu(false)}>
           {NAV.map(([href, k]) => (
             <Link key={href} href={href} className={on(href) ? 'on' : ''}>{label(k)}</Link>
           ))}
