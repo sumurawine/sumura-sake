@@ -92,7 +92,7 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
             <T k="tk-ig-note" as="div" className="hint" style={{ marginTop: 4 }} />
           </div>
           <div style={{ margin: '8px 0' }}>
-            <T k="tk-webring" as="span" /> &lt; <a href="#">PREV</a> ｜ <a href="#">RANDOM</a> ｜ <a href="#">NEXT</a> &gt;
+            <T k="tk-webring" as="span" /> &lt; <a href="#">PREV</a> ｜ <a href="#">RANDOM</a> ｜ <a href="#">NEXT</a>{' '}&gt;
           </div>
           <div style={{ margin: '8px 0' }}>
             <T k="tk-vis-pre" as="span" /> <VisitCounter /> <T k="tk-vis-post" as="span" />
