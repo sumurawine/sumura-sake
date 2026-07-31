@@ -8,6 +8,7 @@ import { T } from '@/components/T';
 import { A } from '@/components/A';
 import { useSite } from '@/components/Providers';
 import { isModern } from '@/lib/era';
+import { stripDeco } from '@/lib/decor';
 import {
   ORDER, u, catOf, apOf, prodOf, nameOf, descOf, notesOf, isOut,
   type Item, type ProductData, type I18nData,
@@ -19,6 +20,8 @@ export function StorePage() {
   const { lang, eraView } = useSite();
   const router = useRouter();
   const plain = isModern(eraView as any);
+  /** 2010年代・2020年代では飾り文字を落とします */
+  const dec = (s: string) => (plain ? stripDeco(s) : s);
   const brk = (s: string) => (plain ? s : `[${s}]`);
   const brk2 = (s: string) => (plain ? s : `［ ${s} ］`);
 
@@ -96,9 +99,9 @@ export function StorePage() {
 
         <div style={{ textAlign: 'center', margin: '14px 0 2px' }}>
           <button className="btn" id="mode-area" style={{ margin: 2 }} data-on={mode === 'area' ? '1' : '0'}
-            onClick={() => setMode('area')}>{u('modeArea', lang)}</button>
+            onClick={() => setMode('area')}>{dec(u('modeArea', lang))}</button>
           <button className="btn" id="mode-prod" style={{ margin: 2 }} data-on={mode === 'prod' ? '1' : '0'}
-            onClick={() => setMode('prod')}>{u('modeProd', lang)}</button>
+            onClick={() => setMode('prod')}>{dec(u('modeProd', lang))}</button>
         </div>
 
         {mode === 'area' ? (
@@ -148,7 +151,7 @@ export function StorePage() {
 
         <div style={{ textAlign: 'center', margin: '12px 0 2px' }}>
           <button className="btn" id="stock-btn" data-on={instock ? '1' : '0'} onClick={() => setInstock((v) => !v)}>
-            {instock ? u('stockOn', lang) : u('stockOff', lang)}
+            {dec(instock ? u('stockOn', lang) : u('stockOff', lang))}
           </button>
         </div>
 
@@ -183,7 +186,7 @@ export function StorePage() {
                         <span className="price">{it.price}</span>
                         {out ? <><br /><span className="hint">{u('soldout', lang)}</span></> : null}
                         <br />
-                        <button className="btn" style={{ marginTop: 5 }} onClick={() => setModal(it)}>{u('detail', lang)}</button>
+                        <button className="btn" style={{ marginTop: 5 }} onClick={() => setModal(it)}>{dec(u('detail', lang))}</button>
                       </div>
                     </div>
                   );
@@ -216,7 +219,7 @@ export function StorePage() {
                   <div className="modal-price">{modal.price}{isOut(modal) ? '　' + u('soldout', lang) : ''}</div>
                   <div style={{ textAlign: 'center', marginTop: 14 }}>
                     <a href="#" onClick={(e) => { e.preventDefault(); openContact(modal); }}>
-                      <span className="btn" style={{ fontSize: 15, padding: '8px 20px' }}>{u('cta', lang)}</span>
+                      <span className="btn" style={{ fontSize: 15, padding: '8px 20px' }}>{dec(u('cta', lang))}</span>
                     </a>
                   </div>
                 </>
