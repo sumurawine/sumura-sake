@@ -188,3 +188,12 @@ export const MC: Record<Lang, Copy> = {
     gallery: '가게의 풍경', galleryHead: '선반에서 몇 병을.',
   },
 };
+
+/** 2010年代・2020年代のブログ見出し（「よもやま日記」は古い時代だけに残します） */
+export const BLOG_TITLE: Record<Lang, string> = {
+  jp: 'すむら酒店　ブログ',
+  en: 'Liquor Shop Sumura — Journal',
+  fr: 'Liquor Shop Sumura — Journal',
+  zh: 'すむら酒店 博客',
+  ko: '스무라 주점 블로그',
+};
