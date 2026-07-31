@@ -96,8 +96,9 @@ export function useStuck(px = 40) {
 }
 
 /** 画面全体のスクロールに粘りを持たせ、節目で気持ちよく止めます */
-export function useSmoothScroll(ease = 0.085) {
+export function useSmoothScroll(enabled = true, ease = 0.11) {
   useEffect(() => {
+    if (!enabled) return;
     if (typeof window === 'undefined') return;
     const mm = window.matchMedia;
     if (mm && mm('(prefers-reduced-motion: reduce)').matches) return;
@@ -137,7 +138,7 @@ export function useSmoothScroll(ease = 0.085) {
       const reach = window.innerHeight * 0.28;
       if (Math.abs(best - y) < reach) { target = Math.max(0, Math.min(best, maxY())); run(); }
     };
-    const queueSettle = () => { clearTimeout(idle); idle = window.setTimeout(settle, 170); };
+    const queueSettle = () => { clearTimeout(idle); idle = window.setTimeout(settle, 260); };
 
     const fine = !mm || mm('(pointer: fine)').matches;
     const onWheel = (e: WheelEvent) => {
@@ -166,5 +167,5 @@ export function useSmoothScroll(ease = 0.085) {
       clearTimeout(idle);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [ease]);
+  }, [enabled, ease]);
 }
