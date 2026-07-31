@@ -249,8 +249,8 @@ function buildModes(){
   var a=document.getElementById('mode-area'),p=document.getElementById('mode-prod');
   if(!a)return;
   a.textContent=u('modeArea');p.textContent=u('modeProd');
-  a.style.boxShadow=MODE==='area'?'0 0 0 2px #c8a84b':'';
-  p.style.boxShadow=MODE==='prod'?'0 0 0 2px #c8a84b':'';
+  a.setAttribute('data-on',MODE==='area'?'1':'0');
+  p.setAttribute('data-on',MODE==='prod'?'1':'0');
   a.style.opacity=MODE==='area'?'1':'.55';
   p.style.opacity=MODE==='prod'?'1':'.55';
 }
@@ -258,7 +258,7 @@ function buildModes(){
 function buildStock(){
   var b=document.getElementById('stock-btn');if(!b)return;
   b.textContent=INSTOCK?u('stockOn'):u('stockOff');
-  b.style.boxShadow=INSTOCK?'0 0 0 2px #7dff7d':'';
+  b.setAttribute('data-on',INSTOCK?'1':'0');
 }
 
 function buildUI(){buildModes();buildCatNav();buildSub();buildStock();}
