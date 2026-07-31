@@ -52,6 +52,7 @@ export function SecretPage() {
   useEffect(() => {
     if (params?.get('locked') === '1') setMsg({ k: 'locked', cls: 'bad' });
   }, [params]);
+  useEffect(() => { setMsg((m) => (m ? { ...m } : m)); }, [lang]);
 
   const knock = async () => {
     const v = norm(pw);
