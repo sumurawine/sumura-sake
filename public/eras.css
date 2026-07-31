@@ -480,3 +480,40 @@ html[data-era="now"]{scroll-behavior:auto !important}
 #timewarp.tw-closed{cursor:pointer}
 html[data-era="now"] #timewarp .tw-toggle{background:transparent !important;border:0 !important;color:rgba(244,236,228,.55) !important;box-shadow:none !important}
 html[data-era="2010"] #timewarp .tw-toggle{background:#fff !important;border:1px solid #dcdcdc !important;color:#666 !important}
+
+/* ===== ゲームコーナー：時代ごとの見た目 ===== */
+html[data-era="1995"] .gm-tab{ border:2px outset #cfcfcf !important; border-radius:0 !important;
+  background:#c0c0c0 !important; color:#000080 !important; font-family:"MS Gothic",monospace !important }
+html[data-era="1995"] .gm-tab.is-on{ border-style:inset !important; background:#000080 !important; color:#25ff25 !important }
+html[data-era="1995"] .gm-key{ border:2px outset #cfcfcf !important; border-radius:0 !important;
+  background:#c0c0c0 !important; color:#000080 !important }
+html[data-era="1995"] .gm-key:active{ border-style:inset !important }
+html[data-era="1995"] .gm-tetris,html[data-era="1995"] .gm-racer,
+html[data-era="1995"] .gm-plat,html[data-era="1995"] .gm-marble{
+  border:3px outset #cfcfcf !important; border-radius:0 !important; image-rendering:pixelated !important }
+
+html[data-era="2005"] .gm-tab{ border:2px ridge #ff44aa !important; border-radius:8px !important;
+  background:linear-gradient(#fff0f7,#ffd5ec) !important; color:#ff0066 !important }
+html[data-era="2005"] .gm-tab.is-on{ background:linear-gradient(#ff66b2,#ff0066) !important; color:#fff !important;
+  box-shadow:0 0 8px rgba(255,0,102,.5) !important }
+html[data-era="2005"] .gm-key{ border:2px ridge #ff44aa !important; border-radius:10px !important;
+  background:linear-gradient(#fff0f7,#ffd5ec) !important; color:#ff0066 !important }
+html[data-era="2005"] .gm-tetris,html[data-era="2005"] .gm-racer,
+html[data-era="2005"] .gm-plat,html[data-era="2005"] .gm-marble{
+  border:4px ridge #ff44aa !important; border-radius:8px !important }
+
+html[data-era="2010"] .gm-tab{ border:1px solid #dcdcdc !important; border-radius:20px !important;
+  background:#fff !important; color:#5f6368 !important; opacity:1 !important }
+html[data-era="2010"] .gm-tab.is-on{ background:#4d90fe !important; color:#fff !important; border-color:#4d90fe !important }
+html[data-era="2010"] .gm-key{ border:1px solid #dcdcdc !important; border-radius:8px !important;
+  background:#fff !important; color:#3c4043 !important }
+html[data-era="2010"] .gm-key:active{ background:#eef3fb !important }
+html[data-era="2010"] .gm-tetris,html[data-era="2010"] .gm-racer,
+html[data-era="2010"] .gm-plat,html[data-era="2010"] .gm-marble{
+  border:1px solid #dcdcdc !important; border-radius:6px !important;
+  box-shadow:0 1px 3px rgba(0,0,0,.12) !important }
+
+html[data-era="now"] .gm-menu{ display:flex !important }
+@media (max-width:759px){ html[data-era="now"] .gm-pad{ display:flex !important } }
+@media (min-width:760px){ html[data-era="now"] .gm-pad{ display:none !important } }
+html[data-era="now"] .gm-tab{ border-color:rgba(244,236,228,.35) !important; color:var(--mx-paper,#f4ece4) !important }

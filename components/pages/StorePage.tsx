@@ -10,9 +10,54 @@ import { useSite } from '@/components/Providers';
 import { isModern } from '@/lib/era';
 import { stripDeco } from '@/lib/decor';
 import {
-  ORDER, u, catOf, apOf, prodOf, nameOf, descOf, notesOf, isOut,
+  ORDER, CATS, u, catOf, apOf, prodOf, nameOf, descOf, notesOf, isOut,
   type Item, type ProductData, type I18nData,
 } from '@/lib/store';
+import { loadContent, type Row } from '@/lib/content';
+
+/** 管理画面（スプレッドシート）で足した商品を、いつもの商品一覧に混ぜます */
+function extraItems(rows: Row[]): Item[] {
+  const key = (jp: string) => {
+    const t = (jp || '').trim();
+    if (!t) return 'other';
+    if (ORDER.indexOf(t) >= 0) return t;
+    const hit = ORDER.find((k) => CATS[k] && CATS[k].jp === t);
+    if (hit) return hit;
+    const part = ORDER.find((k) => CATS[k] && (CATS[k].jp.indexOf(t) >= 0 || t.indexOf(CATS[k].jp) >= 0));
+    return part || 'other';
+  };
+  return rows.map((r, i) => ({
+    id: 'x' + (i + 1),
+    name: (r['商品名(日本語)'] || '').trim(),
+    price: (r['価格'] || '').trim(),
+    img: (r['写真URL'] || '').trim(),
+    cat: key(r['産地']),
+    prod: (r['生産者'] || '').trim() || undefined,
+    stock: /^(0|無|なし|品切|在庫切れ|sold ?out)$/i.test((r['在庫'] || '').trim()) ? '0' : ((r['在庫'] || '').trim() || '1'),
+    desc: (r['説明(日本語)'] || '').trim() || undefined,
+    notes: [],
+  })).filter((it) => it.name);
+}
+
+/** 管理画面で入れた外国語を、既存の翻訳表に足します */
+function mergeI18n(i: I18nData | null, rows: Row[], list: Item[]): I18nData {
+  const out: I18nData = { ...(i || {}) };
+  out.items = { ...(out.items || {}) };
+  out.descs = { ...(out.descs || {}) };
+  rows.forEach((r, n) => {
+    const it = list[n]; if (!it) return;
+    const nm: Record<string, string> = {};
+    const ds: Record<string, string> = {};
+    (['en', 'fr', 'zh', 'ko'] as const).forEach((l) => {
+      const L = l.toUpperCase();
+      const a = (r['商品名' + L] || '').trim(); if (a) nm[l] = a;
+      const b = (r['説明' + L] || '').trim(); if (b) ds[l] = b;
+    });
+    if (Object.keys(nm).length) out.items![it.id] = { name: nm };
+    if (Object.keys(ds).length) out.descs![it.id] = ds;
+  });
+  return out;
+}
 
 type Mode = 'area' | 'prod';
 
@@ -41,8 +86,14 @@ export function StorePage() {
     Promise.all([
       fetch(asset('/products.json') + v).then((r) => r.json()),
       fetch(asset('/products.i18n.json') + v).then((r) => r.json()).catch(() => null),
+      loadContent().catch(() => null),
     ])
-      .then(([d, i]) => { setDATA(d); setI18N(i); })
+      .then(([d, i, c]) => {
+        const rows = (c && c.items) || [];
+        const add = extraItems(rows);
+        setDATA(add.length ? { ...d, items: [...add, ...d.items], count: d.items.length + add.length } : d);
+        setI18N(add.length ? mergeI18n(i, rows, add) : i);
+      })
       .catch(() => setErr(true));
   }, []);
 

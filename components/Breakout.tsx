@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Lang } from '@/lib/i18n';
+import { roundBox } from '@/components/games/Frame';
 
 const L: Record<Lang, Record<string, string>> = {
   jp: { title: '★☆★ すむら酒店 ブロックくずし ★☆★', start: '▶ ゲームスタート', next: '▶ つぎのレベルへ', again: '▶ もういちど',
@@ -141,14 +142,12 @@ export function Breakout({ lang, era = '2005' }: { lang: Lang; era?: string }) {
       for (const b of bricks) {
         if (b.hp <= 0) continue;
         g.fillStyle = b.steel ? sk.steel : b.hp > 1 ? sk.tough : b.c;
-        if (sk.round) { g.beginPath(); (g as any).roundRect(b.x, b.y, BW, BH, sk.round); g.fill(); }
-        else g.fillRect(b.x, b.y, BW, BH);
+        roundBox(g, b.x, b.y, BW, BH, sk.round);
         g.fillStyle = sk.shade; g.fillRect(b.x, b.y, BW, sk.round ? 2 : 3);
         if (b.steel) { g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(b.x + 4, b.y + 5, BW - 8, 3); }
       }
       g.fillStyle = sk.paddle;
-      if (sk.round) { g.beginPath(); (g as any).roundRect(px, H - 18 - ph, pw, ph, ph / 2); g.fill(); }
-      else g.fillRect(px, H - 18 - ph, pw, ph);
+      roundBox(g, px, H - 18 - ph, pw, ph, sk.round ? ph / 2 : 0);
       g.fillStyle = sk.ball; g.beginPath(); g.arc(bx, by, r, 0, Math.PI * 2); g.fill();
 
       if (!bricks.some((b) => b.hp > 0 && !b.steel)) {

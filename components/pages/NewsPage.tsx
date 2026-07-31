@@ -2,10 +2,15 @@
 import { Shell } from '@/components/Shell';
 import { T } from '@/components/T';
 import { A } from '@/components/A';
+import { useSite } from '@/components/Providers';
+import { useContent, pick } from '@/lib/content';
 
 const ITEMS = [1, 2, 3, 4] as const;
 
 export function NewsPage() {
+  const { lang } = useSite();
+  const { news } = useContent();
+  const L = lang.toUpperCase();
   return (
     <Shell>
       <div className="panel">
@@ -13,13 +18,25 @@ export function NewsPage() {
         <T k="nw-sub" as="p" kind="sub" className="sub" />
       </div>
 
-      {ITEMS.map((i) => (
-        <div className="panel" key={i}>
-          <T k={`nw-d${i}`} as="div" className="x-pink" style={{ fontSize: 14 }} />
-          <T k={`nw-t${i}`} as="div" kind="head" className="pixhead" style={{ fontSize: 18 }} />
-          <T k={`nw-b${i}`} as="p" />
-        </div>
-      ))}
+      {news.length
+        ? news.map((r, i) => (
+            <div className="panel" key={i}>
+              <div className="x-pink" style={{ fontSize: 14 }}>{r['日付']}</div>
+              <div
+                className="pixhead"
+                style={{ fontSize: 18 }}
+                dangerouslySetInnerHTML={{ __html: pick(r, lang, '題名(日本語)', '題名' + L) }}
+              />
+              <p dangerouslySetInnerHTML={{ __html: pick(r, lang, '本文(日本語)', '本文' + L) }} />
+            </div>
+          ))
+        : ITEMS.map((i) => (
+            <div className="panel" key={i}>
+              <T k={`nw-d${i}`} as="div" className="x-pink" style={{ fontSize: 14 }} />
+              <T k={`nw-t${i}`} as="div" kind="head" className="pixhead" style={{ fontSize: 18 }} />
+              <T k={`nw-b${i}`} as="p" />
+            </div>
+          ))}
 
       <div className="panel" style={{ textAlign: 'center' }}>
         <T k="nw-foot" as="p" className="hint" />

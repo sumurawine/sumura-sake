@@ -2,11 +2,13 @@
 import { asset } from '@/lib/paths';
 import { Shell } from '@/components/Shell';
 import { T } from '@/components/T';
+import { useContent, pick } from '@/lib/content';
 import { useSite } from '@/components/Providers';
 import { MHome } from '@/components/modern/MHome';
 
 export function HomePage() {
-  const { eraView } = useSite();
+  const { eraView, lang } = useSite();
+  const c = useContent();
   if (eraView === 'now') return <MHome />;
   return (
     <Shell>
@@ -31,9 +33,17 @@ export function HomePage() {
       <div className="panel">
         <T k="home-hist-head" as="div" kind="head" className="pixhead" />
         <ul className="dots">
-          <T k="home-hist-1" as="li" />
-          <T k="home-hist-2" as="li" />
-          <T k="home-hist-3" as="li" />
+          {c.history.length ? (
+            c.history.map((r, i) => (
+              <li key={i} dangerouslySetInnerHTML={{ __html: `<b>${r['日付'] || ''}</b>　${pick(r, lang, '本文(日本語)', lang.toUpperCase())}` }} />
+            ))
+          ) : (
+            <>
+              <T k="home-hist-1" as="li" />
+              <T k="home-hist-2" as="li" />
+              <T k="home-hist-3" as="li" />
+            </>
+          )}
         </ul>
       </div>
 
@@ -45,11 +55,15 @@ export function HomePage() {
       <div className="panel" style={{ textAlign: 'center' }}>
         <img src={asset('/images/bottle.png')} alt="" />
         {'　'}
-        <T k="home-today" as="span" />
+        {c.today.length
+          ? <span dangerouslySetInnerHTML={{ __html: `本日の一本：<b>${pick(c.today[0], lang, '銘柄(日本語)', '銘柄' + lang.toUpperCase())}</b>` }} />
+          : <T k="home-today" as="span" />}
         {'　'}
         <img src={asset('/images/bottle.png')} alt="" />
         <br />
-        <T k="home-today-desc" as="span" className="hint" />
+        {c.today.length
+          ? <span className="hint">— {pick(c.today[0], lang, '一言(日本語)', '一言' + lang.toUpperCase())} —</span>
+          : <T k="home-today-desc" as="span" className="hint" />}
         <br />
         <a href="store.html">
           <T k="home-store-btn" as="span" kind="btn" className="btn" style={{ display: 'inline-block', marginTop: 10 }} />
