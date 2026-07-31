@@ -304,3 +304,34 @@ html[data-mx="1"] #tw-panel, html[data-mx="1"] .tw-panel{
 
 /* 表紙は帯のぶん下げます */
 .mx-hero .mx-in{ padding-top:40px; }
+
+/* 時間旅行の小箱・言語バーを暗い画面に合わせます -------------- */
+html[data-mx="1"] #timewarp{
+  background:rgba(16,14,18,.66) !important;
+  border:1px solid rgba(239,234,226,.14) !important;
+  border-radius:3px !important; box-shadow:none !important;
+  backdrop-filter:saturate(1.1) blur(16px);
+  color:var(--mx-paper) !important; padding:8px !important;
+}
+html[data-mx="1"] #timewarp .tw-t{ color:rgba(239,234,226,.4) !important; font-family:var(--mx-sans) !important; letter-spacing:.18em !important; }
+html[data-mx="1"] #timewarp button{
+  background:transparent !important; color:rgba(239,234,226,.62) !important;
+  border:1px solid transparent !important; border-radius:2px !important;
+  font-family:var(--mx-sans) !important; letter-spacing:.06em !important; box-shadow:none !important;
+}
+html[data-mx="1"] #timewarp button:hover{ color:var(--mx-paper) !important; background:rgba(239,234,226,.06) !important; }
+html[data-mx="1"] #timewarp button.on{ color:var(--mx-ink) !important; background:var(--mx-paper) !important; }
+html[data-mx="1"] #timewarp .tw-toggle{ display:block !important; background:transparent !important; color:rgba(239,234,226,.5) !important; border:0 !important; }
+html[data-mx="1"] #timewarp.tw-closed{ width:40px !important; }
+html[data-mx="1"] #lang-bar{ padding:5px 8px !important; }
+
+/* 帯は左右のウィジェットを避けます */
+.mx-head{ padding-left:64px; padding-right:64px; }
+.mx-head.is-stuck{ padding-left:64px; padding-right:64px; }
+@media (min-width:861px){
+  .mx-head{ padding-left:70px; padding-right:236px; }
+  .mx-head.is-stuck{ padding-left:70px; padding-right:236px; padding-top:14px; }
+}
+@media (max-width:860px){
+  .mx-head{ padding-left:22px; padding-right:22px; padding-top:58px; }
+}
