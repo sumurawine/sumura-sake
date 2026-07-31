@@ -38,11 +38,12 @@ export function TimeTravel() {
   };
 
   return (
-    <div id="timewarp" className={closed ? 'tw-closed' : undefined}>
+    <div id="timewarp" className={closed ? 'tw-closed' : undefined}
+         onClick={closed ? () => setClosed(false) : undefined}>
       <button type="button" className="tw-toggle" aria-label="toggle" onClick={() => setClosed((v) => !v)}>
         {closed ? '+' : '−'}
       </button>
-      <span className="tw-t">⏳ {t.t}</span>
+      <span className="tw-t" onClick={() => setClosed((v) => !v)}>⏳ {t.t}</span>
       <div className="tw-body">
         {items.map(([key, label]) => (
           <button key={key} type="button" data-era={key} className={key === cur ? 'on' : undefined} onClick={() => go(key)}>
