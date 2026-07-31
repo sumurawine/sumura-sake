@@ -56,7 +56,27 @@ ul.dots{list-style:none;padding-left:0}ul.dots li{margin:6px 0}ul.dots li:before
 <div class="panel">
 <div class="pixhead" data-i18n="st-head">■ オンラインストア ■</div>
 <p class="sub" data-i18n="st-sub">▼ 表示価格はすべて税込です ▼</p>
-<div id="cat-nav" style="margin:10px 0;text-align:center;line-height:2"></div>
+
+<div style="text-align:center;margin:14px 0 2px">
+<button class="btn" id="mode-area" style="margin:2px">◆ 産地から選ぶ</button>
+<button class="btn" id="mode-prod" style="margin:2px">◆ 生産者から選ぶ</button>
+</div>
+
+<div id="cat-nav" style="margin:8px 0 2px;text-align:center;line-height:2"></div>
+
+<div id="sub-wrap" style="text-align:center;margin:10px 0 2px">
+<div class="hint" id="sub-label" style="margin-bottom:4px"></div>
+<select id="sub-sel" class="field" style="max-width:360px;display:inline-block"></select>
+</div>
+
+<div style="text-align:center;margin:12px 0 2px">
+<button class="btn" id="stock-btn"></button>
+</div>
+
+<div class="hint" id="result-count" style="text-align:center;margin-top:8px"></div>
+</div>
+
+<div class="panel">
 <div id="catalogue"><p class="hint" data-i18n="st-loading">読み込んでいます…</p></div>
 </div>
 
@@ -94,47 +114,153 @@ whisky:{jp:'ウイスキー',en:'Whisky',fr:'Whisky',zh:'威士忌',ko:'위스�
 other:{jp:'その他',en:'Other',fr:'Autres',zh:'其他',ko:'기타'}};
 var ORDER=['burgundy','rhone','jura','loire','alsace','bordeaux','italy','usa','australia','whisky','other'];
 var UI={soldout:{jp:'在庫切れ',en:'Sold out',fr:'Épuisé',zh:'售罄',ko:'품절'},
-detail:{jp:'▶ 詳細',en:'▶ Details',fr:'▶ Détails',fr2:'',zh:'▶ 详情',ko:'▶ 상세'},
+detail:{jp:'▶ 詳細',en:'▶ Details',fr:'▶ Détails',zh:'▶ 详情',ko:'▶ 상세'},
 items:{jp:'点',en:' items',fr:' articles',zh:'款',ko:'점'},
 cta:{jp:'■ この商品について問い合わせる',en:'■ Enquire about this bottle',fr:'■ Nous contacter à ce sujet',zh:'■ 点此咨询本商品',ko:'■ 이 상품에 대해 문의하기'},
 noimg:{jp:'[ 写 真 準 備 中 ]',en:'[ image coming soon ]',fr:'[ image à venir ]',zh:'[ 图片準备中 ]',ko:'[ 사진 준비 중 ]'},
 prod:{jp:'生産者',en:'Producer',fr:'Producteur',zh:'生产者',ko:'생산자'},
-err:{jp:'商品情報を読み込めませんでした。',en:'Could not load the product list.',fr:'Impossible de charger la liste des produits.',zh:'无法载入商品资讯。',ko:'상품 정보를 불러올 수 없습니다.'}};
+err:{jp:'商品情報を読み込めませんでした。',en:'Could not load the product list.',fr:'Impossible de charger la liste des produits.',zh:'无法载入商品资讯。',ko:'상품 정보를 불러올 수 없습니다.'},
+modeArea:{jp:'◆ 産地から選ぶ',en:'◆ By region',fr:'◆ Par région',zh:'◆ 按产地选择',ko:'◆ 산지로 고르기'},
+modeProd:{jp:'◆ 生産者から選ぶ',en:'◆ By producer',fr:'◆ Par producteur',zh:'◆ 按生产者选择',ko:'◆ 생산자로 고르기'},
+subArea:{jp:'▼ さらに細かい産地・村名で絞り込む',en:'▼ Narrow down by appellation',fr:'▼ Affiner par appellation',zh:'▼ 按更细的产区・村庄筛选',ko:'▼ 더 세부 산지・마을로 좁히기'},
+subProd:{jp:'▼ 生産者を選ぶ',en:'▼ Choose a producer',fr:'▼ Choisir un producteur',zh:'▼ 选择生产者',ko:'▼ 생산자 선택'},
+allArea:{jp:'すべての産地',en:'All appellations',fr:'Toutes les appellations',zh:'全部产区',ko:'모든 산지'},
+allProd:{jp:'すべての生産者',en:'All producers',fr:'Tous les producteurs',zh:'全部生产者',ko:'모든 생산자'},
+allCat:{jp:'すべて',en:'All',fr:'Tout',zh:'全部',ko:'전체'},
+stockOff:{jp:'□ 在庫のある商品のみ表示',en:'□ Show in-stock only',fr:'□ Afficher seulement les vins en stock',zh:'□ 仅显示有货商品',ko:'□ 재고 있는 상품만 표시'},
+stockOn:{jp:'■ 在庫のある商品のみ表示中',en:'■ Showing in-stock only',fr:'■ Seulement les vins en stock',zh:'■ 正在仅显示有货商品',ko:'■ 재고 있는 상품만 표시 중'},
+hits:{jp:'該当 %n 点',en:'%n items',fr:'%n articles',zh:'共 %n 款',ko:'%n 점'},
+none:{jp:'該当する商品がありません。条件を変えてお試しください。',en:'No wines match. Please try different filters.',fr:'Aucun vin ne correspond. Essayez d’autres critères.',zh:'没有符合条件的商品，请更换条件试试。',ko:'해당하는 상품이 없습니다. 조건을 바꿔 보세요.'}};
+
 var DATA=null,I18N=null;
+var MODE='area',CAT='all',SUB='all',PROD='all',INSTOCK=false;
+
 function L(){return localStorage.getItem('lang')||'jp';}
-function tr(o){if(!o)return '';var l=L();return o[l]||o.jp||o.en||'';}
+function u(k){var o=UI[k];return o[L()]||o.jp;}
 function dkey(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;}return 'd'+h.toString(36)+'_'+s.length;}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function nameOf(it){var l=L();if(l==='jp')return it.name;var e=I18N&&I18N.items&&I18N.items[it.id];return (e&&e.name&&e.name[l])||it.name;}
 function descOf(it){if(!it.desc)return '';var l=L();if(l==='jp')return it.desc;var d=I18N&&I18N.descs&&I18N.descs[dkey(it.desc)];return (d&&d[l])||it.desc;}
 function notesOf(it){var l=L();var ns=it.notes||[];if(!ns.length)return [];if(l==='jp')return ns;var N=I18N&&I18N.notes;return ns.map(function(k){return (N&&N[k]&&N[k][l])||k;});}
 function prodOf(it){if(!it.prod)return '';var l=L();if(l==='jp')return it.prod;var P=I18N&&I18N.producers;return (P&&P[it.prod]&&P[it.prod][l])||it.prod;}
+function apOf(it){var k=it.ap||'other';var o=I18N&&I18N.aps&&I18N.aps[k];return (o&&(o[L()]||o.jp))||k;}
+function catOf(c){var o=CATS[c]||CATS.other;return o[L()]||o.jp;}
 function isOut(it){return String(it.stock).trim()==='0';}
+
+function pool(){
+  if(!DATA)return [];
+  return DATA.items.filter(function(it){
+    if(INSTOCK&&isOut(it))return false;
+    if(MODE==='prod')return PROD==='all'||it.prod===PROD;
+    if(CAT!=='all'&&it.cat!==CAT)return false;
+    if(SUB!=='all'&&(it.ap||'other')!==SUB)return false;
+    return true;
+  });
+}
+
+function tally(list,key){
+  var m={},order=[];
+  list.forEach(function(it){var k=key(it)||'other';if(!(k in m)){m[k]=0;order.push(k);}m[k]++;});
+  return {m:m,order:order};
+}
+
+function card(it){
+  var out=isOut(it),l=L();
+  return '<div class="card" style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px'+(out?';opacity:.62':'')+'">'+
+   '<div style="flex:0 0 62px"><img src="'+esc(it.img)+'" alt="" loading="lazy" style="width:62px;height:auto;border:1px solid #5a4626;background:#1a0a00"></div>'+
+   '<div style="flex:1;min-width:0"><b>'+esc(nameOf(it))+'</b>'+
+   (it.prod?'<br><span class="hint">'+esc(prodOf(it))+'</span>':'')+
+   '</div>'+
+   '<div style="text-align:right;white-space:nowrap"><span class="price">'+esc(it.price)+'</span>'+
+   (out?'<br><span class="hint">'+(UI.soldout[l]||UI.soldout.jp)+'</span>':'')+
+   '<br><button class="btn" onclick="showModal(\''+it.id+'\')" style="margin-top:5px">'+(UI.detail[l]||UI.detail.jp)+'</button></div>'+
+   '</div>';
+}
+
 function render(){
   var box=document.getElementById('catalogue');if(!box||!DATA)return;
-  var l=L(),html='',nav='';
-  ORDER.forEach(function(c){
-    var list=DATA.items.filter(function(x){return x.cat===c;});
-    if(!list.length)return;
-    var label=CATS[c]?(CATS[c][l]||CATS[c].jp):c;
-    nav+='<a href="#cat-'+c+'" style="margin:0 6px">['+esc(label)+' '+list.length+(UI.items[l]||UI.items.jp)+']</a>';
-    html+='<div id="cat-'+c+'" style="color:#ffb000;font-size:18px;margin:18px 0 6px;border-bottom:1px dashed #6b4b18;padding-bottom:4px">［ '+esc(label)+' ］</div>';
-    list.forEach(function(it){
-      var out=isOut(it);
-      html+='<div class="card" style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px'+(out?';opacity:.62':'')+'">'+
-        '<div style="flex:0 0 62px"><img src="'+esc(it.img)+'" alt="" loading="lazy" style="width:62px;height:auto;border:1px solid #5a4626;background:#1a0a00"></div>'+
-        '<div style="flex:1;min-width:0"><b>'+esc(nameOf(it))+'</b>'+
-        (it.prod?'<br><span class="hint">'+esc(prodOf(it))+'</span>':'')+
-        '</div>'+
-        '<div style="text-align:right;white-space:nowrap"><span class="price">'+esc(it.price)+'</span>'+
-        (out?'<br><span class="hint">'+(UI.soldout[l]||UI.soldout.jp)+'</span>':'')+
-        '<br><button class="btn" onclick="showModal(\''+it.id+'\')" style="margin-top:5px">'+(UI.detail[l]||UI.detail.jp)+'</button></div>'+
-        '</div>';
-    });
+  var list=pool(),html='';
+  var rc=document.getElementById('result-count');
+  if(rc)rc.textContent=u('hits').replace('%n',list.length);
+  if(!list.length){box.innerHTML='<p class="hint">'+esc(u('none'))+'</p>';return;}
+  var groupKey, groupLabel;
+  if(MODE==='prod'){groupKey=function(it){return it.prod||'other';};groupLabel=function(k){var it={prod:k};return k==='other'?catOf('other'):prodOf(it);};}
+  else if(CAT==='all'){groupKey=function(it){return it.cat;};groupLabel=catOf;}
+  else {groupKey=function(it){return it.ap||'other';};groupLabel=function(k){return apOf({ap:k});};}
+  var t=tally(list,groupKey);
+  var keys=t.order.slice();
+  if(MODE==='area'&&CAT==='all')keys=ORDER.filter(function(k){return t.m[k];});
+  else keys.sort(function(a,b){return t.m[b]-t.m[a];});
+  keys.forEach(function(k){
+    html+='<div style="color:#ffb000;font-size:18px;margin:18px 0 6px;border-bottom:1px dashed #6b4b18;padding-bottom:4px">［ '+esc(groupLabel(k))+' ］ <span class="hint" style="font-size:13px">'+t.m[k]+(UI.items[L()]||UI.items.jp)+'</span></div>';
+    list.forEach(function(it){if(groupKey(it)===k)html+=card(it);});
   });
   box.innerHTML=html;
-  var nv=document.getElementById('cat-nav');if(nv)nv.innerHTML=nav;
 }
+
+function buildCatNav(){
+  var nv=document.getElementById('cat-nav');if(!nv||!DATA)return;
+  if(MODE!=='area'){nv.innerHTML='';return;}
+  var base=DATA.items.filter(function(it){return !(INSTOCK&&isOut(it));});
+  var t=tally(base,function(it){return it.cat;});
+  var h='<a href="#" data-cat="all" style="margin:0 6px'+(CAT==='all'?';color:#ffd479;font-weight:bold':'')+'">['+esc(u('allCat'))+' '+base.length+']</a>';
+  ORDER.forEach(function(c){
+    if(!t.m[c])return;
+    h+='<a href="#" data-cat="'+c+'" style="margin:0 6px'+(CAT===c?';color:#ffd479;font-weight:bold':'')+'">['+esc(catOf(c))+' '+t.m[c]+']</a>';
+  });
+  nv.innerHTML=h;
+  [].forEach.call(nv.querySelectorAll('a'),function(a){
+    a.addEventListener('click',function(e){e.preventDefault();CAT=a.getAttribute('data-cat');SUB='all';buildUI();render();});
+  });
+}
+
+function buildSub(){
+  var wrap=document.getElementById('sub-wrap'),lab=document.getElementById('sub-label'),sel=document.getElementById('sub-sel');
+  if(!wrap||!DATA)return;
+  var base=DATA.items.filter(function(it){return !(INSTOCK&&isOut(it));});
+  var opts='',cur;
+  if(MODE==='prod'){
+    lab.textContent=u('subProd');
+    var t=tally(base.filter(function(it){return it.prod;}),function(it){return it.prod;});
+    var keys=t.order.slice().sort(function(a,b){return t.m[b]-t.m[a];});
+    opts='<option value="all">'+esc(u('allProd'))+'（'+base.length+'）</option>';
+    keys.forEach(function(k){opts+='<option value="'+esc(k)+'">'+esc(prodOf({prod:k}))+'（'+t.m[k]+'）</option>';});
+    cur=PROD;
+    wrap.style.display='';
+  } else {
+    if(CAT==='all'){wrap.style.display='none';return;}
+    lab.textContent=u('subArea');
+    var b2=base.filter(function(it){return it.cat===CAT;});
+    var t2=tally(b2,function(it){return it.ap||'other';});
+    var k2=t2.order.slice().sort(function(a,b){return t2.m[b]-t2.m[a];});
+    opts='<option value="all">'+esc(u('allArea'))+'（'+b2.length+'）</option>';
+    k2.forEach(function(k){opts+='<option value="'+esc(k)+'">'+esc(apOf({ap:k}))+'（'+t2.m[k]+'）</option>';});
+    cur=SUB;
+    wrap.style.display=(k2.length>1)?'':'none';
+  }
+  sel.innerHTML=opts;
+  sel.value=cur;
+  if(sel.value!==cur){if(MODE==='prod')PROD='all';else SUB='all';sel.value='all';}
+}
+
+function buildModes(){
+  var a=document.getElementById('mode-area'),p=document.getElementById('mode-prod');
+  if(!a)return;
+  a.textContent=u('modeArea');p.textContent=u('modeProd');
+  a.style.boxShadow=MODE==='area'?'0 0 0 2px #c8a84b':'';
+  p.style.boxShadow=MODE==='prod'?'0 0 0 2px #c8a84b':'';
+  a.style.opacity=MODE==='area'?'1':'.55';
+  p.style.opacity=MODE==='prod'?'1':'.55';
+}
+
+function buildStock(){
+  var b=document.getElementById('stock-btn');if(!b)return;
+  b.textContent=INSTOCK?u('stockOn'):u('stockOff');
+  b.style.boxShadow=INSTOCK?'0 0 0 2px #7dff7d':'';
+}
+
+function buildUI(){buildModes();buildCatNav();buildSub();buildStock();}
+
 function showModal(id){
   if(!DATA)return;
   var it=null;for(var i=0;i<DATA.items.length;i++){if(DATA.items[i].id===id){it=DATA.items[i];break;}}
@@ -144,6 +270,7 @@ function showModal(id){
     '<div style="text-align:center"><img src="'+esc(it.img)+'" alt="" style="max-width:200px;height:auto;border:1px solid #5a4626;background:#1a0a00"></div>'+
     '<div class="modal-title">'+esc(nameOf(it))+'</div>'+
     (it.prod?'<div class="modal-sub">'+(UI.prod[l]||UI.prod.jp)+'： '+esc(prodOf(it))+'</div>':'')+
+    (it.ap?'<div class="modal-sub hint">'+esc(apOf(it))+'</div>':'')+
     '<hr class="rainbow" style="margin:8px 0">'+
     (d?'<div class="modal-body">'+esc(d)+'</div>':'')+
     (ns.length?'<div class="hint" style="margin-top:8px">'+ns.map(esc).join('<br>')+'</div>':'')+
@@ -152,12 +279,24 @@ function showModal(id){
   document.getElementById('modal-ov').classList.add('open');document.body.style.overflow='hidden';
 }
 function closeModal(){document.getElementById('modal-ov').classList.remove('open');document.body.style.overflow='';}
+
 (function(){
   var _v='?v='+(new Date().toISOString().slice(0,13));
-  Promise.all([fetch('products.json'+_v).then(function(r){return r.json();}),
-               fetch('products.i18n.json'+_v).then(function(r){return r.json();}).catch(function(){return null;})])
-   .then(function(a){DATA=a[0];I18N=a[1];window.__renderCat=render;render();})
-   .catch(function(){var b=document.getElementById('catalogue');if(b)b.innerHTML='<p class="hint">'+(UI.err[L()]||UI.err.jp)+'</p>';});
+  Promise.all([
+    fetch('products.json'+_v).then(function(r){return r.json();}),
+    fetch('products.i18n.json'+_v).then(function(r){return r.json();})['catch'](function(){return null;})
+  ]).then(function(a){
+    DATA=a[0];I18N=a[1];
+    document.getElementById('mode-area').addEventListener('click',function(){MODE='area';buildUI();render();});
+    document.getElementById('mode-prod').addEventListener('click',function(){MODE='prod';buildUI();render();});
+    document.getElementById('stock-btn').addEventListener('click',function(){INSTOCK=!INSTOCK;buildUI();render();});
+    document.getElementById('sub-sel').addEventListener('change',function(){if(MODE==='prod')PROD=this.value;else SUB=this.value;render();});
+    buildUI();render();
+  })['catch'](function(){
+    var box=document.getElementById('catalogue');
+    if(box)box.innerHTML='<p class="hint">'+(UI.err[L()]||UI.err.jp)+'</p>';
+  });
+  window.__renderCat=function(){if(DATA){buildUI();render();}};
 })();
 </script>
 <script>
