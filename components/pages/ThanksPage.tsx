@@ -13,7 +13,7 @@ export function ThanksPage() {
         <img src={asset('/images/thanks.png')} alt="" />
         <p>
           <A href="/home">
-            <span className="btn" style={{ display: 'inline-block', marginTop: 8 }}>▶ トップへ戻る</span>
+            <T k="thx-back" as="span" kind="btn" className="btn" style={{ display: 'inline-block', marginTop: 8 }} />
           </A>
         </p>
       </div>
