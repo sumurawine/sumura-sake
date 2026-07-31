@@ -32,7 +32,8 @@ export function MShell({ children }: { children: React.ReactNode }) {
   const { lang } = useSite();
   const path = usePathname() || '';
   const stuck = useStuck(40);
-  useSmoothScroll();
+  const isHome = path === '/home' || path === '/home/' || path === '/';
+  useSmoothScroll(isHome);
   const [leaving, setLeaving] = useState(false);
   const [menu, setMenu] = useState(false);
 
