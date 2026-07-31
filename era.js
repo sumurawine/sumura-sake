@@ -62,7 +62,7 @@
 
   /* ---------- 時代ごとの細かい仕上げ ---------- */
   function gif(src, w, h, style) {
-    return '<img src="' + src + '" width="' + w + '" height="' + h + '" alt="" style="' + (style || '') + '">';
+    return '<img src="' + src + '?v=2" width="' + w + '" height="' + h + '" alt="" style="' + (style || '') + '">';
   }
 
   function decorate2000() {
