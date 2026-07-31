@@ -551,3 +551,29 @@ html[data-era="now"][data-mx="1"] .mx-legacy .btn{ font-size:12px !important; }
 html[data-era="now"][data-mx="1"] .mx-legacy .field{ font-size:15.5px !important; }
 /* 本文の幅を読みやすく */
 .mx-legacy .mx-in{ max-width:900px; }
+
+/* 旧「現在」用の色指定を、mx 表示中はすべて上書きします ---------- */
+html[data-mx="1"] .btn{ background:transparent !important; color:var(--mx-paper) !important;
+  border:1px solid var(--mx-line) !important; border-radius:1px !important; box-shadow:none !important; }
+html[data-mx="1"] .btn:hover{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; }
+html[data-mx="1"] .btn[data-on="0"]{ background:transparent !important; color:var(--mx-paper) !important; opacity:.62; }
+html[data-mx="1"] .btn[data-on="1"]{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; opacity:1; }
+html[data-mx="1"] [style*="color:#ffd479"]{ color:var(--mx-gold) !important; }
+html[data-mx="1"] [style*="color:#ffb000"]{ color:var(--mx-gold) !important; }
+html[data-mx="1"] .price{ color:var(--mx-paper) !important; font-size:15px !important; letter-spacing:.04em !important; }
+html[data-mx="1"] .field{ background:transparent !important; color:var(--mx-paper) !important;
+  border:0 !important; border-bottom:1px solid var(--mx-line) !important; border-radius:0 !important; }
+html[data-mx="1"] label{ color:var(--mx-faint) !important; font-size:10.5px !important; font-weight:400 !important; letter-spacing:.26em !important; }
+html[data-mx="1"] .sub{ color:var(--mx-faint) !important; }
+html[data-mx="1"] .hint{ color:var(--mx-faint) !important; }
+html[data-mx="1"] .pixhead{ color:var(--mx-paper) !important; }
+html[data-mx="1"] .modal, html[data-mx="1"] .modal-box{
+  background:var(--mx-ink2) !important; color:var(--mx-paper) !important;
+  border:1px solid var(--mx-line) !important; box-shadow:0 40px 90px -40px rgba(0,0,0,.9) !important; }
+html[data-mx="1"] .modal *{ color:var(--mx-paper) !important; }
+html[data-mx="1"] .modal .hint, html[data-mx="1"] .modal-sub{ color:var(--mx-dim) !important; }
+html[data-mx="1"] #cat-nav a{ color:var(--mx-dim) !important; }
+html[data-mx="1"] #cat-nav a:hover{ color:var(--mx-paper) !important; }
+html[data-mx="1"] #sub-label{ color:var(--mx-faint) !important; }
+html[data-mx="1"] .badge{ background:transparent !important; color:var(--mx-faint) !important; border:1px solid var(--mx-line) !important; }
+html[data-mx="1"] .counter{ color:var(--mx-paper) !important; }
