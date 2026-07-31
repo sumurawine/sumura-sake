@@ -140,7 +140,8 @@ export function useSmoothScroll(enabled = true, ease = 0.11) {
     };
     const queueSettle = () => { clearTimeout(idle); idle = window.setTimeout(settle, 260); };
 
-    const fine = !mm || mm('(pointer: fine)').matches;
+    const fine = !!mm && mm('(pointer: fine)').matches && !mm('(max-width: 900px)').matches;
+    if (!fine) return;   // 指で操作する端末は、端末そのままの動きに任せます
     const onWheel = (e: WheelEvent) => {
       if (e.ctrlKey || e.metaKey) return;
       const el = e.target as HTMLElement | null;
@@ -151,17 +152,13 @@ export function useSmoothScroll(enabled = true, ease = 0.11) {
       queueSettle();
     };
 
-    // 指の操作：はじく勢いは端末に任せ、止まったところで節目に寄せます
-    const onTouchEnd = () => { target = window.scrollY; clearTimeout(idle); idle = window.setTimeout(() => { target = window.scrollY; settle(); }, 420); };
     const sync = () => { if (!raf) { target = window.scrollY; current = target; } };
 
     if (fine) window.addEventListener('wheel', onWheel, { passive: false });
-    window.addEventListener('touchend', onTouchEnd, { passive: true });
     window.addEventListener('scroll', sync, { passive: true });
     window.addEventListener('resize', sync);
     return () => {
       window.removeEventListener('wheel', onWheel);
-      window.removeEventListener('touchend', onTouchEnd);
       window.removeEventListener('scroll', sync);
       window.removeEventListener('resize', sync);
       clearTimeout(idle);
