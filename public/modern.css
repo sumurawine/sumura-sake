@@ -577,3 +577,6 @@ html[data-mx="1"] #cat-nav a:hover{ color:var(--mx-paper) !important; }
 html[data-mx="1"] #sub-label{ color:var(--mx-faint) !important; }
 html[data-mx="1"] .badge{ background:transparent !important; color:var(--mx-faint) !important; border:1px solid var(--mx-line) !important; }
 html[data-mx="1"] .counter{ color:var(--mx-paper) !important; }
+
+/* 小さな見出しをもう少し読みやすく */
+html[data-era="now"]{ --mx-faint:rgba(244,236,228,.58); }
