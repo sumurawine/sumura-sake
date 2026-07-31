@@ -1,0 +1,44 @@
+name: Next.js版のプレビューを公開
+
+on:
+  push:
+    branches: [next]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: next
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install --no-audit --no-fund
+
+      - name: ビルド（/preview 配下・素材は既存のルートを参照）
+        env:
+          BASE_PATH: /sumura-sake/preview
+          ASSET_BASE: /sumura-sake
+        run: npm run build
+
+      - name: main の preview/ に配置（公開中のサイトはそのまま）
+        run: |
+          rm -f out/products.json out/products.i18n.json out/api.js
+          rm -rf out/images out/gif
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git worktree add /tmp/mainwt origin/main
+          rm -rf /tmp/mainwt/preview
+          mkdir -p /tmp/mainwt/preview
+          cp -r out/. /tmp/mainwt/preview/
+          cd /tmp/mainwt
+          git add -A preview
+          git commit -m "preview: Next.js版のビルド" || echo "変更なし"
+          git push origin HEAD:main
