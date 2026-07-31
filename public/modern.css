@@ -811,3 +811,9 @@ html[data-mx="1"] #tw-leave-ov .tw-door{ background:var(--mx-ink2) !important; }
   html[data-era="now"] #lang-bar.lb-quiet button{ padding:7px 8px !important; }
   html[data-mx="1"] #timewarp.tw-closed{ width:36px !important; }
 }
+
+/* 写真の上の「お問い合わせ」釦は、いつでも読めるように */
+.mx-bleed .mx-btn-solid{ background:var(--mx-paper) !important; color:var(--mx-ink) !important;
+  border-color:var(--mx-paper) !important; backdrop-filter:none !important; }
+.mx-bleed .mx-btn-solid:hover{ background:var(--mx-wine) !important; color:#fff !important; border-color:var(--mx-wine) !important; }
+.mx-bleed .mx-btn-solid span{ color:inherit !important; }
