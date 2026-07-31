@@ -17,19 +17,19 @@
   document.documentElement.setAttribute('data-era', get());
 
   var T = {
-    jp: { t:'時間旅行', a:'1995年へ', b:'2005年へ', c:'2010年へ', d:'現在に戻る',
+    jp: { t:'時間旅行', a:'1990年代へ', b:'2000年代へ', c:'2010年代へ', d:'2020年代（現代）へ戻る',
           priv:'非公開在庫', ask:'こちらは非公開のページです。合言葉をご入力ください。', back:'← 戻る', enter:'入店する',
           sub:'山口・宇部　フランス銘醸ワインの店' },
-    en: { t:'TIME TRAVEL', a:'To 1995', b:'To 2005', c:'To 2010', d:'Back to now',
+    en: { t:'TIME TRAVEL', a:'To the 1990s', b:'To the 2000s', c:'To the 2010s', d:'Back to the 2020s',
           priv:'Private Cellar', ask:'This page is private. Please enter the passphrase.', back:'← Back', enter:'Enter',
           sub:'Fine French wines · Ube, Yamaguchi' },
-    fr: { t:'VOYAGE TEMPOREL', a:'Vers 1995', b:'Vers 2005', c:'Vers 2010', d:'Retour au présent',
+    fr: { t:'VOYAGE TEMPOREL', a:'Vers les 1990s', b:'Vers les 2000s', c:'Vers les 2010s', d:'Retour aux 2020s',
           priv:'Cave privée', ask:'Cette page est privée. Merci de saisir le mot de passe.', back:'← Retour', enter:'Entrer',
           sub:'Grands vins de France · Ube, Yamaguchi' },
-    zh: { t:'时光旅行', a:'回到1995年', b:'回到2005年', c:'回到2010年', d:'回到现在',
+    zh: { t:'时光旅行', a:'回到 1990s', b:'回到 2000s', c:'回到 2010s', d:'回到 2020s（现代）',
           priv:'非公开库存', ask:'此页面为非公开页面。请输入暗号。', back:'← 返回', enter:'进入',
           sub:'法国名酿葡萄酒 · 山口宇部' },
-    ko: { t:'시간 여행', a:'1995년으로', b:'2005년으로', c:'2010년으로', d:'현재로 돌아가기',
+    ko: { t:'시간 여행', a:'1990s 로', b:'2000s 로', c:'2010s 로', d:'2020s(현재)로 돌아가기',
           priv:'비공개 재고', ask:'이 페이지는 비공개입니다. 암호를 입력해 주세요.', back:'← 돌아가기', enter:'입장하기',
           sub:'프랑스 명양조 와인 · 야마구치 우베' }
   };
