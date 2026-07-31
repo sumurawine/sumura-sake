@@ -34,16 +34,26 @@ function thud() {
 
 const LEAVE_SHOTS = ['/images/photos/rouget.jpg','/images/photos/roch.jpg','/images/photos/gillet.jpg','/images/shop-sign.webp'];
 
-export function LeaveOverlay({ open, lang }: { open: boolean; lang: Lang }) {
+export function LeaveOverlay({ open, lang, onClose }: { open: boolean; lang: Lang; onClose?: () => void }) {
   const { era } = useSite();
   const [go, setGo] = useState(false);
+
   useEffect(() => {
-    if (!open) return;
+    if (!open) { setGo(false); return; }   // 閉じたら必ず初期状態に戻します
     const r = requestAnimationFrame(() => setGo(true));
     let id: any;
     if (era === '1995' || era === '2005') id = setTimeout(thud, 900);
     return () => { cancelAnimationFrame(r); if (id) clearTimeout(id); };
   }, [open, era]);
+
+  // Esc でいつでも閉じられます（万一の閉じ込め防止）
+  useEffect(() => {
+    if (!open) return;
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose?.(); };
+    window.addEventListener('keydown', esc);
+    return () => window.removeEventListener('keydown', esc);
+  }, [open, onClose]);
+
   if (!open) return null;
   const t = L[lang];
   return (
@@ -53,7 +63,7 @@ export function LeaveOverlay({ open, lang }: { open: boolean; lang: Lang }) {
       <div className="tw-door tw-door-r" />
       <div className="tw-bye">
         <div className="tw-bye-t">{t.bye}</div>
-        <Link className="tw-bye-a" href="/">{t.again}</Link>
+        <Link className="tw-bye-a" href="/" onClick={() => onClose?.()}>{t.again}</Link>
       </div>
     </div>
   );
