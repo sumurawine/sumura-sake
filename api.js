@@ -16,7 +16,8 @@ https://script.google.com/macros/s/AKfycbxqVr1P1WfiXsPJNWV8tH_IcQY7XH6Wr_kpsoWOZ
   function api() { return String(window.SUMURA_API || '').trim(); }
 
   window.sumuraReady = function () {
-    return /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/.test(api());
+    var m = /^https:\/\/script\.google\.com\/macros\/s\/([A-Za-z0-9_-]+)\/exec$/.exec(api());
+    return !!(m && m[1].length >= 30);
   };
 
   window.sumuraPost = function (payload) {
