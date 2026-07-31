@@ -7,7 +7,7 @@ https://script.google.com/macros/s/AKfycbxqVr1P1WfiXsPJNWV8tH_IcQY7XH6Wr_kpsoWOZ
 
 /* ▲▲▲ ここ1行だけ書き換えれば、お問い合わせ・メルマガ登録・
        ブログのコメント・来客カウンターがすべて動きます ▲▲▲
-   例: window.SUMURA_API = 'https://script.google.com/macros/s/AKfy..../exec';
+   例: window.SUMURA_API = 'https://script.google.com/macros/s/AKfycbxqVr1P1WfiXsPJNWV8tH_IcQY7XH6Wr_kpsoWOZtwc2V--MYQieZOD5wj5mCWDeTlmrQ/exec';
    ============================================================= */
 
 (function () {
