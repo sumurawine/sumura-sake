@@ -14,6 +14,7 @@ import { Clock } from './Clock';
 import { VisitCounter } from './VisitCounter';
 import { DecoRow, Gif, Rainbow, Ticker } from './Deco';
 import { LeaveOverlay, leaveLabel } from './LeaveOverlay';
+import { GAME_NAV } from '@/lib/gameNav';
 import { MShell } from './modern/MShell';
 
 const NAV: Array<[string, string]> = [
@@ -26,6 +27,7 @@ const NAV: Array<[string, string]> = [
   ['/contact', 'nav:contact'],
   ['/legal', 'nav:legal'],
   ['/secret', 'nav:secret'],
+  ['/game', 'nav:game'],
 ];
 
 export function Shell({ children, footerRule = true }: { children: React.ReactNode; footerRule?: boolean }) {
@@ -74,7 +76,9 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
           {NAV.map(([href, key]) => {
             const on = path === href || path === href + '/';
             const label =
-              key === 'nav:secret' && modern
+              key === 'nav:game'
+                ? GAME_NAV[lang]
+                : key === 'nav:secret' && modern
                 ? MODERN[lang].priv
                 : decorate(tr(lang, key), eraView, lang, 'btn');
             return (
