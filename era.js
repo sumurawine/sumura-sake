@@ -11,29 +11,30 @@
     try {
       var e = localStorage.getItem('era');
       if (e === '2000') { e = '2005'; localStorage.setItem('era', e); }
-      return ERAS.indexOf(e) >= 0 ? e : '1995';
-    } catch (x) { return '1995'; }
+      return ERAS.indexOf(e) >= 0 ? e : 'now';
+    } catch (x) { return 'now'; }
   }
-  document.documentElement.setAttribute('data-era', get());
+  var MUKASHI = /mukashi\.html/.test(location.pathname);
+  document.documentElement.setAttribute('data-era', MUKASHI ? 'mukashi' : get());
 
   var T = {
-    jp: { t:'時間旅行', a:'1990年代へ', b:'2000年代へ', c:'2010年代へ', d:'2020年代（現代）へ戻る',
+    jp: { t:'時間旅行', a:'2020年代（現代）', b:'2010年代', c:'2000年代', d:'1990年代', e:'昔日',
           priv:'非公開在庫', ask:'こちらは非公開のページです。パスワードをご入力ください。', back:'← 戻る', enter:'入店する',
           leave:'退店', bye:'またのお越しをお待ちしております。', again:'入口へ戻る', drop:'時をおすそわけ',
           sub:'山口・宇部　フランス銘醸ワインの店' },
-    en: { t:'TIME TRAVEL', a:'To the 1990s', b:'To the 2000s', c:'To the 2010s', d:'Back to the 2020s',
+    en: { t:'TIME TRAVEL', a:'The 2020s (now)', b:'The 2010s', c:'The 2000s', d:'The 1990s', e:'The old days',
           priv:'Private Cellar', ask:'This page is private. Please enter the password.', back:'← Back', enter:'Enter',
           leave:'LEAVE', bye:'We look forward to welcoming you again.', again:'Back to the entrance', drop:'Sharing a Little Time',
           sub:'Fine French wines · Ube, Yamaguchi' },
-    fr: { t:'VOYAGE TEMPOREL', a:'Vers les 1990s', b:'Vers les 2000s', c:'Vers les 2010s', d:'Retour aux 2020s',
+    fr: { t:'VOYAGE TEMPOREL', a:'Les 2020s (aujourd’hui)', b:'Les 2010s', c:'Les 2000s', d:'Les 1990s', e:'Autrefois',
           priv:'Cave privée', ask:'Cette page est privée. Merci de saisir le mot de passe.', back:'← Retour', enter:'Entrer',
           leave:'SORTIE', bye:'Au plaisir de vous revoir.', again:'Retour à l’entrée', drop:'Un peu de temps partagé',
           sub:'Grands vins de France · Ube, Yamaguchi' },
-    zh: { t:'时光旅行', a:'回到 1990s', b:'回到 2000s', c:'回到 2010s', d:'回到 2020s（现代）',
+    zh: { t:'时光旅行', a:'2020s（现在）', b:'2010s', c:'2000s', d:'1990s', e:'昔日',
           priv:'非公开库存', ask:'此页面为非公开页面。请输入密码。', back:'← 返回', enter:'进入',
           leave:'离店', bye:'期待您的再次光临。', again:'返回入口', drop:'与您分享时光',
           sub:'法国名酿葡萄酒 · 山口宇部' },
-    ko: { t:'시간 여행', a:'1990s 로', b:'2000s 로', c:'2010s 로', d:'2020s(현재)로 돌아가기',
+    ko: { t:'시간 여행', a:'2020s(현재)', b:'2010s', c:'2000s', d:'1990s', e:'옛날',
           priv:'비공개 재고', ask:'이 페이지는 비공개입니다. 비밀번호를 입력해 주세요.', back:'← 돌아가기', enter:'입장하기',
           leave:'퇴점', bye:'다음에 또 방문해 주시기를 기다리겠습니다.', again:'입구로 돌아가기', drop:'시간을 나눠 드립니다',
           sub:'프랑스 명양조 와인 · 야마구치 우베' }
@@ -52,7 +53,8 @@
     var cur = get();
     var box = document.createElement('div');
     box.id = 'timewarp';
-    var labels = [['1995', t('a')], ['2005', t('b')], ['2010', t('c')], ['now', t('d')]];
+    var labels = [['now', t('a')], ['2010', t('b')], ['2005', t('c')], ['1995', t('d')], ['mukashi', t('e')]];
+    if (MUKASHI) cur = 'mukashi';
     var html = '<button type="button" class="tw-toggle" aria-label="toggle">−</button>' +
                '<span class="tw-t">⏳ ' + t('t') + '</span><div class="tw-body">';
     labels.forEach(function (p) {
@@ -62,7 +64,12 @@
     box.innerHTML = html;
     document.body.appendChild(box);
     [].forEach.call(box.querySelectorAll('button[data-era]'), function (b) {
-      b.addEventListener('click', function () { set(b.getAttribute('data-era')); });
+      b.addEventListener('click', function () {
+        var e = b.getAttribute('data-era');
+        if (e === 'mukashi') { location.href = 'mukashi.html'; return; }
+        if (MUKASHI) { try { localStorage.setItem('era', e); } catch (x) {} location.href = 'home.html'; return; }
+        set(e);
+      });
     });
     var tg = box.querySelector('.tw-toggle');
     tg.addEventListener('click', function () {
@@ -228,6 +235,7 @@
 
   function boot() {
     panel();
+    if (MUKASHI) return;
     leaveButton();
     var era = get();
     if (era === '2005') decorate2005();
