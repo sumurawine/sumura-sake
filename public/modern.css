@@ -335,3 +335,64 @@ html[data-mx="1"] #lang-bar{ padding:5px 8px !important; }
 @media (max-width:860px){
   .mx-head{ padding-left:22px; padding-right:22px; padding-top:58px; }
 }
+
+/* =========================================================
+   熟成したブルゴーニュの色へ。深く、淡い赤茶。
+   重さを抜き、動きをゆっくりに。
+   ========================================================= */
+html[data-era="now"]{
+  --mx-ink:#241a17;
+  --mx-ink2:#2f2320;
+  --mx-paper:#f4ece4;
+  --mx-dim:rgba(244,236,228,.70);
+  --mx-faint:rgba(244,236,228,.46);
+  --mx-line:rgba(244,236,228,.18);
+  --mx-wine:#8f4038;
+  --mx-gold:#d3a98a;
+  --mx-vit:#f7f2ec;
+}
+html[data-era="now"][data-mx="1"] body{ background:var(--mx-ink) !important; }
+html[data-era="now"]{ background:var(--mx-ink); }
+
+/* 重さを抜く */
+.mx-grain{ opacity:.16; }
+.mx-vign{ background:radial-gradient(125% 95% at 50% 44%, transparent 52%, rgba(28,18,15,.24) 82%, rgba(28,18,15,.44) 100%); }
+.mx-hero-shade{
+  background:
+    linear-gradient(to bottom, rgba(36,26,23,.24) 0%, rgba(36,26,23,.06) 36%, rgba(36,26,23,.58) 84%, var(--mx-ink) 100%),
+    radial-gradient(85% 65% at 24% 36%, rgba(36,26,23,0) 34%, rgba(36,26,23,.38) 100%);
+}
+.mx-bleed-shade{
+  background:linear-gradient(to bottom, var(--mx-ink) 0%, rgba(36,26,23,.30) 24%, rgba(36,26,23,.30) 76%, var(--mx-ink) 100%);
+}
+.mx-photo img{ filter:brightness(.86) contrast(1.02) saturate(.88); }
+.mx-photo.is-in img{ filter:brightness(1) contrast(1) saturate(.96); }
+.mx-photo::after{ box-shadow:inset 0 0 100px 14px rgba(36,26,23,.42); }
+.mx-vitrine{
+  box-shadow:0 0 0 1px rgba(244,236,228,.12), 0 26px 60px -28px rgba(0,0,0,.72), 0 0 80px -40px rgba(211,169,138,.5);
+}
+
+/* 動きをゆっくりに */
+.mx-rv{ transform:translate3d(0,32px,0); filter:blur(7px);
+  transition:opacity 1.75s cubic-bezier(.16,.84,.24,1), transform 1.75s cubic-bezier(.16,.84,.24,1), filter 1.6s ease; }
+.mx-rv[data-d="1"]{ transition-delay:.16s } .mx-rv[data-d="2"]{ transition-delay:.32s }
+.mx-rv[data-d="3"]{ transition-delay:.48s } .mx-rv[data-d="4"]{ transition-delay:.64s }
+.mx-rv[data-d="5"]{ transition-delay:.80s } .mx-rv[data-d="6"]{ transition-delay:.96s }
+.mx-ch{ transition:opacity 1.5s ease, transform 1.7s cubic-bezier(.16,.84,.24,1); }
+.mx-photo img{ transition:filter 2.4s ease, transform 3s cubic-bezier(.16,.84,.24,1); }
+.mx-hero-bg{ animation:mx-breathe 44s ease-in-out infinite alternate; }
+.mx-scroll i{ animation:mx-drip 4s ease-in-out infinite; }
+
+/* 章のあいだをゆったり */
+.mx-sec{ padding:clamp(120px,19vh,240px) 0; }
+.mx-bleed{ min-height:92svh; }
+
+/* 見出しが上の帯に隠れないように */
+.mx-sec, .mx-bleed{ scroll-margin-top:120px; }
+
+/* 写真の並び */
+.mx-duo{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(18px,3vw,34px); }
+.mx-duo .mx-photo{ aspect-ratio:4/5; }
+.mx-wide .mx-photo{ aspect-ratio:16/9; }
+.mx-tall .mx-photo{ aspect-ratio:3/4; }
+@media (max-width:860px){ .mx-duo{ grid-template-columns:1fr; } }
