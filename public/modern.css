@@ -686,3 +686,57 @@ html[data-era="now"] #modern-entrance .me-btn{
 html[data-era="now"] #modern-entrance .me-btn:hover{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; }
 html[data-era="now"] body:has(.door-page){ background:var(--mx-ink) !important; }
 html[data-era="now"] #age-note{ position:relative; z-index:2; color:var(--mx-faint) !important; text-shadow:0 1px 18px rgba(18,10,8,.9); }
+
+/* 携帯：メニューを三本線にまとめます -------------------------- */
+.mx-burger{ display:none; position:relative; width:34px; height:26px; background:transparent; border:0; cursor:pointer; padding:0; }
+.mx-burger span{ position:absolute; left:4px; right:4px; height:1px; background:var(--mx-paper); transition:transform .4s ease, opacity .3s ease; }
+.mx-burger span:nth-child(1){ top:7px } .mx-burger span:nth-child(2){ top:13px } .mx-burger span:nth-child(3){ top:19px }
+.mx-burger.is-open span:nth-child(1){ transform:translateY(6px) rotate(45deg) }
+.mx-burger.is-open span:nth-child(2){ opacity:0 }
+.mx-burger.is-open span:nth-child(3){ transform:translateY(-6px) rotate(-45deg) }
+@media (max-width:860px){
+  .mx-head{ flex-direction:row; align-items:center; justify-content:space-between; padding-top:14px !important; }
+  .mx-burger{ display:block; }
+  .mx-nav{
+    position:fixed; left:0; right:0; top:0; height:100svh; z-index:-1;
+    flex-direction:column; align-items:center; justify-content:center; gap:26px;
+    background:rgba(28,18,15,.96); backdrop-filter:blur(18px);
+    opacity:0; pointer-events:none; transition:opacity .45s ease;
+  }
+  .mx-nav.is-open{ opacity:1; pointer-events:auto; z-index:39; }
+  .mx-nav a{ font-size:15px !important; letter-spacing:.2em !important; }
+}
+
+/* ストアの詳細：黒地ではなく、すりガラスの窓に ----------------- */
+html[data-mx="1"] .modal-ov{ background:rgba(20,13,11,.55) !important; backdrop-filter:blur(10px) saturate(1.05); }
+html[data-mx="1"] .modal-box{
+  background:rgba(46,34,30,.72) !important; backdrop-filter:blur(26px) saturate(1.2);
+  border:1px solid rgba(244,236,228,.20) !important; border-radius:4px !important;
+  box-shadow:0 50px 120px -50px rgba(0,0,0,.95) !important; color:var(--mx-paper) !important;
+  padding:34px !important; max-width:760px !important;
+}
+html[data-mx="1"] .modal-box *{ color:var(--mx-paper) !important; }
+html[data-mx="1"] .modal-box .hint, html[data-mx="1"] .modal-box .modal-sub{ color:var(--mx-dim) !important; }
+html[data-mx="1"] .modal-close{
+  background:transparent !important; border:1px solid rgba(244,236,228,.28) !important; border-radius:999px !important;
+  color:var(--mx-paper) !important; box-shadow:none !important; text-shadow:none !important;
+  width:40px !important; height:40px !important; padding:0 !important; font-size:0 !important;
+  position:absolute !important; right:18px !important; top:18px !important;
+  transition:background .35s ease, border-color .35s ease;
+}
+html[data-mx="1"] .modal-close::before, html[data-mx="1"] .modal-close::after{
+  content:""; position:absolute; left:12px; right:12px; top:50%; height:1px; background:var(--mx-paper);
+}
+html[data-mx="1"] .modal-close::before{ transform:rotate(45deg) } html[data-mx="1"] .modal-close::after{ transform:rotate(-45deg) }
+html[data-mx="1"] .modal-close:hover{ background:rgba(244,236,228,.12) !important; border-color:rgba(244,236,228,.5) !important; }
+html[data-mx="1"] .modal-box img{ background:var(--mx-vit) !important; border-radius:3px !important; padding:8px !important; }
+
+/* 退店の背景にワインの一枚 ------------------------------------- */
+html[data-mx="1"] #tw-leave-ov .tw-bye-bg{
+  position:absolute; inset:0; background-size:cover; background-position:center;
+  opacity:.22; filter:saturate(.8) blur(1px);
+}
+html[data-mx="1"] #tw-leave-ov .tw-bye{ position:relative; z-index:2; }
+
+/* ブログの見出し画像は現代では出しません */
+html[data-mx="1"] .mx-legacy img[src*="blog-head"]{ display:none !important; }
