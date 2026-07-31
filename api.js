@@ -1,14 +1,14 @@
 /* =============================================================
    すむら酒店 ホームページ 共通スクリプト
-   -------------------------------------------------------------
-   ▼▼▼ Google Apps Script のウェブアプリURLをここに貼ってください ▼▼▼ */
 
-https://script.google.com/macros/s/AKfycbxqVr1P1WfiXsPJNWV8tH_IcQY7XH6Wr_kpsoWOZtwc2V--MYQieZOD5wj5mCWDeTlmrQ/exec;
-
-/* ▲▲▲ ここ1行だけ書き換えれば、お問い合わせ・メルマガ登録・
-       ブログのコメント・来客カウンターがすべて動きます ▲▲▲
-   例: window.SUMURA_API = 'https://script.google.com/macros/s/AKfycbxqVr1P1WfiXsPJNWV8tH_IcQY7XH6Wr_kpsoWOZtwc2V--MYQieZOD5wj5mCWDeTlmrQ/exec';
+   下の1行が Google Apps Script のウェブアプリURLです。
+   デプロイをやり直してURLが変わったときは、シングルクォートの
+   中身だけを差し替えてください（行ごと消さないでください）。
    ============================================================= */
+
+window.SUMURA_API = 'https://script.google.com/macros/s/AKfycbxqVr1P1WfiXsPJNWV8tH_IcQY7XH6Wr_kpsoWOZtwc2V--MYQieZOD5wj5mCWDeTlmrQ/exec';
+
+/* ============================================================= */
 
 (function () {
   'use strict';
@@ -48,7 +48,6 @@ https://script.google.com/macros/s/AKfycbxqVr1P1WfiXsPJNWV8tH_IcQY7XH6Wr_kpsoWOZ
     });
   };
 
-  /* 言語切替のあとに走らせたい処理を登録する */
   window.sumuraOnLang = function (fn) {
     var prev = window.__afterLang;
     window.__afterLang = function (l) { if (prev) { try { prev(l); } catch (e) {} } fn(l); };
