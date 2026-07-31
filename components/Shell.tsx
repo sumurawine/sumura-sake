@@ -14,6 +14,7 @@ import { Clock } from './Clock';
 import { VisitCounter } from './VisitCounter';
 import { DecoRow, Gif, Rainbow, Ticker } from './Deco';
 import { LeaveOverlay, leaveLabel } from './LeaveOverlay';
+import { MShell } from './modern/MShell';
 
 const NAV: Array<[string, string]> = [
   ['/home', 'nav:home'],
@@ -35,6 +36,18 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
 
   const marquee = tr(lang, 'tk-marquee');
 
+  // 2020年代は、黒の画廊の枠組みで包みます
+  if (eraView === 'now') {
+    return (
+      <MShell>
+        <div className="mx-legacy">
+          <div className="mx-in">{children}</div>
+        </div>
+      </MShell>
+    );
+  }
+
+
   /** フッターのリンク名。日本語のときは従来どおり英字のままにします。 */
   const foot = (key: string, en: string) => (lang === 'jp' ? en : tr(lang, 'nav:' + key));
 
@@ -47,11 +60,7 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
         <div style={{ textAlign: 'center', paddingTop: 8 }}>
           <Link href="/home">
             {modern ? (
-              <span className="tw-logo" style={
-                eraView === 'now'
-                  ? { display: 'block', fontSize: 44, fontWeight: 700, letterSpacing: '-.04em', color: '#1d1d1f', padding: '34px 0 4px', lineHeight: 1.05 }
-                  : { display: 'block', fontSize: 30, fontWeight: 'bold', color: '#222', padding: '16px 0 0' }
-              }>すむら酒店</span>
+              <span className="tw-logo" style={{ display: 'block', fontSize: 30, fontWeight: 'bold', color: '#222', padding: '16px 0 0' }}>すむら酒店</span>
             ) : (
               <img src={asset('/images/logo-header.png')} alt="すむら酒店" style={{ maxWidth: '96%' }} />
             )}

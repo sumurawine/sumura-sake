@@ -23,7 +23,8 @@ function monthHtml(y: number, m: number): string {
     else if (dow === 6) s += 'color:#6098ff;';
     if (isTod) s += 'outline:2px solid #ffe14d;font-weight:bold;';
     const inner = isTue ? d + '<br><span style="font-size:9px;line-height:1">休</span>' : String(d);
-    h += '<td style="' + s + '">' + inner + '</td>';
+    const cls = (isTue ? 'cal-off' : '') + (isTod ? ' cal-today' : '');
+    h += '<td class="' + cls.trim() + '" style="' + s + '">' + inner + '</td>';
     if (dow === 6 || d === last.getDate()) {
       if (d === last.getDate()) for (let q = dow + 1; q <= 6; q++) h += '<td style="padding:3px 5px"></td>';
       h += '</tr>';

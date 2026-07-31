@@ -106,12 +106,12 @@ export function StorePage() {
 
         {mode === 'area' ? (
           <div id="cat-nav" style={{ margin: '8px 0 2px', textAlign: 'center', lineHeight: 2 }}>
-            <a href="#" style={{ margin: '0 6px', ...(cat === 'all' ? { color: '#ffd479', fontWeight: 'bold' } : {}) }}
+            <a href="#" className={cat === 'all' ? 'is-on' : undefined} style={{ margin: '0 6px', ...(cat === 'all' ? { fontWeight: 'bold', ...(plain ? {} : { color: '#ffd479' }) } : {}) }}
               onClick={(e) => { e.preventDefault(); setCat('all'); setSub('all'); }}>
               {brk(`${u('allCat', lang)} ${base.length}`)}
             </a>
             {ORDER.filter((c) => catTally.m[c]).map((c) => (
-              <a key={c} href="#" style={{ margin: '0 6px', ...(cat === c ? { color: '#ffd479', fontWeight: 'bold' } : {}) }}
+              <a key={c} href="#" className={cat === c ? 'is-on' : undefined} style={{ margin: '0 6px', ...(cat === c ? { fontWeight: 'bold', ...(plain ? {} : { color: '#ffd479' }) } : {}) }}
                 onClick={(e) => { e.preventDefault(); setCat(c); setSub('all'); }}>
                 {brk(`${catOf(c, lang)} ${catTally.m[c]}`)}
               </a>

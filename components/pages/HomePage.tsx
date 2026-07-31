@@ -2,8 +2,12 @@
 import { asset } from '@/lib/paths';
 import { Shell } from '@/components/Shell';
 import { T } from '@/components/T';
+import { useSite } from '@/components/Providers';
+import { MHome } from '@/components/modern/MHome';
 
 export function HomePage() {
+  const { eraView } = useSite();
+  if (eraView === 'now') return <MHome />;
   return (
     <Shell>
       <div className="panel">

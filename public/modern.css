@@ -1,0 +1,813 @@
+/* =========================================================
+   すむら酒店 2020年代版「黒の画廊」
+   暗く、静かで、映画的。html[data-era="now"] のときだけ効きます。
+   ========================================================= */
+
+html[data-era="now"]{
+  --mx-ink:#08070a;          /* 地の黒 */
+  --mx-ink2:#0d0c10;
+  --mx-paper:#efeae2;        /* 文字の生成り */
+  --mx-dim:rgba(239,234,226,.58);
+  --mx-faint:rgba(239,234,226,.34);
+  --mx-line:rgba(239,234,226,.14);
+  --mx-wine:#7c1428;
+  --mx-gold:#c6a878;
+  --mx-vit:#f4f1ea;          /* 陳列台の白 */
+  --mx-serif:'Cormorant Garamond','Shippori Mincho',"Hiragino Mincho ProN","Yu Mincho",serif;
+  --mx-jp:'Shippori Mincho',"Hiragino Mincho ProN","Yu Mincho",serif;
+  --mx-sans:'Zen Kaku Gothic New',-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+}
+
+html[data-era="now"] body{
+  background:var(--mx-ink);
+  color:var(--mx-paper);
+  font-family:var(--mx-jp);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+html[data-era="now"]{ scroll-behavior:smooth; background:var(--mx-ink); }
+html[data-era="now"] ::selection{ background:rgba(124,20,40,.55); color:#fff; }
+
+/* 画面全体の粒子と周辺光量落ち ------------------------------------ */
+.mx-grain{
+  position:fixed; inset:-120px; z-index:60; pointer-events:none;
+  opacity:.30; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='.55'/></svg>");
+  animation:mx-shift 7s steps(6) infinite;
+}
+@keyframes mx-shift{
+  0%{transform:translate(0,0)} 16%{transform:translate(-14px,8px)} 33%{transform:translate(9px,-12px)}
+  50%{transform:translate(-8px,-6px)} 66%{transform:translate(12px,10px)} 83%{transform:translate(-11px,4px)} 100%{transform:translate(0,0)}
+}
+.mx-vign{
+  position:fixed; inset:0; z-index:59; pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 42%, transparent 42%, rgba(0,0,0,.42) 78%, rgba(0,0,0,.72) 100%);
+}
+
+/* 版面 --------------------------------------------------------- */
+.mx{ position:relative; z-index:1; }
+.mx-in{ max-width:1180px; margin:0 auto; padding:0 40px; }
+.mx-in-n{ max-width:780px; margin:0 auto; padding:0 40px; }
+
+/* 見出し ------------------------------------------------------- */
+.mx-kicker{
+  font-family:var(--mx-sans); font-size:11px; letter-spacing:.34em; text-transform:uppercase;
+  color:var(--mx-faint); margin:0 0 22px;
+}
+.mx-h1{
+  font-family:var(--mx-serif); font-weight:300; letter-spacing:.01em; line-height:1.06;
+  font-size:clamp(46px,7.4vw,104px); margin:0;
+}
+.mx-h2{
+  font-family:var(--mx-jp); font-weight:400; letter-spacing:.06em; line-height:1.34;
+  font-size:clamp(26px,3.4vw,42px); margin:0 0 26px;
+}
+.mx-h3{
+  font-family:var(--mx-jp); font-weight:600; letter-spacing:.06em; line-height:1.5;
+  font-size:19px; margin:0 0 12px;
+}
+.mx-lead{
+  font-size:17px; line-height:2.15; letter-spacing:.05em; color:var(--mx-dim); margin:0 0 20px;
+  font-feature-settings:"palt" 1;
+}
+.mx-p{ font-size:15.5px; line-height:2.3; letter-spacing:.055em; color:var(--mx-dim); margin:0 0 20px; font-feature-settings:"palt" 1; }
+.mx-p strong,.mx-lead strong{ color:var(--mx-paper); font-weight:600; }
+.mx-rule{ height:1px; background:var(--mx-line); border:0; margin:0; }
+.mx-mark{ color:var(--mx-gold); }
+
+/* 現れかた ----------------------------------------------------- */
+.mx-rv{ opacity:0; transform:translate3d(0,26px,0); filter:blur(6px);
+  transition:opacity 1.15s cubic-bezier(.16,.84,.24,1), transform 1.15s cubic-bezier(.16,.84,.24,1), filter 1.15s ease; }
+.mx-rv.is-in{ opacity:1; transform:none; filter:none; }
+.mx-rv[data-d="1"]{ transition-delay:.09s } .mx-rv[data-d="2"]{ transition-delay:.18s }
+.mx-rv[data-d="3"]{ transition-delay:.27s } .mx-rv[data-d="4"]{ transition-delay:.36s }
+.mx-rv[data-d="5"]{ transition-delay:.45s } .mx-rv[data-d="6"]{ transition-delay:.54s }
+
+/* 一文字ずつ立ち上がる見出し */
+.mx-ch{ display:inline-block; opacity:0; transform:translate3d(0,.42em,0);
+  transition:opacity .9s ease, transform 1.05s cubic-bezier(.16,.84,.24,1); }
+.is-in .mx-ch{ opacity:1; transform:none; }
+
+/* 表紙 --------------------------------------------------------- */
+.mx-hero{ position:relative; min-height:100svh; display:flex; align-items:center; overflow:hidden; }
+.mx-hero-bg{
+  position:absolute; inset:-6%; background-size:cover; background-position:52% 42%;
+  transform:scale(1.06); animation:mx-breathe 26s ease-in-out infinite alternate; will-change:transform;
+}
+@keyframes mx-breathe{ from{transform:scale(1.04) translate3d(0,0,0)} to{transform:scale(1.13) translate3d(-1.4%,-1.6%,0)} }
+.mx-hero-shade{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(to bottom, rgba(8,7,10,.34) 0%, rgba(8,7,10,.10) 34%, rgba(8,7,10,.72) 82%, var(--mx-ink) 100%),
+    radial-gradient(80% 60% at 22% 34%, rgba(8,7,10,0) 30%, rgba(8,7,10,.55) 100%);
+}
+.mx-hero-in{ position:relative; width:100%; }
+.mx-hero .mx-h1{ text-shadow:0 2px 40px rgba(0,0,0,.6); }
+.mx-hero-sub{ margin-top:26px; font-size:15px; letter-spacing:.2em; color:var(--mx-dim); }
+
+/* 下へ促す線 */
+.mx-scroll{ position:absolute; left:50%; bottom:34px; transform:translateX(-50%); z-index:3; text-align:center; }
+.mx-scroll i{ display:block; width:1px; height:56px; margin:0 auto; background:linear-gradient(var(--mx-faint),transparent);
+  animation:mx-drip 2.6s ease-in-out infinite; }
+@keyframes mx-drip{ 0%{transform:scaleY(.2); transform-origin:top; opacity:0} 40%{transform:scaleY(1); opacity:1}
+  100%{transform:scaleY(1); transform-origin:bottom; opacity:0} }
+.mx-scroll span{ display:block; margin-top:10px; font-family:var(--mx-sans); font-size:10px; letter-spacing:.32em; color:var(--mx-faint); }
+
+/* 章 ----------------------------------------------------------- */
+.mx-sec{ padding:clamp(96px,15vh,190px) 0; position:relative; }
+.mx-sec-tight{ padding:clamp(64px,9vh,110px) 0; }
+.mx-bleed{ position:relative; min-height:88svh; display:flex; align-items:center; overflow:hidden; }
+.mx-bleed-bg{ position:absolute; inset:-8%; background-size:cover; background-position:center; will-change:transform; }
+.mx-bleed-shade{ position:absolute; inset:0;
+  background:linear-gradient(to bottom, var(--mx-ink) 0%, rgba(8,7,10,.42) 22%, rgba(8,7,10,.42) 74%, var(--mx-ink) 100%); }
+.mx-bleed .mx-in{ position:relative; }
+
+/* 二段組 */
+.mx-two{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(40px,6vw,96px); align-items:center; }
+.mx-two-40{ grid-template-columns:.8fr 1.2fr; }
+
+/* 陳列台（白背景の商品写真を活かす） --------------------------- */
+.mx-vitrine{
+  position:relative; background:var(--mx-vit); border-radius:2px; overflow:hidden;
+  box-shadow:0 0 0 1px rgba(239,234,226,.10), 0 30px 70px -30px rgba(0,0,0,.9), 0 0 90px -40px rgba(198,168,120,.45);
+}
+.mx-vitrine::after{ content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(90% 70% at 50% 20%, rgba(255,255,255,.45), transparent 62%); mix-blend-mode:soft-light; }
+.mx-vitrine img{ display:block; width:100%; height:100%; object-fit:contain; }
+.mx-vit-sq{ aspect-ratio:1/1; }
+.mx-vit-tall{ aspect-ratio:3/4; }
+
+/* 写真（実写）を暗く落として使う */
+.mx-photo{ position:relative; overflow:hidden; background:#000; }
+.mx-photo img{ display:block; width:100%; height:100%; object-fit:cover;
+  filter:brightness(.72) contrast(1.06) saturate(.82); transition:filter 1.4s ease, transform 2.2s cubic-bezier(.16,.84,.24,1); }
+.mx-photo.is-in img{ filter:brightness(.86) contrast(1.04) saturate(.9); }
+.mx-photo::after{ content:""; position:absolute; inset:0; pointer-events:none;
+  box-shadow:inset 0 0 120px 20px rgba(8,7,10,.65); }
+.mx-cap{ margin-top:14px; font-family:var(--mx-sans); font-size:11px; letter-spacing:.24em; color:var(--mx-faint); }
+
+/* 横に流れる一列 */
+.mx-rail{ display:flex; gap:22px; overflow-x:auto; padding:6px 40px 22px; scroll-snap-type:x proximity; }
+.mx-rail::-webkit-scrollbar{ height:2px } .mx-rail::-webkit-scrollbar-thumb{ background:var(--mx-line) }
+.mx-rail > *{ flex:0 0 clamp(190px,22vw,260px); scroll-snap-align:center; }
+
+/* 数字・仕様の並び */
+.mx-facts{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1px; background:var(--mx-line); border:1px solid var(--mx-line); }
+.mx-facts > div{ background:var(--mx-ink); padding:30px 26px; }
+.mx-facts dt{ font-family:var(--mx-sans); font-size:10.5px; letter-spacing:.28em; color:var(--mx-faint); margin-bottom:12px; }
+.mx-facts dd{ margin:0; font-size:15px; line-height:1.95; letter-spacing:.05em; color:var(--mx-paper); }
+.mx-num{ font-family:var(--mx-serif); font-size:clamp(40px,5vw,64px); font-weight:300; line-height:1; }
+
+/* 釦 ----------------------------------------------------------- */
+.mx-btn{
+  display:inline-block; padding:17px 42px; border:1px solid var(--mx-line); border-radius:1px;
+  font-family:var(--mx-sans); font-size:12px; letter-spacing:.26em; color:var(--mx-paper);
+  text-decoration:none; background:transparent; cursor:pointer; position:relative; overflow:hidden;
+  transition:color .5s ease, border-color .5s ease;
+}
+.mx-btn::before{ content:""; position:absolute; inset:0; background:var(--mx-paper);
+  transform:scaleX(0); transform-origin:right; transition:transform .62s cubic-bezier(.16,.84,.24,1); }
+.mx-btn:hover{ color:var(--mx-ink); border-color:var(--mx-paper); }
+.mx-btn:hover::before{ transform:scaleX(1); transform-origin:left; }
+.mx-btn span{ position:relative; }
+.mx-btn-solid{ background:var(--mx-paper); color:var(--mx-ink); border-color:var(--mx-paper); }
+.mx-btn-solid::before{ background:var(--mx-wine); }
+.mx-btn-solid:hover{ color:#fff; border-color:var(--mx-wine); }
+
+/* 下線が伸びるリンク */
+.mx-link{ color:var(--mx-paper); text-decoration:none; position:relative; letter-spacing:.06em; }
+.mx-link::after{ content:""; position:absolute; left:0; right:0; bottom:-3px; height:1px; background:currentColor;
+  transform:scaleX(0); transform-origin:right; transition:transform .5s cubic-bezier(.16,.84,.24,1); }
+.mx-link:hover::after{ transform:scaleX(1); transform-origin:left; }
+
+/* 天の帯 ------------------------------------------------------- */
+.mx-head{
+  position:fixed; top:0; left:0; right:0; z-index:40; padding:22px 40px;
+  display:flex; align-items:center; justify-content:space-between; gap:24px;
+  transition:background .6s ease, padding .6s ease, border-color .6s ease;
+  border-bottom:1px solid transparent;
+}
+.mx-head.is-stuck{ background:rgba(8,7,10,.72); backdrop-filter:saturate(1.2) blur(14px); padding:14px 40px; border-bottom-color:var(--mx-line); }
+.mx-brand{ font-family:var(--mx-jp); font-size:19px; letter-spacing:.16em; color:var(--mx-paper); text-decoration:none; white-space:nowrap; }
+.mx-brand small{ display:block; font-family:var(--mx-sans); font-size:9px; letter-spacing:.34em; color:var(--mx-faint); margin-top:4px; }
+.mx-nav{ display:flex; gap:clamp(14px,2vw,30px); align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+.mx-nav a{ font-family:var(--mx-sans); font-size:11.5px; letter-spacing:.18em; color:var(--mx-dim); text-decoration:none;
+  position:relative; padding:6px 0; transition:color .45s ease; white-space:nowrap; }
+.mx-nav a::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:1px; background:var(--mx-gold);
+  transform:scaleX(0); transform-origin:right; transition:transform .5s cubic-bezier(.16,.84,.24,1); }
+.mx-nav a:hover,.mx-nav a.on{ color:var(--mx-paper); }
+.mx-nav a:hover::after,.mx-nav a.on::after{ transform:scaleX(1); transform-origin:left; }
+
+/* 地の帯 ------------------------------------------------------- */
+.mx-foot{ border-top:1px solid var(--mx-line); padding:80px 0 46px; margin-top:40px; }
+.mx-foot-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:48px; }
+.mx-foot h4{ font-family:var(--mx-sans); font-size:10.5px; letter-spacing:.28em; color:var(--mx-faint); margin:0 0 18px; font-weight:400; }
+.mx-foot ul{ list-style:none; margin:0; padding:0; }
+.mx-foot li{ margin-bottom:11px; }
+.mx-foot a{ color:var(--mx-dim); text-decoration:none; font-size:13.5px; letter-spacing:.08em; transition:color .4s ease; }
+.mx-foot a:hover{ color:var(--mx-paper); }
+.mx-foot-end{ display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;
+  margin-top:58px; padding-top:26px; border-top:1px solid var(--mx-line);
+  font-family:var(--mx-sans); font-size:10.5px; letter-spacing:.2em; color:var(--mx-faint); }
+
+/* 帳（読み物・表組み） ----------------------------------------- */
+.mx-table{ width:100%; border-collapse:collapse; }
+.mx-table th,.mx-table td{ padding:20px 4px; border-bottom:1px solid var(--mx-line); text-align:left; vertical-align:top; }
+.mx-table th{ font-family:var(--mx-sans); font-size:10.5px; letter-spacing:.24em; color:var(--mx-faint); font-weight:400; width:34%; white-space:nowrap; }
+.mx-table td{ font-size:15px; line-height:2; letter-spacing:.05em; color:var(--mx-paper); }
+
+/* 入力 --------------------------------------------------------- */
+.mx-field{ width:100%; background:transparent; border:0; border-bottom:1px solid var(--mx-line);
+  color:var(--mx-paper); font-family:var(--mx-jp); font-size:15.5px; letter-spacing:.05em;
+  padding:14px 2px; outline:none; transition:border-color .5s ease; }
+.mx-field:focus{ border-bottom-color:var(--mx-gold); }
+.mx-field::placeholder{ color:rgba(239,234,226,.22); }
+textarea.mx-field{ min-height:150px; resize:vertical; line-height:2; }
+.mx-label{ display:block; font-family:var(--mx-sans); font-size:10.5px; letter-spacing:.26em; color:var(--mx-faint); margin:34px 0 2px; }
+.mx-note{ font-size:12.5px; letter-spacing:.06em; color:var(--mx-faint); line-height:1.9; }
+
+/* 携帯 --------------------------------------------------------- */
+@media (max-width:860px){
+  .mx-in,.mx-in-n{ padding:0 22px; }
+  .mx-two,.mx-two-40{ grid-template-columns:1fr; gap:38px; }
+  .mx-foot-grid{ grid-template-columns:1fr; gap:34px; }
+  .mx-head{ padding:16px 22px; flex-direction:column; align-items:flex-start; gap:10px; }
+  .mx-head.is-stuck{ padding:12px 22px; }
+  .mx-nav{ justify-content:flex-start; gap:14px; }
+  .mx-rail{ padding:6px 22px 22px; }
+  .mx-sec{ padding:76px 0; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  html[data-era="now"]{ scroll-behavior:auto; }
+  .mx-rv,.mx-ch{ opacity:1 !important; transform:none !important; filter:none !important; transition:none !important; }
+  .mx-hero-bg{ animation:none !important; }
+  .mx-grain{ animation:none !important; }
+}
+
+/* =========================================================
+   旧「現在」用の指定（eras.css の !important）を打ち消します。
+   mx レイアウトを描いているときだけ効きます。
+   ========================================================= */
+html[data-era="now"][data-mx="1"] body{
+  background:var(--mx-ink) !important; color:var(--mx-paper) !important;
+  font-family:var(--mx-jp) !important; font-size:16px !important;
+  line-height:1.9 !important; letter-spacing:.04em !important;
+}
+html[data-era="now"][data-mx="1"] a{ color:inherit !important; text-decoration:none !important; }
+html[data-era="now"][data-mx="1"] p{ font-size:inherit !important; line-height:inherit !important; color:inherit !important; margin:0 0 20px !important; }
+html[data-era="now"][data-mx="1"] li{ line-height:inherit !important; }
+html[data-era="now"][data-mx="1"] .mx-p{ font-size:15.5px !important; line-height:2.3 !important; color:var(--mx-dim) !important; }
+html[data-era="now"][data-mx="1"] .mx-lead{ font-size:17px !important; line-height:2.15 !important; color:var(--mx-dim) !important; }
+html[data-era="now"][data-mx="1"] .mx-h1,
+html[data-era="now"][data-mx="1"] .mx-h2,
+html[data-era="now"][data-mx="1"] .mx-h3{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-note,
+html[data-era="now"][data-mx="1"] .mx-cap,
+html[data-era="now"][data-mx="1"] .mx-kicker{ color:var(--mx-faint) !important; }
+html[data-era="now"][data-mx="1"] .mx-link{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-btn{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-btn:hover{ color:var(--mx-ink) !important; }
+html[data-era="now"][data-mx="1"] .mx-btn-solid{ color:var(--mx-ink) !important; }
+html[data-era="now"][data-mx="1"] .mx-btn-solid:hover{ color:#fff !important; }
+html[data-era="now"][data-mx="1"] .mx-nav a{ color:var(--mx-dim) !important; }
+html[data-era="now"][data-mx="1"] .mx-nav a:hover,
+html[data-era="now"][data-mx="1"] .mx-nav a.on{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-foot a{ color:var(--mx-dim) !important; }
+html[data-era="now"][data-mx="1"] .mx-foot a:hover{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-vitrine img{ image-rendering:auto !important; }
+
+/* 時間旅行・言語バーも暗い画面に合わせます */
+html[data-mx="1"] #lang-bar{
+  background:rgba(18,16,20,.72) !important; border:1px solid rgba(239,234,226,.16) !important;
+  backdrop-filter:saturate(1.2) blur(14px); box-shadow:none !important; border-radius:2px !important;
+}
+html[data-mx="1"] #lang-bar button{ opacity:.45 !important; }
+html[data-mx="1"] #lang-bar button.active{ opacity:1 !important; background:transparent !important; border-color:rgba(239,234,226,.4) !important; }
+html[data-mx="1"] #tw-panel, html[data-mx="1"] .tw-panel{
+  background:rgba(18,16,20,.72) !important; border:1px solid rgba(239,234,226,.16) !important;
+  backdrop-filter:saturate(1.2) blur(14px); box-shadow:none !important; color:var(--mx-paper) !important;
+}
+
+/* 上の帯は、左上の時間旅行と右上の言語バーを避けます */
+@media (min-width:1100px){
+  .mx-head{ padding-left:240px; padding-right:230px; }
+  .mx-head.is-stuck{ padding-left:240px; padding-right:230px; }
+}
+@media (min-width:861px) and (max-width:1099px){
+  .mx-head{ padding-top:70px; }
+  .mx-head.is-stuck{ padding-top:60px; }
+}
+@media (max-width:860px){
+  .mx-head{ padding-top:64px; }
+}
+
+/* 表紙は帯のぶん下げます */
+.mx-hero .mx-in{ padding-top:40px; }
+
+/* 時間旅行の小箱・言語バーを暗い画面に合わせます -------------- */
+html[data-mx="1"] #timewarp{
+  background:rgba(16,14,18,.66) !important;
+  border:1px solid rgba(239,234,226,.14) !important;
+  border-radius:3px !important; box-shadow:none !important;
+  backdrop-filter:saturate(1.1) blur(16px);
+  color:var(--mx-paper) !important; padding:8px !important;
+}
+html[data-mx="1"] #timewarp .tw-t{ color:rgba(239,234,226,.4) !important; font-family:var(--mx-sans) !important; letter-spacing:.18em !important; }
+html[data-mx="1"] #timewarp button{
+  background:transparent !important; color:rgba(239,234,226,.62) !important;
+  border:1px solid transparent !important; border-radius:2px !important;
+  font-family:var(--mx-sans) !important; letter-spacing:.06em !important; box-shadow:none !important;
+}
+html[data-mx="1"] #timewarp button:hover{ color:var(--mx-paper) !important; background:rgba(239,234,226,.06) !important; }
+html[data-mx="1"] #timewarp button.on{ color:var(--mx-ink) !important; background:var(--mx-paper) !important; }
+html[data-mx="1"] #timewarp .tw-toggle{ display:block !important; background:transparent !important; color:rgba(239,234,226,.5) !important; border:0 !important; }
+html[data-mx="1"] #timewarp.tw-closed{ width:40px !important; }
+html[data-mx="1"] #lang-bar{ padding:5px 8px !important; }
+
+/* 帯は左右のウィジェットを避けます */
+.mx-head{ padding-left:64px; padding-right:64px; }
+.mx-head.is-stuck{ padding-left:64px; padding-right:64px; }
+@media (min-width:861px){
+  .mx-head{ padding-left:70px; padding-right:236px; }
+  .mx-head.is-stuck{ padding-left:70px; padding-right:236px; padding-top:14px; }
+}
+@media (max-width:860px){
+  .mx-head{ padding-left:22px; padding-right:22px; padding-top:58px; }
+}
+
+/* =========================================================
+   熟成したブルゴーニュの色へ。深く、淡い赤茶。
+   重さを抜き、動きをゆっくりに。
+   ========================================================= */
+html[data-era="now"]{
+  --mx-ink:#241a17;
+  --mx-ink2:#2f2320;
+  --mx-paper:#f4ece4;
+  --mx-dim:rgba(244,236,228,.70);
+  --mx-faint:rgba(244,236,228,.46);
+  --mx-line:rgba(244,236,228,.18);
+  --mx-wine:#8f4038;
+  --mx-gold:#d3a98a;
+  --mx-vit:#f7f2ec;
+}
+html[data-era="now"][data-mx="1"] body{ background:var(--mx-ink) !important; }
+html[data-era="now"]{ background:var(--mx-ink); }
+
+/* 重さを抜く */
+.mx-grain{ opacity:.16; }
+.mx-vign{ background:radial-gradient(125% 95% at 50% 44%, transparent 52%, rgba(28,18,15,.24) 82%, rgba(28,18,15,.44) 100%); }
+.mx-hero-shade{
+  background:
+    linear-gradient(to bottom, rgba(36,26,23,.24) 0%, rgba(36,26,23,.06) 36%, rgba(36,26,23,.58) 84%, var(--mx-ink) 100%),
+    radial-gradient(85% 65% at 24% 36%, rgba(36,26,23,0) 34%, rgba(36,26,23,.38) 100%);
+}
+.mx-bleed-shade{
+  background:linear-gradient(to bottom, var(--mx-ink) 0%, rgba(36,26,23,.30) 24%, rgba(36,26,23,.30) 76%, var(--mx-ink) 100%);
+}
+.mx-photo img{ filter:brightness(.86) contrast(1.02) saturate(.88); }
+.mx-photo.is-in img{ filter:brightness(1) contrast(1) saturate(.96); }
+.mx-photo::after{ box-shadow:inset 0 0 100px 14px rgba(36,26,23,.42); }
+.mx-vitrine{
+  box-shadow:0 0 0 1px rgba(244,236,228,.12), 0 26px 60px -28px rgba(0,0,0,.72), 0 0 80px -40px rgba(211,169,138,.5);
+}
+
+/* 動きをゆっくりに */
+.mx-rv{ transform:translate3d(0,32px,0); filter:blur(7px);
+  transition:opacity 1.75s cubic-bezier(.16,.84,.24,1), transform 1.75s cubic-bezier(.16,.84,.24,1), filter 1.6s ease; }
+.mx-rv[data-d="1"]{ transition-delay:.16s } .mx-rv[data-d="2"]{ transition-delay:.32s }
+.mx-rv[data-d="3"]{ transition-delay:.48s } .mx-rv[data-d="4"]{ transition-delay:.64s }
+.mx-rv[data-d="5"]{ transition-delay:.80s } .mx-rv[data-d="6"]{ transition-delay:.96s }
+.mx-ch{ transition:opacity 1.5s ease, transform 1.7s cubic-bezier(.16,.84,.24,1); }
+.mx-photo img{ transition:filter 2.4s ease, transform 3s cubic-bezier(.16,.84,.24,1); }
+.mx-hero-bg{ animation:mx-breathe 44s ease-in-out infinite alternate; }
+.mx-scroll i{ animation:mx-drip 4s ease-in-out infinite; }
+
+/* 章のあいだをゆったり */
+.mx-sec{ padding:clamp(120px,19vh,240px) 0; }
+.mx-bleed{ min-height:92svh; }
+
+/* 見出しが上の帯に隠れないように */
+.mx-sec, .mx-bleed{ scroll-margin-top:120px; }
+
+/* 写真の並び */
+.mx-duo{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(18px,3vw,34px); }
+.mx-duo .mx-photo{ aspect-ratio:4/5; }
+.mx-wide .mx-photo{ aspect-ratio:16/9; }
+.mx-tall .mx-photo{ aspect-ratio:3/4; }
+@media (max-width:860px){ .mx-duo{ grid-template-columns:1fr; } }
+
+/* 表紙に実写を敷いたときの調整 ------------------------------ */
+.mx-hero-bg{ background-position:72% 46%; inset:-3%; }
+@keyframes mx-breathe{ from{transform:scale(1.02) translate3d(0,0,0)} to{transform:scale(1.07) translate3d(-.8%,-1%,0)} }
+.mx-hero-shade{
+  background:
+    linear-gradient(100deg, rgba(30,20,17,.90) 0%, rgba(30,20,17,.78) 26%, rgba(30,20,17,.34) 52%, rgba(30,20,17,.16) 72%, rgba(30,20,17,.30) 100%),
+    linear-gradient(to bottom, rgba(30,20,17,.62) 0%, rgba(30,20,17,.10) 30%, rgba(30,20,17,.52) 82%, var(--mx-ink) 100%);
+}
+.mx-hero .mx-in{ max-width:1180px; }
+.mx-hero-in{ z-index:2; }
+.mx-hero .mx-h1{ text-shadow:0 2px 60px rgba(20,12,10,.85); }
+.mx-hero-sub, .mx-hero .mx-kicker{ text-shadow:0 1px 24px rgba(20,12,10,.9); }
+
+/* 天の帯は、下地が明るくても読めるように薄い覆いを敷きます */
+.mx-head::before{
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:linear-gradient(to bottom, rgba(30,20,17,.72), rgba(30,20,17,0));
+  transition:opacity .6s ease;
+}
+.mx-head.is-stuck::before{ opacity:0; }
+
+/* =========================================================
+   既存ページ（ホーム以外）を「黒の画廊」で包んだときの体裁
+   ========================================================= */
+.mx-legacy{ padding:clamp(120px,16vh,190px) 0 40px; }
+.mx-legacy .panel{
+  background:transparent !important; border:0 !important; box-shadow:none !important;
+  padding:0 !important; margin:0 0 clamp(72px,10vh,120px) !important; color:var(--mx-paper) !important;
+  animation:none !important;
+}
+.mx-legacy .pixhead{
+  font-family:var(--mx-jp) !important; font-weight:400 !important;
+  font-size:clamp(26px,3.4vw,42px) !important; letter-spacing:.06em !important;
+  line-height:1.34 !important; color:var(--mx-paper) !important;
+  margin:0 0 26px !important; text-shadow:none !important;
+}
+.mx-legacy .sub{
+  font-family:var(--mx-sans) !important; font-size:11px !important; letter-spacing:.32em !important;
+  text-transform:uppercase; color:var(--mx-faint) !important; font-weight:400 !important;
+  margin:0 0 30px !important; line-height:1.9 !important;
+}
+.mx-legacy p{ font-size:15.5px !important; line-height:2.3 !important; letter-spacing:.055em !important;
+  color:var(--mx-dim) !important; margin:0 0 20px !important; font-feature-settings:"palt" 1; }
+.mx-legacy li{ font-size:15px !important; line-height:2.2 !important; letter-spacing:.05em !important; color:var(--mx-dim) !important; }
+.mx-legacy .hint{ font-size:12.5px !important; letter-spacing:.06em !important; color:var(--mx-faint) !important; line-height:1.9 !important; }
+.mx-legacy b, .mx-legacy strong{ color:var(--mx-paper) !important; font-weight:600 !important; }
+.mx-legacy a{ color:var(--mx-paper) !important; text-decoration:none !important; }
+.mx-legacy .panel > a, .mx-legacy p a{ border-bottom:1px solid var(--mx-line); }
+
+/* 釦 */
+.mx-legacy .btn{
+  display:inline-block; padding:15px 36px !important; border:1px solid var(--mx-line) !important; border-radius:1px !important;
+  background:transparent !important; color:var(--mx-paper) !important; box-shadow:none !important;
+  font-family:var(--mx-sans) !important; font-size:12px !important; letter-spacing:.24em !important;
+  transition:background .5s ease, color .5s ease, border-color .5s ease; text-shadow:none !important;
+}
+.mx-legacy .btn:hover{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; }
+.mx-legacy button.btn[data-on="1"], .mx-legacy .btn[data-on="1"]{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; }
+
+/* 入力 */
+.mx-legacy .field{
+  width:100%; background:transparent !important; border:0 !important; border-bottom:1px solid var(--mx-line) !important;
+  border-radius:0 !important; color:var(--mx-paper) !important; font-family:var(--mx-jp) !important;
+  font-size:15.5px !important; letter-spacing:.05em !important; padding:14px 2px !important; box-shadow:none !important;
+}
+.mx-legacy .field:focus{ border-bottom-color:var(--mx-gold) !important; outline:none !important; }
+.mx-legacy select.field{ color:var(--mx-paper) !important; }
+.mx-legacy select.field option{ background:var(--mx-ink2); color:var(--mx-paper); }
+.mx-legacy label{ font-family:var(--mx-sans) !important; font-size:10.5px !important; letter-spacing:.26em !important; color:var(--mx-faint) !important; }
+
+/* 表 */
+.mx-legacy table{ width:100%; border-collapse:collapse; }
+.mx-legacy th, .mx-legacy td{
+  border:0 !important; border-bottom:1px solid var(--mx-line) !important;
+  padding:18px 4px !important; text-align:left; vertical-align:top;
+  background:transparent !important; color:var(--mx-paper) !important;
+}
+.mx-legacy th{ font-family:var(--mx-sans) !important; font-size:10.5px !important; letter-spacing:.24em !important;
+  color:var(--mx-faint) !important; font-weight:400 !important; white-space:nowrap; }
+
+/* 一覧 */
+.mx-legacy ul.dots{ list-style:none; padding:0; margin:0; }
+.mx-legacy ul.dots li{ border-top:1px solid var(--mx-line); padding:20px 0; }
+
+/* 商品の並び */
+.mx-legacy #catalogue > div[style]{ border:0 !important; background:transparent !important; box-shadow:none !important;
+  border-bottom:1px solid var(--mx-line) !important; padding:26px 0 !important; margin:0 !important; }
+.mx-legacy .thumb, .mx-legacy #catalogue img{
+  background:var(--mx-vit) !important; border:0 !important; border-radius:2px !important; padding:6px !important;
+  box-shadow:0 0 0 1px rgba(244,236,228,.12), 0 18px 40px -22px rgba(0,0,0,.7) !important;
+}
+.mx-legacy hr, .mx-legacy .rainbow{ display:none !important; }
+
+/* 石の扉まわりは現代では出しません */
+.mx-legacy #door-wrap, .mx-legacy #stone-door{ display:none !important; }
+.mx-legacy #modern-lock{ display:block; text-align:center; margin:10px 0 34px; }
+.mx-legacy #modern-lock .ml-key{ font-size:34px; opacity:.5; }
+.mx-legacy #modern-lock .ml-t{ width:44px; height:1px; background:var(--mx-line); margin:22px auto 0; }
+
+/* 表紙の写真は静かに入れ替わります ---------------------------- */
+.mx-hero-bg{ opacity:0; transition:opacity 1.9s ease; }
+.mx-hero-bg.is-on{ opacity:1; }
+@media (prefers-reduced-motion:reduce){
+  .mx-hero-bg{ opacity:0 !important; transition:none !important; }
+  .mx-hero-bg.is-on{ opacity:1 !important; }
+}
+
+/* 表紙の写真は静かに入れ替わります */
+.mx-hero-bg{ opacity:0; transition:opacity 1.9s ease; }
+.mx-hero-bg.is-on{ opacity:1; }
+@media (prefers-reduced-motion:reduce){ .mx-hero-bg{ opacity:0 !important; transition:none !important; } .mx-hero-bg.is-on{ opacity:1 !important; } }
+
+/* 取りこぼしを潰す：現代の画面では、どの文字も地に沈まないように ---- */
+html[data-era="now"][data-mx="1"] .mx-legacy .pixhead,
+html[data-era="now"][data-mx="1"] .mx-legacy th,
+html[data-era="now"][data-mx="1"] .mx-legacy td,
+html[data-era="now"][data-mx="1"] .mx-legacy dt,
+html[data-era="now"][data-mx="1"] .mx-legacy dd,
+html[data-era="now"][data-mx="1"] .mx-legacy h1,
+html[data-era="now"][data-mx="1"] .mx-legacy h2,
+html[data-era="now"][data-mx="1"] .mx-legacy h3,
+html[data-era="now"][data-mx="1"] .mx-legacy b,
+html[data-era="now"][data-mx="1"] .mx-legacy strong,
+html[data-era="now"][data-mx="1"] .mx-legacy span,
+html[data-era="now"][data-mx="1"] .mx-legacy div,
+html[data-era="now"][data-mx="1"] .mx-legacy li,
+html[data-era="now"][data-mx="1"] .mx-legacy label{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy p,
+html[data-era="now"][data-mx="1"] .mx-legacy .hint,
+html[data-era="now"][data-mx="1"] .mx-legacy .note,
+html[data-era="now"][data-mx="1"] .mx-legacy small{ color:var(--mx-dim) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy .hint,
+html[data-era="now"][data-mx="1"] .mx-legacy small{ color:var(--mx-faint) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy th,
+html[data-era="now"][data-mx="1"] .mx-legacy dt,
+html[data-era="now"][data-mx="1"] .mx-legacy label{ color:var(--mx-faint) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy a{ color:var(--mx-paper) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy input,
+html[data-era="now"][data-mx="1"] .mx-legacy textarea,
+html[data-era="now"][data-mx="1"] .mx-legacy select{ color:var(--mx-paper) !important; }
+
+/* 文字の大きさを揃えます */
+html[data-era="now"][data-mx="1"] .mx-legacy .pixhead{ font-size:clamp(24px,2.9vw,34px) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy p,
+html[data-era="now"][data-mx="1"] .mx-legacy li,
+html[data-era="now"][data-mx="1"] .mx-legacy td{ font-size:15.5px !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy .hint,
+html[data-era="now"][data-mx="1"] .mx-legacy small{ font-size:12.5px !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy th,
+html[data-era="now"][data-mx="1"] .mx-legacy label{ font-size:10.5px !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy .btn{ font-size:12px !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy .field{ font-size:15.5px !important; }
+/* 本文の幅を読みやすく */
+.mx-legacy .mx-in{ max-width:900px; }
+
+/* 旧「現在」用の色指定を、mx 表示中はすべて上書きします ---------- */
+html[data-mx="1"] .btn{ background:transparent !important; color:var(--mx-paper) !important;
+  border:1px solid var(--mx-line) !important; border-radius:1px !important; box-shadow:none !important; }
+html[data-mx="1"] .btn:hover{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; }
+html[data-mx="1"] .btn[data-on="0"]{ background:transparent !important; color:var(--mx-paper) !important; opacity:.62; }
+html[data-mx="1"] .btn[data-on="1"]{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; opacity:1; }
+html[data-mx="1"] [style*="color:#ffd479"]{ color:var(--mx-gold) !important; }
+html[data-mx="1"] [style*="color:#ffb000"]{ color:var(--mx-gold) !important; }
+html[data-mx="1"] .price{ color:var(--mx-paper) !important; font-size:15px !important; letter-spacing:.04em !important; }
+html[data-mx="1"] .field{ background:transparent !important; color:var(--mx-paper) !important;
+  border:0 !important; border-bottom:1px solid var(--mx-line) !important; border-radius:0 !important; }
+html[data-mx="1"] label{ color:var(--mx-faint) !important; font-size:10.5px !important; font-weight:400 !important; letter-spacing:.26em !important; }
+html[data-mx="1"] .sub{ color:var(--mx-faint) !important; }
+html[data-mx="1"] .hint{ color:var(--mx-faint) !important; }
+html[data-mx="1"] .pixhead{ color:var(--mx-paper) !important; }
+html[data-mx="1"] .modal, html[data-mx="1"] .modal-box{
+  background:var(--mx-ink2) !important; color:var(--mx-paper) !important;
+  border:1px solid var(--mx-line) !important; box-shadow:0 40px 90px -40px rgba(0,0,0,.9) !important; }
+html[data-mx="1"] .modal *{ color:var(--mx-paper) !important; }
+html[data-mx="1"] .modal .hint, html[data-mx="1"] .modal-sub{ color:var(--mx-dim) !important; }
+html[data-mx="1"] #cat-nav a{ color:var(--mx-dim) !important; }
+html[data-mx="1"] #cat-nav a:hover{ color:var(--mx-paper) !important; }
+html[data-mx="1"] #sub-label{ color:var(--mx-faint) !important; }
+html[data-mx="1"] .badge{ background:transparent !important; color:var(--mx-faint) !important; border:1px solid var(--mx-line) !important; }
+html[data-mx="1"] .counter{ color:var(--mx-paper) !important; }
+
+/* 小さな見出しをもう少し読みやすく */
+html[data-era="now"]{ --mx-faint:rgba(244,236,228,.58); }
+
+html[data-mx="1"] #cat-nav a.is-on{ color:var(--mx-gold) !important; }
+
+/* 旧「現在」の白い箱を、すべて暗い画面に合わせます -------------- */
+html[data-mx="1"] .btn[data-on="0"]{ background:transparent !important; }
+html[data-mx="1"] .field{ background:transparent !important; border:0 !important; border-bottom:1px solid var(--mx-line) !important; }
+html[data-mx="1"] .card img{ background:var(--mx-vit) !important; }
+html[data-mx="1"] [style*="#5a4626"]{ background:transparent !important; border:1px solid var(--mx-line) !important; border-radius:2px !important; }
+html[data-mx="1"] [style*="background:#1a0a00"]{ background:transparent !important; }
+html[data-mx="1"] #modern-lock{ background:transparent !important; border:1px solid var(--mx-line) !important; border-radius:2px !important; }
+html[data-mx="1"] .x-thumb{ background:var(--mx-vit) !important; border-radius:2px !important; }
+html[data-mx="1"] #tw-leave-ov{ background:var(--mx-ink) !important; }
+html[data-mx="1"] #tw-leave-ov .tw-bye-t{ color:var(--mx-paper) !important; }
+html[data-mx="1"] #tw-leave-ov .tw-bye-a{ background:transparent !important; color:var(--mx-paper) !important;
+  border:1px solid var(--mx-line) !important; border-radius:1px !important; }
+html[data-mx="1"] #tw-leave-ov .tw-bye-a:hover{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; }
+html[data-mx="1"] #tw-leave-ov .tw-door{ background:var(--mx-ink2) !important; }
+/* 念のため：mx 表示中に白系の背景が残っていたら暗く落とします */
+html[data-mx="1"] .mx-legacy [style*="background:#fff"],
+html[data-mx="1"] .mx-legacy [style*="background:#f5f5f7"]{ background:transparent !important; }
+
+/* 選ばれていない釦の下地 */
+html[data-era="now"][data-mx="1"] .btn[data-on="0"]{ background:transparent !important; color:var(--mx-paper) !important; border:1px solid var(--mx-line) !important; opacity:.62 !important; }
+html[data-era="now"][data-mx="1"] .btn[data-on="1"]{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; opacity:1 !important; }
+html[data-era="now"][data-mx="1"] .btn{ background:transparent !important; }
+
+/* 明るい写真の上でも読めるように ------------------------------ */
+.mx-bleed-shade{
+  background:
+    linear-gradient(100deg, rgba(28,18,15,.86) 0%, rgba(28,18,15,.70) 30%, rgba(28,18,15,.30) 58%, rgba(28,18,15,.18) 78%, rgba(28,18,15,.34) 100%),
+    linear-gradient(to bottom, var(--mx-ink) 0%, rgba(28,18,15,.24) 22%, rgba(28,18,15,.28) 74%, var(--mx-ink) 100%);
+}
+.mx-bleed .mx-h2, .mx-bleed .mx-h1{ text-shadow:0 2px 46px rgba(18,10,8,.92), 0 1px 3px rgba(18,10,8,.6); }
+.mx-bleed .mx-p, .mx-bleed .mx-kicker, .mx-bleed .mx-cap{ text-shadow:0 1px 22px rgba(18,10,8,.95); }
+.mx-bleed .mx-btn{ backdrop-filter:blur(3px); background:rgba(28,18,15,.30); }
+.mx-bleed .mx-btn:hover{ background:var(--mx-paper); }
+.mx-bleed .mx-in, .mx-bleed .mx-in-n{ position:relative; z-index:2; }
+
+/* ストアの絞り込みを、今どきの選択肢に -------------------------- */
+html[data-mx="1"] #cat-nav{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; line-height:1 !important; }
+html[data-mx="1"] #cat-nav a{
+  margin:0 !important; padding:9px 16px !important; border:1px solid var(--mx-line) !important; border-radius:999px !important;
+  font-family:var(--mx-sans) !important; font-size:12px !important; letter-spacing:.06em !important;
+  color:var(--mx-dim) !important; text-decoration:none !important; white-space:nowrap;
+  transition:background .35s ease, color .35s ease, border-color .35s ease;
+}
+html[data-mx="1"] #cat-nav a:hover{ color:var(--mx-paper) !important; border-color:rgba(244,236,228,.4) !important; background:rgba(244,236,228,.06) !important; }
+html[data-mx="1"] #cat-nav a.is-on{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; border-color:var(--mx-paper) !important; font-weight:600 !important; }
+html[data-mx="1"] #sub-wrap{ margin-top:22px !important; }
+html[data-mx="1"] select.field{
+  -webkit-appearance:none; appearance:none; border:1px solid var(--mx-line) !important; border-radius:999px !important;
+  padding:12px 42px 12px 18px !important; background-image:linear-gradient(45deg,transparent 50%,rgba(244,236,228,.5) 50%),linear-gradient(135deg,rgba(244,236,228,.5) 50%,transparent 50%) !important;
+  background-position:calc(100% - 22px) 50%, calc(100% - 16px) 50% !important;
+  background-size:6px 6px, 6px 6px !important; background-repeat:no-repeat !important;
+  font-size:13px !important; letter-spacing:.05em !important;
+}
+html[data-mx="1"] #stock-btn{ border-radius:999px !important; padding:11px 22px !important; }
+
+/* 営業カレンダー：休みの日をはっきり ---------------------------- */
+html[data-mx="1"] table.retro{ border-collapse:separate !important; border-spacing:3px !important; }
+html[data-mx="1"] table.retro td{ border:0 !important; border-radius:3px !important; padding:6px 7px !important; font-size:12.5px !important; }
+html[data-mx="1"] table.retro th{ border:0 !important; color:var(--mx-faint) !important; font-size:11px !important; letter-spacing:.1em !important; }
+html[data-mx="1"] table.retro td.cal-off{
+  background:rgba(143,64,56,.55) !important; color:#f7ded6 !important; font-weight:600 !important;
+  box-shadow:inset 0 0 0 1px rgba(211,169,138,.45) !important;
+}
+html[data-mx="1"] table.retro td.cal-today{ outline:1px solid var(--mx-gold) !important; outline-offset:-1px; }
+
+/* 全ページの地に、ワインの写真をうっすら ---------------------- */
+.mx-bg{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-size:cover; background-position:56% 44%;
+  opacity:.085; filter:blur(2px) saturate(.7);
+}
+html[data-mx="1"] .mx-legacy, html[data-mx="1"] .mx{ position:relative; z-index:1; }
+
+/* 入口の背景（看板と昔日を数秒で入れ替え） -------------------- */
+html[data-era="now"] .mx-door-bg{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+html[data-era="now"] .mx-door-shot{
+  position:absolute; inset:-2%; background-size:cover; background-position:center;
+  opacity:0; transition:opacity 2.2s ease; transform:scale(1.03);
+  animation:mx-breathe 52s ease-in-out infinite alternate;
+}
+html[data-era="now"] .mx-door-shot.is-on{ opacity:1; }
+html[data-era="now"] .mx-door-veil{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(70% 55% at 50% 46%, rgba(28,18,15,.62) 0%, rgba(28,18,15,.86) 62%, rgba(28,18,15,.95) 100%),
+    linear-gradient(to bottom, rgba(28,18,15,.72), rgba(28,18,15,.90));
+}
+html[data-era="now"] #modern-entrance{
+  position:relative; z-index:2; background:transparent !important; border:0 !important; box-shadow:none !important;
+}
+html[data-era="now"] #modern-entrance .me-jp{ color:var(--mx-paper) !important; font-family:var(--mx-jp) !important;
+  font-weight:400 !important; letter-spacing:.04em !important; text-shadow:0 2px 50px rgba(18,10,8,.9) !important; }
+html[data-era="now"] #modern-entrance .me-en{ color:var(--mx-faint) !important; letter-spacing:.34em !important; }
+html[data-era="now"] #modern-entrance .me-rule{ background:var(--mx-line) !important; }
+html[data-era="now"] #modern-entrance .me-sub{ color:var(--mx-dim) !important; text-shadow:0 1px 22px rgba(18,10,8,.9) !important; }
+html[data-era="now"] #modern-entrance .me-btn{
+  background:transparent !important; color:var(--mx-paper) !important;
+  border:1px solid rgba(244,236,228,.5) !important; border-radius:1px !important;
+  font-family:var(--mx-sans) !important; letter-spacing:.24em !important; font-size:12px !important;
+  padding:16px 40px !important; backdrop-filter:blur(3px); transition:background .5s ease, color .5s ease; }
+html[data-era="now"] #modern-entrance .me-btn:hover{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; }
+html[data-era="now"] body:has(.door-page){ background:var(--mx-ink) !important; }
+html[data-era="now"] #age-note{ position:relative; z-index:2; color:var(--mx-faint) !important; text-shadow:0 1px 18px rgba(18,10,8,.9); }
+
+/* 携帯：メニューを三本線にまとめます -------------------------- */
+.mx-burger{ display:none; position:relative; width:34px; height:26px; background:transparent; border:0; cursor:pointer; padding:0; }
+.mx-burger span{ position:absolute; left:4px; right:4px; height:1px; background:var(--mx-paper); transition:transform .4s ease, opacity .3s ease; }
+.mx-burger span:nth-child(1){ top:7px } .mx-burger span:nth-child(2){ top:13px } .mx-burger span:nth-child(3){ top:19px }
+.mx-burger.is-open span:nth-child(1){ transform:translateY(6px) rotate(45deg) }
+.mx-burger.is-open span:nth-child(2){ opacity:0 }
+.mx-burger.is-open span:nth-child(3){ transform:translateY(-6px) rotate(-45deg) }
+@media (max-width:860px){
+  .mx-head{ flex-direction:row; align-items:center; justify-content:space-between; padding-top:14px !important; }
+  .mx-burger{ display:block; }
+  .mx-nav{
+    position:fixed; left:0; right:0; top:0; height:100svh; z-index:-1;
+    flex-direction:column; align-items:center; justify-content:center; gap:26px;
+    background:rgba(28,18,15,.96); backdrop-filter:blur(18px);
+    opacity:0; pointer-events:none; transition:opacity .45s ease;
+  }
+  .mx-nav.is-open{ opacity:1; pointer-events:auto; z-index:39; }
+  .mx-nav a{ font-size:15px !important; letter-spacing:.2em !important; }
+}
+
+/* ストアの詳細：黒地ではなく、すりガラスの窓に ----------------- */
+html[data-mx="1"] .modal-ov{ background:rgba(20,13,11,.55) !important; backdrop-filter:blur(10px) saturate(1.05); }
+html[data-mx="1"] .modal-box{
+  background:rgba(46,34,30,.72) !important; backdrop-filter:blur(26px) saturate(1.2);
+  border:1px solid rgba(244,236,228,.20) !important; border-radius:4px !important;
+  box-shadow:0 50px 120px -50px rgba(0,0,0,.95) !important; color:var(--mx-paper) !important;
+  padding:34px !important; max-width:760px !important;
+}
+html[data-mx="1"] .modal-box *{ color:var(--mx-paper) !important; }
+html[data-mx="1"] .modal-box .hint, html[data-mx="1"] .modal-box .modal-sub{ color:var(--mx-dim) !important; }
+html[data-mx="1"] .modal-close{
+  background:transparent !important; border:1px solid rgba(244,236,228,.28) !important; border-radius:999px !important;
+  color:var(--mx-paper) !important; box-shadow:none !important; text-shadow:none !important;
+  width:40px !important; height:40px !important; padding:0 !important; font-size:0 !important;
+  position:absolute !important; right:18px !important; top:18px !important;
+  transition:background .35s ease, border-color .35s ease;
+}
+html[data-mx="1"] .modal-close::before, html[data-mx="1"] .modal-close::after{
+  content:""; position:absolute; left:12px; right:12px; top:50%; height:1px; background:var(--mx-paper);
+}
+html[data-mx="1"] .modal-close::before{ transform:rotate(45deg) } html[data-mx="1"] .modal-close::after{ transform:rotate(-45deg) }
+html[data-mx="1"] .modal-close:hover{ background:rgba(244,236,228,.12) !important; border-color:rgba(244,236,228,.5) !important; }
+html[data-mx="1"] .modal-box img{ background:var(--mx-vit) !important; border-radius:3px !important; padding:8px !important; }
+
+/* 退店の背景にワインの一枚 ------------------------------------- */
+html[data-mx="1"] #tw-leave-ov .tw-bye-bg{
+  position:absolute; inset:0; background-size:cover; background-position:center;
+  opacity:.22; filter:saturate(.8) blur(1px);
+}
+html[data-mx="1"] #tw-leave-ov .tw-bye{ position:relative; z-index:2; }
+
+/* ブログの見出し画像は現代では出しません */
+html[data-mx="1"] .mx-legacy img[src*="blog-head"]{ display:none !important; }
+
+/* 言語の切り替えを、静かな文字に ------------------------------ */
+html[data-mx="1"] #lang-bar.lb-quiet, html[data-era="now"] #lang-bar.lb-quiet{
+  gap:0 !important; padding:0 !important;
+  background:rgba(20,13,11,.55) !important; border:1px solid rgba(244,236,228,.16) !important;
+  border-radius:2px !important; backdrop-filter:blur(16px) saturate(1.1); box-shadow:none !important;
+  overflow:hidden;
+}
+html[data-era="now"] #lang-bar.lb-quiet button{
+  font-family:var(--mx-sans) !important; font-size:10.5px !important; letter-spacing:.22em !important;
+  padding:9px 12px !important; color:rgba(244,236,228,.45) !important; opacity:1 !important;
+  background:transparent !important; border:0 !important; border-radius:0 !important;
+  border-left:1px solid rgba(244,236,228,.10) !important; line-height:1 !important;
+  transition:color .4s ease, background .4s ease; cursor:pointer;
+}
+html[data-era="now"] #lang-bar.lb-quiet button:first-child{ border-left:0 !important; }
+html[data-era="now"] #lang-bar.lb-quiet button:hover{ color:var(--mx-paper) !important; background:rgba(244,236,228,.06) !important; }
+html[data-era="now"] #lang-bar.lb-quiet button.active{
+  color:var(--mx-ink) !important; background:var(--mx-paper) !important; font-weight:600 !important;
+}
+
+/* 非公開のページ：鍵は出さず、静かに ---------------------------- */
+html[data-mx="1"] #modern-lock{ border:0 !important; background:transparent !important; padding:0 !important; margin:26px 0 44px !important; }
+html[data-mx="1"] #modern-lock .ml-key{ display:none !important; }
+html[data-mx="1"] #modern-lock .ml-t{ width:60px !important; height:1px !important; background:var(--mx-line) !important; margin:0 auto !important; }
+html[data-mx="1"] #sd-msg{ margin-top:20px !important; font-size:13px !important; letter-spacing:.06em !important; color:var(--mx-dim) !important; }
+html[data-mx="1"] #sd-msg.bad{ color:#d99a90 !important; }
+html[data-mx="1"] #sd-msg.good{ color:var(--mx-gold) !important; }
+html[data-mx="1"] #pw{ text-align:center !important; letter-spacing:.55em !important; font-size:17px !important; padding:16px 2px !important; }
+html[data-mx="1"] #sd-open{ margin-top:8px !important; border-radius:1px !important; padding:16px 44px !important; }
+
+/* 退店の画面：他のページと同じ組版に、上の道具も残します -------- */
+html[data-mx="1"] body:has(#tw-leave-ov) #lang-bar,
+html[data-mx="1"] body:has(#tw-leave-ov) #timewarp{ display:flex !important; z-index:260 !important; }
+html[data-mx="1"] body:has(#tw-leave-ov) #timewarp{ display:block !important; }
+html[data-mx="1"] #tw-leave-ov{ background:var(--mx-ink) !important; }
+html[data-mx="1"] #tw-leave-ov .tw-bye-t{
+  font-family:var(--mx-jp) !important; font-weight:400 !important;
+  font-size:clamp(24px,3.2vw,38px) !important; letter-spacing:.08em !important;
+  color:var(--mx-paper) !important; text-shadow:0 2px 40px rgba(18,10,8,.85) !important;
+}
+html[data-mx="1"] #tw-leave-ov .tw-bye-a{
+  font-family:var(--mx-sans) !important; font-size:12px !important; letter-spacing:.24em !important;
+  background:transparent !important; color:var(--mx-paper) !important;
+  border:1px solid rgba(244,236,228,.35) !important; border-radius:1px !important;
+  padding:15px 38px !important; margin-top:26px !important; backdrop-filter:blur(3px);
+}
+html[data-mx="1"] #tw-leave-ov .tw-bye-a:hover{ background:var(--mx-paper) !important; color:var(--mx-ink) !important; }
+html[data-mx="1"] #tw-leave-ov .tw-door{ background:var(--mx-ink2) !important; }
+
+/* 携帯：上の道具どうしがぶつからないように --------------------- */
+@media (max-width:860px){
+  /* 時間旅行は左下へ */
+  html[data-mx="1"] #timewarp, html[data-era="now"] #timewarp{
+    top:auto !important; bottom:14px !important; left:14px !important; z-index:45 !important;
+  }
+  /* 言語は右下へ（開閉ボタンとぶつからない位置） */
+  html[data-era="now"] #lang-bar.lb-quiet{
+    top:auto !important; bottom:14px !important; right:14px !important; left:auto !important; z-index:45 !important;
+  }
+  html[data-era="now"] #lang-bar.lb-quiet button{ padding:8px 10px !important; font-size:10px !important; letter-spacing:.16em !important; }
+  /* 天の帯は店名と開閉ボタンだけ */
+  .mx-head{ padding:14px 18px !important; }
+  .mx-brand{ font-size:17px !important; }
+  .mx-brand small{ font-size:8.5px !important; letter-spacing:.28em !important; }
+  .mx-nav.is-open{ padding-bottom:90px; }
+}
+@media (max-width:520px){
+  html[data-era="now"] #lang-bar.lb-quiet button{ padding:7px 8px !important; }
+  html[data-mx="1"] #timewarp.tw-closed{ width:36px !important; }
+}

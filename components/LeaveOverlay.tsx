@@ -1,4 +1,6 @@
 'use client';
+
+import { asset } from '@/lib/paths';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSite } from './Providers';
@@ -30,6 +32,8 @@ function thud() {
   } catch {}
 }
 
+const LEAVE_SHOTS = ['/images/photos/rouget.jpg','/images/photos/roch.jpg','/images/photos/gillet.jpg','/images/shop-sign.webp'];
+
 export function LeaveOverlay({ open, lang }: { open: boolean; lang: Lang }) {
   const { era } = useSite();
   const [go, setGo] = useState(false);
@@ -44,6 +48,7 @@ export function LeaveOverlay({ open, lang }: { open: boolean; lang: Lang }) {
   const t = L[lang];
   return (
     <div id="tw-leave-ov" className={go ? 'go' : undefined}>
+      <div className="tw-bye-bg" style={{ backgroundImage: `url(${asset(LEAVE_SHOTS[Math.floor(Math.random() * LEAVE_SHOTS.length)])})` }} />
       <div className="tw-door tw-door-l" />
       <div className="tw-door tw-door-r" />
       <div className="tw-bye">

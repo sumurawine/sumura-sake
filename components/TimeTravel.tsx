@@ -20,9 +20,11 @@ export function TimeTravel() {
   const [closed, setClosed] = useState(false);
   const t = L[lang];
 
+  // 2020年代の画面では、はじめは畳んでおきます（本文の邪魔をしないように）
   useEffect(() => {
-    if (window.matchMedia && window.matchMedia('(max-width:900px)').matches) setClosed(true);
-  }, []);
+    const narrow = window.matchMedia && window.matchMedia('(max-width:900px)').matches;
+    if (narrow || era === 'now') setClosed(true);
+  }, [era]);
 
   const items: Array<[string, string]> = [
     ['now', t.a], ['2010', t.b], ['2005', t.c], ['1995', t.d], ['mukashi', t.e],
