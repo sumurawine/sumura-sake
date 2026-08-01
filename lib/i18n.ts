@@ -1080,7 +1080,15 @@ export const dict: Record<Lang, Record<string, string>> = {
  }
 };
 
+/** 編集モードで直した文言があれば、そちらを先に使います */
+let ovLookup: ((key: string, lang: Lang) => string | null) | null = null;
+export function setOverrideLookup(fn: (key: string, lang: Lang) => string | null) { ovLookup = fn; }
+
 export function tr(lang: Lang, key: string): string {
+  if (ovLookup) {
+    const o = ovLookup(key, lang);
+    if (o != null) return o;
+  }
   const d = dict[lang];
   if (d && d[key] != null) return d[key];
   return dict.jp[key] ?? '';

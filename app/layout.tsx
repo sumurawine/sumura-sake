@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Providers } from '@/components/Providers';
 import { LangBar } from '@/components/LangBar';
 import { Tidy } from '@/components/Tidy';
+import { EditorMount } from '@/components/editor/Mount';
 import { TimeTravel } from '@/components/TimeTravel';
 import { SITE } from '@/lib/siteMeta';
 
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="stylesheet" href={`${BP}/base.css?v=${CSSV}`} />
         <link rel="stylesheet" href={`${BP}/eras.css?v=${CSSV}`} />
         <link rel="stylesheet" href={`${BP}/modern.css?v=${CSSV}`} />
+        <link rel="stylesheet" href={`${BP}/editor.css?v=${CSSV}`} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Shippori+Mincho:wght@400;600&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" />
@@ -86,6 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <LangBar />
           <TimeTravel />
           <Tidy />
+          <EditorMount />
         </Providers>
       </body>
     </html>

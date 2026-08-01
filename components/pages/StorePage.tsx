@@ -9,6 +9,7 @@ import { A } from '@/components/A';
 import { useSite } from '@/components/Providers';
 import { isModern } from '@/lib/era';
 import { stripDeco } from '@/lib/decor';
+import { NewProduct } from '@/components/editor/NewProduct';
 import {
   ORDER, CATS, u, catOf, apOf, prodOf, nameOf, descOf, notesOf, isOut,
   type Item, type ProductData, type I18nData,
