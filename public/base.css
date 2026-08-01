@@ -195,3 +195,20 @@ body:has(.mk-wrap) #lang-bar button.active{opacity:1;border-color:#a8977c;backgr
 .gm-key:active{ background:rgba(0,0,0,.28) }
 .bk-canvas{ touch-action:none }
 @media (min-width:760px){ .gm-pad{ display:none } }
+
+/* ===== お取り扱い生産者ページ ===== */
+.pr-card{ border-top:1px dashed currentColor; padding:16px 0 4px; margin-top:14px }
+.pr-name{ font-size:19px; margin:0 0 2px; line-height:1.5 }
+.pr-latin{ display:block; font-size:13px; opacity:.72; font-weight:normal; letter-spacing:.04em }
+.pr-where{ font-size:12px; opacity:.68; margin-bottom:8px; letter-spacing:.08em }
+.pr-also{ font-size:12px; opacity:.62; line-height:2; margin:8px 0 10px }
+.pr-ask{ font-size:13px; display:inline-block; margin-bottom:6px }
+.pr-group{ margin-top:18px }
+.pr-region{ font-size:15px; margin:0 0 8px; padding-bottom:4px; border-bottom:1px solid currentColor; opacity:.9 }
+.pr-list{ list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:2px 18px }
+.pr-list li{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:5px 0; font-size:14px }
+.pr-jp{ margin-right:6px }
+.pr-latin2{ font-size:11px; opacity:.6 }
+.pr-n{ font-size:11px; opacity:.55; white-space:nowrap }
+@media (max-width:520px){ .pr-list{ grid-template-columns:1fr } }

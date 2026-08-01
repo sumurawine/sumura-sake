@@ -32,12 +32,25 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
-      const l = localStorage.getItem('lang');
-      if (l && (LANGS as string[]).includes(l)) setLangState(l as Lang);
+      // ?lang=en のように指定があればそちらを優先します（検索エンジン向けの言語別URL）
+      const q = new URLSearchParams(window.location.search).get('lang');
+      if (q && (LANGS as string[]).includes(q)) {
+        setLangState(q as Lang);
+        try { localStorage.setItem('lang', q); } catch {}
+      } else {
+        const l = localStorage.getItem('lang');
+        if (l && (LANGS as string[]).includes(l)) setLangState(l as Lang);
+      }
     } catch {}
     setEraState(readEra());
     setMounted(true);
   }, []);
+
+  /** 表示中の言語を <html lang> に反映します */
+  useEffect(() => {
+    if (!mounted) return;
+    document.documentElement.setAttribute('lang', lang === 'jp' ? 'ja' : lang);
+  }, [lang, mounted]);
 
   useEffect(() => {
     if (!mounted) return;

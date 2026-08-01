@@ -15,12 +15,14 @@ import { VisitCounter } from './VisitCounter';
 import { DecoRow, Gif, Rainbow, Ticker } from './Deco';
 import { LeaveOverlay, leaveLabel } from './LeaveOverlay';
 import { GAME_NAV } from '@/lib/gameNav';
+import { PROD_NAV } from '@/lib/producersNav';
 import { MShell } from './modern/MShell';
 
 const NAV: Array<[string, string]> = [
   ['/home', 'nav:home'],
   ['/news', 'nav:news'],
   ['/store', 'nav:store'],
+  ['/producers', 'nav:producers'],
   ['/blog', 'nav:blog'],
   ['/about', 'nav:about'],
   ['/access', 'nav:access'],
@@ -78,6 +80,8 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
             const label =
               key === 'nav:game'
                 ? GAME_NAV[lang]
+                : key === 'nav:producers'
+                ? decorate(PROD_NAV[lang], eraView, lang, 'btn')
                 : key === 'nav:secret' && modern
                 ? MODERN[lang].priv
                 : decorate(tr(lang, key), eraView, lang, 'btn');
