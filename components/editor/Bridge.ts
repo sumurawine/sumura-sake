@@ -18,10 +18,12 @@ export function setBridgeUrl(u: string) {
 type Pending = { resolve: (v: any) => void; reject: (e: any) => void; t: number };
 
 let frame: HTMLIFrameElement | null = null;
+let peer: Window | null = null;      // 返事をくれた相手。ここへ送り返します
 let ready = false;
 let readyWaiters: Array<(ok: boolean) => void> = [];
 const pending = new Map<string, Pending>();
 let seq = 0;
+let listening = false;
 
 function origin(u: string) { try { return new URL(u).origin; } catch { return '*'; } }
 
@@ -30,15 +32,16 @@ export function openBridge(): Promise<boolean> {
   const url = bridgeUrl();
   if (!url) return Promise.resolve(false);
   if (ready) return Promise.resolve(true);
-  if (!frame) {
-    frame = document.createElement('iframe');
-    frame.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'page=bridge';
-    frame.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:0;left:-9999px';
-    document.body.appendChild(frame);
+
+  if (!listening) {
+    listening = true;
     window.addEventListener('message', (e) => {
-      if (!frame || e.source !== frame.contentWindow) return;
+      // Apps Script は中身をさらに枠へ入れて配るので、送り主ではなく出どころで見分けます
+      if (!/^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/.test(e.origin) &&
+          e.origin !== 'https://script.google.com') return;
       const d = e.data || {};
       if (d.sumura === 'ready') {
+        peer = e.source as Window;
         ready = true;
         readyWaiters.splice(0).forEach((fn) => fn(true));
         return;
@@ -51,28 +54,33 @@ export function openBridge(): Promise<boolean> {
       }
     });
   }
+
+  if (!frame) {
+    frame = document.createElement('iframe');
+    frame.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'page=bridge';
+    frame.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:0;left:-9999px';
+    document.body.appendChild(frame);
+  }
   return new Promise((res) => {
     readyWaiters.push(res);
-    setTimeout(() => {
-      if (!ready) { readyWaiters.splice(0).forEach((fn) => fn(false)); }
-    }, 12000);
+    setTimeout(() => { if (!ready) readyWaiters.splice(0).forEach((fn) => fn(false)); }, 15000);
   });
 }
 
 /** 管理画面の中の関数を呼びます */
 export function call(action: string, payload: any): Promise<any> {
   return openBridge().then((ok) => {
-    if (!ok || !frame || !frame.contentWindow) {
-      throw new Error('管理画面につながりません。Googleアカウントでログインしているかご確認ください。');
+    if (!ok || !peer) {
+      throw new Error('管理画面につながりません。お店のGoogleアカウントでログインしているかご確認ください。');
     }
     const id = 'r' + (++seq);
     return new Promise((resolve, reject) => {
       const t = window.setTimeout(() => {
         pending.delete(id);
         reject(new Error('時間がかかりすぎました。もう一度お試しください。'));
-      }, 90000);
+      }, 120000);
       pending.set(id, { resolve, reject, t });
-      frame!.contentWindow!.postMessage({ sumura: 'call', id, action, payload }, origin(bridgeUrl()));
+      peer!.postMessage({ sumura: 'call', id, action, payload }, '*');
     });
   });
 }
