@@ -172,3 +172,26 @@ body:has(.mk-wrap) #lang-bar button.active{opacity:1;border-color:#a8977c;backgr
 .bk-word b{ color:#ffd23f; font-size:16px; letter-spacing:2px; display:inline-block; margin:0 4px }
 .bk-canvas{ touch-action:none; width:100%; max-width:420px }
 @media (max-width:520px){ .bk-stage{ width:100% } .bk-score{ font-size:13px } }
+
+/* ===== ゲームコーナー：えらぶボタンと、スマホ用の十字ボタン ===== */
+.gm-menu{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:14px 0 2px }
+.gm-tab{ font:inherit; font-size:13px; line-height:1.4; padding:9px 15px; cursor:pointer;
+  background:transparent; color:inherit; border:2px solid currentColor; border-radius:0;
+  opacity:.62; transition:opacity .15s, transform .1s }
+.gm-tab:hover{ opacity:.9 }
+.gm-tab.is-on{ opacity:1; font-weight:bold }
+.gm-tab:active{ transform:translateY(1px) }
+.gm-wrap{ margin-top:14px }
+.bk-stage.gm-narrow{ max-width:300px; width:100% }
+.bk-stage.gm-narrow .bk-canvas{ max-width:300px }
+.gm-tetris{ max-width:340px }
+.gm-racer{ max-width:280px }
+.gm-marble{ max-width:420px }
+.gm-pad{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:2px auto 16px; max-width:420px }
+.gm-key{ font:inherit; font-size:20px; line-height:1; width:64px; height:52px; cursor:pointer;
+  background:rgba(0,0,0,.10); color:inherit; border:2px solid currentColor; border-radius:6px;
+  user-select:none; -webkit-user-select:none; touch-action:none }
+.gm-key-wide{ width:104px }
+.gm-key:active{ background:rgba(0,0,0,.28) }
+.bk-canvas{ touch-action:none }
+@media (min-width:760px){ .gm-pad{ display:none } }
