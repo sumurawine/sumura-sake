@@ -97,6 +97,16 @@ export function StorePage() {
       .catch(() => setErr(true));
   }, []);
 
+  /** お取り扱い生産者ページからの ?prod= を受け取ります */
+  useEffect(() => {
+    if (!DATA) return;
+    try {
+      const q = new URLSearchParams(window.location.search).get('prod');
+      if (!q) return;
+      if (DATA.items.some((it) => it.prod === q)) { setMode('prod'); setProd(q); }
+    } catch {}
+  }, [DATA]);
+
   const base = useMemo(
     () => (DATA ? DATA.items.filter((it) => !(instock && isOut(it))) : []),
     [DATA, instock]

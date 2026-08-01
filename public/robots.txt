@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# 合言葉で入る部屋は、検索には載せません
+Disallow: /room-cellar
+Disallow: /room-note
+Disallow: /room-primeur
+Disallow: /room-game
+Disallow: /thanks
+
+Sitemap: https://sumurawine.github.io/sumura-sake/sitemap.xml

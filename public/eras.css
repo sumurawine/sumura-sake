@@ -517,3 +517,18 @@ html[data-era="now"] .gm-menu{ display:flex !important }
 @media (max-width:759px){ html[data-era="now"] .gm-pad{ display:flex !important } }
 @media (min-width:760px){ html[data-era="now"] .gm-pad{ display:none !important } }
 html[data-era="now"] .gm-tab{ border-color:rgba(244,236,228,.35) !important; color:var(--mx-paper,#f4ece4) !important }
+
+/* ===== お取り扱い生産者ページ：時代ごとの見た目 ===== */
+html[data-era="1995"] .pr-region{ color:#000080 !important }
+html[data-era="1995"] .pr-name{ color:#000080 !important }
+html[data-era="2005"] .pr-region{ color:#ff0066 !important; border-bottom-color:#ff44aa !important }
+html[data-era="2005"] .pr-name{ color:#ff0066 !important }
+html[data-era="2010"] .pr-region{ color:#3c4043 !important; border-bottom-color:#e5e5e5 !important }
+html[data-era="2010"] .pr-name{ color:#3c4043 !important }
+html[data-era="now"][data-mx="1"] .pr-name{ font-family:"Shippori Mincho",serif !important; color:var(--mx-paper) !important }
+html[data-era="now"][data-mx="1"] .pr-latin{ font-family:"Cormorant Garamond",serif !important; font-style:italic; color:var(--mx-gold) !important }
+html[data-era="now"][data-mx="1"] .pr-region{ font-family:"Cormorant Garamond",serif !important;
+  letter-spacing:.18em !important; color:var(--mx-gold) !important; border-bottom-color:var(--mx-line) !important }
+html[data-era="now"][data-mx="1"] .pr-card{ border-top-color:var(--mx-line) !important }
+html[data-era="now"][data-mx="1"] .pr-also,html[data-era="now"][data-mx="1"] .pr-where,
+html[data-era="now"][data-mx="1"] .pr-n,html[data-era="now"][data-mx="1"] .pr-latin2{ color:var(--mx-faint) !important }

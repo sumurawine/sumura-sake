@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { tr } from '@/lib/i18n';
+import { PROD_NAV } from '@/lib/producersNav';
 import { MODERN } from '@/lib/decor';
 import { LEGAL_TITLE } from '@/lib/modernCopy';
 import { useSite } from '@/components/Providers';
@@ -14,6 +15,7 @@ import { useEffect, useState } from 'react';
 
 const NAV: Array<[string, string]> = [
   ['/store', 'nav:store'],
+  ['/producers', 'nav:producers'],
   ['/about', 'nav:about'],
   ['/blog', 'nav:blog'],
   ['/news', 'nav:news'],
@@ -23,7 +25,7 @@ const NAV: Array<[string, string]> = [
 ];
 
 const FOOT_A: Array<[string, string]> = [
-  ['/store', 'nav:store'], ['/about', 'nav:about'], ['/blog', 'nav:blog'], ['/news', 'nav:news'],
+  ['/store', 'nav:store'], ['/producers', 'nav:producers'], ['/about', 'nav:about'], ['/blog', 'nav:blog'],
 ];
 const FOOT_B: Array<[string, string]> = [
   ['/access', 'nav:access'], ['/contact', 'nav:contact'], ['/legal', 'nav:legal'], ['/secret', 'nav:secret'],
@@ -43,7 +45,8 @@ export function MShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   const label = (k: string) =>
-    k === 'nav:secret' ? MODERN[lang].priv : k === 'nav:legal' ? LEGAL_TITLE[lang] : tr(lang, k);
+    k === 'nav:secret' ? MODERN[lang].priv : k === 'nav:legal' ? LEGAL_TITLE[lang]
+    : k === 'nav:producers' ? PROD_NAV[lang] : tr(lang, k);
   const on = (href: string) => path === href || path === href + '/';
 
   return (
