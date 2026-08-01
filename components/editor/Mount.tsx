@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { setOverrideLookup } from '@/lib/i18n';
 import { loadOverrides, onOverrides, ovText, ovImage, editMode, overrides } from '@/lib/overrides';
 import { Editor, imageKey } from './Editor';
+import { NewProduct } from './NewProduct';
 
 /** 上書きを読み込み、編集モードなら道具立てを出します */
 export function EditorMount() {
@@ -40,5 +41,14 @@ export function EditorMount() {
   const [on, setOn] = useState(false);
   useEffect(() => { setOn(editMode()); }, []);
 
-  return on ? <Editor /> : null;
+  /* オンラインストアのページだけ、出品ボタンも出します */
+  const store = typeof window !== 'undefined' && /store(\.html)?$/.test(window.location.pathname.replace(/\/$/, ''));
+
+  if (!on) return null;
+  return (
+    <>
+      <Editor />
+      {store ? <NewProduct /> : null}
+    </>
+  );
 }
