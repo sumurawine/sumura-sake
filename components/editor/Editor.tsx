@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { editMode, loadOverrides, overrides, isMirror } from '@/lib/overrides';
+import { applyOverrides, keyOf, baseText, isTarget } from '@/lib/domtext';
+import { NewProduct } from './NewProduct';
 import { bridgeUrl, setBridgeUrl, call, openBridge } from './Bridge';
 import { useSite } from '@/components/Providers';
 
@@ -38,6 +40,7 @@ export function Editor() {
   const [who, setWho] = useState('');
   const [allowed, setAllowed] = useState(false);
   const [urlDraft, setUrlDraft] = useState('');
+  const [sure, setSure] = useState(false);
   const hover = useRef<HTMLElement | null>(null);
 
   const toast = useCallback((t: string, ms = 2600) => {
@@ -84,8 +87,8 @@ export function Editor() {
         const img = (el.tagName === 'IMG' ? el : el.querySelector('img')) as HTMLImageElement | null;
         setTarget({ key: imgKey, kind: 'image', el, current: img?.src || '' });
       } else {
-        const k = el.getAttribute('data-i18n')!;
-        const cur = (el.textContent || '').trim();
+        const k = keyOf(el);
+        const cur = (baseText(el) || '').trim();
         setTarget({ key: k, kind: 'text', el, current: cur });
         setText(cur);
         const r = overrides()[k] || {};
@@ -106,8 +109,10 @@ export function Editor() {
     if (!target) return;
     setBusy(true);
     try {
+      toast('保存しています。訳も作りますので、20秒ほどお待ちください…', 60000);
       await call('saveText', { key: target.key, jp: text, linkText, linkHref });
       await loadOverrides(true);
+      applyOverrides(lang);
       toast('下書きとして保存しました。鏡にだけ映っています');
       setTarget(null);
     } catch (e: any) { toast(e.message || '保存できませんでした', 6000); }
@@ -116,11 +121,13 @@ export function Editor() {
 
   const revert = async () => {
     if (!target) return;
-    if (!confirm('この場所を、もとの文章に戻します。よろしいですか？')) return;
+    if (!sure) { setSure(true); window.setTimeout(() => setSure(false), 6000); return; }
+    setSure(false);
     setBusy(true);
     try {
       await call('removeOverride', { key: target.key });
       await loadOverrides(true);
+      applyOverrides(lang);
       toast('もとに戻しました');
       setTarget(null);
     } catch (e: any) { toast(e.message || '戻せませんでした', 6000); }
@@ -131,8 +138,10 @@ export function Editor() {
     if (!target) return;
     setBusy(true);
     try {
+      toast('本番に出しています…', 60000);
       await call('publish', { key: target.key });
       await loadOverrides(true);
+      applyOverrides(lang);
       toast('本番に出しました');
       setTarget(null);
     } catch (e: any) { toast(e.message || '出せませんでした', 6000); }
@@ -148,6 +157,7 @@ export function Editor() {
       const url = await call('uploadPhoto', { data: dataUrl, name: file.name });
       await call('saveImage', { key: target.key, url });
       await loadOverrides(true);
+      applyOverrides(lang);
       toast('写真を入れ替えました');
       setTarget(null);
     } catch (e: any) { toast(e.message || '写真を入れられませんでした', 6000); }
@@ -162,6 +172,7 @@ export function Editor() {
         <span className="ed-badge">編集モード（鏡）</span>
         {who ? <span className="ed-who">{who}</span> : <span className="ed-who">確認中…</span>}
         <button className="ed-b" onClick={() => { loadOverrides(true).then(() => location.reload()); }}>読み直す</button>
+        {allowed && /store/.test(location.pathname) ? <NewProduct /> : null}
         <button className="ed-b" onClick={() => setNeedUrl(true)}>つなぎ先</button>
         <button className="ed-b" onClick={() => { window.open(location.href.replace('/preview/', '/'), '_blank'); }}>本番を見る</button>
         <button className="ed-b" onClick={() => { sessionStorage.removeItem('sumura-edit'); location.href = location.pathname; }}>編集をやめる</button>
@@ -223,8 +234,8 @@ export function Editor() {
               <button className="ed-b ed-primary" disabled={busy} onClick={saveText}>保存する</button>
             ) : null}
             <button className="ed-b" disabled={busy} onClick={publish}>本番に出す</button>
-            <button className="ed-b" disabled={busy} onClick={revert}>もとに戻す</button>
-            <button className="ed-b" onClick={() => setTarget(null)}>閉じる</button>
+            <button className="ed-b" disabled={busy} onClick={revert}>{sure ? 'もう一度押すと戻ります' : 'もとに戻す'}</button>
+            <button className="ed-b" onClick={() => { setTarget(null); setSure(false); }}>閉じる</button>
           </div>
         </div>
       ) : null}
@@ -237,10 +248,19 @@ export function Editor() {
 /** 触れる場所か見分けます。文言と、ページ中のすべての写真が対象です */
 function pickable(t: HTMLElement | null): HTMLElement | null {
   if (!t) return null;
-  const marked = t.closest('[data-i18n],[data-img]') as HTMLElement | null;
-  if (marked) return marked;
+  if (t.closest('.ed-panel, .ed-bar, .ed-msg, .ed-new, .ed-form')) return null;
   const img = t.closest('img') as HTMLElement | null;
-  return img && !img.closest('.ed-panel') ? img : null;
+  if (img) return img;
+  const marked = t.closest('[data-img]') as HTMLElement | null;
+  if (marked) return marked;
+  /* いちばん内側の「文字だけの場所」を探します */
+  let el: HTMLElement | null = t;
+  let guard = 0;
+  while (el && el !== document.body && guard++ < 40) {
+    if (isTarget(el)) return el;
+    el = el.parentElement;
+  }
+  return null;
 }
 
 /**
