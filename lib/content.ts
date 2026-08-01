@@ -54,6 +54,9 @@ function plain(s: string): string {
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/[ \t]+/g, ' ')
+    .trim()
+    // 昔の書き方に付いていた「NEW!」は、新着の印と重なるので落とします
+    .replace(/[\s　]*NEW!?[\s　]*$/i, '')
     .trim();
 }
 
