@@ -56,7 +56,7 @@ export function NewProduct() {
 
   return (
     <>
-      <button className="ed-new" onClick={() => setOpen(true)}>＋ 出品する</button>
+      <button className="ed-b ed-primary" onClick={() => setOpen(true)}>＋ 出品する</button>
       {open ? (
         <div className="ed-panel ed-center ed-wide">
           <h3>商品を出品する</h3>
