@@ -76,4 +76,6 @@ export const EXTRA: Extra[] = [
   { jp: 'ドメーヌ ド ラ ロマネ コンティ', latin: 'Domaine de la Romanée-Conti', cat: 'burgundy' },
   { jp: 'ドメーヌ ルロワ', latin: 'Domaine Leroy', cat: 'burgundy' },
   { jp: 'ドメーヌ ドーヴネ', latin: "Domaine d'Auvenay", cat: 'burgundy' },
+  { jp: 'エマニュエル ルジェ', latin: 'Emmanuel Rouget', cat: 'burgundy' },
+  { jp: 'ドメーヌ ジョルジュ ルーミエ', latin: 'Domaine Georges Roumier', cat: 'burgundy' },
 ];
