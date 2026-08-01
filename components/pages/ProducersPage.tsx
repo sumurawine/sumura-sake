@@ -8,7 +8,7 @@ import { useSite } from '@/components/Providers';
 import { isModern } from '@/lib/era';
 import { stripDeco } from '@/lib/decor';
 import { CATS, ORDER, type ProductData, type I18nData } from '@/lib/store';
-import { PR_COPY, FEATURED } from '@/lib/producers';
+import { PR_COPY, EXTRA } from '@/lib/producers';
 
 type Row = { jp: string; latin: string; n: number };
 
@@ -33,10 +33,9 @@ export function ProducersPage() {
 
   /** 産地ごとに、そこに一番多く商品のある生産者をまとめます */
   const groups = useMemo(() => {
-    if (!DATA) return [] as Array<{ cat: string; rows: Row[] }>;
     const count: Record<string, number> = {};
     const where: Record<string, Record<string, number>> = {};
-    for (const it of DATA.items) {
+    for (const it of DATA?.items || []) {
       const p = it.prod;
       if (!p) continue;
       count[p] = (count[p] || 0) + 1;
@@ -47,6 +46,10 @@ export function ProducersPage() {
       const cat = Object.entries(where[p]).sort((a, b) => b[1] - a[1])[0][0];
       const latin = I18N?.producers?.[p]?.en || '';
       (byCat[cat] = byCat[cat] || []).push({ jp: p, latin, n: count[p] });
+    }
+    // ストアに載せていない造り手も、同じ欄に並べます
+    for (const e of EXTRA) {
+      (byCat[e.cat] = byCat[e.cat] || []).push({ jp: e.jp, latin: e.latin, n: 0 });
     }
     return ORDER.filter((k) => byCat[k]).map((k) => ({
       cat: k,
@@ -63,25 +66,6 @@ export function ProducersPage() {
       </div>
 
       <div className="panel">
-        <div className="pixhead" style={{ fontSize: 18 }}>{d(c.rareHead)}</div>
-        <p>{c.rareLead}</p>
-        {FEATURED.map((f) => (
-          <div key={f.key} className="pr-card">
-            <h3 className="pr-name">
-              {f.jp}
-              <span className="pr-latin">{f.latin}</span>
-            </h3>
-            <div className="pr-where">{f.region[lang]}</div>
-            <p>{f.body[lang]}</p>
-            <div className="pr-also">{f.also.join('　／　')}</div>
-            <A href={`/contact?item=${encodeURIComponent(f.jp + ' のお問い合わせ')}`} className="pr-ask">
-              {c.askBtn}
-            </A>
-          </div>
-        ))}
-      </div>
-
-      <div className="panel">
         <div className="pixhead" style={{ fontSize: 18 }}>{d(c.listHead)}</div>
         <p>{c.listLead}</p>
         {groups.map((g) => (
@@ -90,11 +74,11 @@ export function ProducersPage() {
             <ul className="pr-list">
               {g.rows.map((r) => (
                 <li key={r.jp}>
-                  <A href={`/store?prod=${encodeURIComponent(r.jp)}`}>
+                  <A href={r.n ? `/store?prod=${encodeURIComponent(r.jp)}` : `/contact?item=${encodeURIComponent(r.jp)}`}>
                     <span className="pr-jp">{r.jp}</span>
                     {r.latin && r.latin !== r.jp ? <span className="pr-latin2">{r.latin}</span> : null}
                   </A>
-                  <span className="pr-n">{r.n}{c.itemsUnit}</span>
+                  {r.n ? <span className="pr-n">{r.n}{c.itemsUnit}</span> : null}
                 </li>
               ))}
             </ul>
