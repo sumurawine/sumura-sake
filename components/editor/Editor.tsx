@@ -88,10 +88,11 @@ export function Editor() {
         setTarget({ key: imgKey, kind: 'image', el, current: img?.src || '' });
       } else {
         const k = keyOf(el);
-        const cur = (baseText(el) || '').trim();
+        const r = overrides()[k] || {};
+        const saved = String(r['日本語'] || '').trim();
+        const cur = saved || (baseText(el) || '').trim();
         setTarget({ key: k, kind: 'text', el, current: cur });
         setText(cur);
-        const r = overrides()[k] || {};
         setLinkText(String(r['リンク文字(日本語)'] || ''));
         setLinkHref(String(r['リンク先'] || ''));
       }
@@ -138,7 +139,7 @@ export function Editor() {
     if (!target) return;
     setBusy(true);
     try {
-      toast('本番に出しています…', 60000);
+      toast('本番に出しています。20秒ほどかかります…', 60000);
       await call('publish', { key: target.key });
       await loadOverrides(true);
       applyOverrides(lang);
