@@ -1,0 +1,47 @@
+/* ===== 編集モード ===== */
+html[data-edit="1"] [data-i18n], html[data-edit="1"] [data-img]{ cursor:pointer }
+html[data-edit="1"] .ed-hot{ outline:2px dashed #d3a98a !important; outline-offset:3px;
+  background:rgba(211,169,138,.10) !important; border-radius:3px }
+html[data-edit="1"] body{ padding-bottom:56px }
+
+.ed-bar{ position:fixed; left:0; right:0; bottom:0; z-index:2147483000;
+  background:rgba(36,26,23,.97); color:#f4ece4; display:flex; gap:10px; align-items:center;
+  padding:10px 16px; font-family:-apple-system,system-ui,sans-serif; font-size:13px;
+  border-top:1px solid rgba(244,236,228,.2) }
+.ed-badge{ background:#8f4038; color:#fff; padding:4px 12px; border-radius:999px; font-size:12px; letter-spacing:.1em }
+.ed-b{ background:transparent; color:#f4ece4; border:1px solid rgba(244,236,228,.3); border-radius:5px;
+  padding:7px 14px; font:inherit; font-size:13px; cursor:pointer }
+.ed-b:hover{ background:rgba(244,236,228,.1) }
+.ed-b.ed-primary{ background:#f4ece4; color:#241a17; border-color:#f4ece4; font-weight:600 }
+.ed-b:disabled{ opacity:.5; cursor:default }
+
+.ed-panel{ position:fixed; right:18px; bottom:70px; z-index:2147483001; width:min(400px,92vw);
+  max-height:74vh; overflow:auto; background:#241a17; color:#f4ece4; border:1px solid rgba(244,236,228,.22);
+  border-radius:10px; padding:18px; box-shadow:0 20px 60px rgba(0,0,0,.5);
+  font-family:-apple-system,system-ui,sans-serif; font-size:14px; line-height:1.8 }
+.ed-panel.ed-center{ left:50%; right:auto; top:50%; bottom:auto; transform:translate(-50%,-50%) }
+.ed-panel.ed-wide{ width:min(520px,94vw) }
+.ed-panel h3{ margin:0 0 10px; font-size:15px; letter-spacing:.08em }
+.ed-panel label{ display:block; font-size:11px; letter-spacing:.14em; color:rgba(244,236,228,.55); margin:12px 0 4px }
+.ed-panel input, .ed-panel textarea, .ed-panel select{ width:100%; box-sizing:border-box;
+  background:rgba(0,0,0,.28); color:#f4ece4; border:1px solid rgba(244,236,228,.24);
+  border-radius:5px; padding:10px 11px; font:inherit; font-size:14px; line-height:1.7 }
+.ed-panel textarea{ resize:vertical }
+.ed-panel input:focus, .ed-panel textarea:focus, .ed-panel select:focus{ outline:none; border-color:#d3a98a }
+.ed-key{ font-size:10px; letter-spacing:.1em; color:rgba(244,236,228,.4); margin-bottom:6px; word-break:break-all }
+.ed-hint{ font-size:11px; line-height:1.8; color:rgba(244,236,228,.55); margin:6px 0 0 }
+.ed-row{ display:flex; gap:8px; margin-top:16px; flex-wrap:wrap }
+.ed-thumb{ max-width:150px; border-radius:6px; margin-top:6px; background:#f4ece4; padding:3px }
+.ed-file{ display:inline-block !important; border:1px solid rgba(244,236,228,.3); border-radius:5px;
+  padding:9px 15px; cursor:pointer; font-size:13px !important; letter-spacing:0 !important;
+  color:#f4ece4 !important; background:rgba(244,236,228,.07); margin-top:8px !important }
+.ed-file input{ display:none }
+.ed-msg{ position:fixed; left:50%; transform:translateX(-50%); bottom:70px; z-index:2147483002;
+  background:#8f4038; color:#fff; padding:11px 22px; border-radius:999px; font-size:13px;
+  font-family:-apple-system,system-ui,sans-serif; box-shadow:0 8px 30px rgba(0,0,0,.4) }
+.ed-new{ position:sticky; top:8px; z-index:50; float:left; margin:0 0 12px;
+  background:#8f4038; color:#fff; border:none; border-radius:6px; padding:10px 18px;
+  font:inherit; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,.25) }
+@media (max-width:560px){ .ed-panel{ right:8px; left:8px; width:auto } .ed-bar{ font-size:12px; gap:6px; padding:8px 10px } }
+.ed-who{ font-size:11px; color:rgba(244,236,228,.6); letter-spacing:.05em; margin-left:2px }
+@media (max-width:560px){ .ed-who{ display:none } }
