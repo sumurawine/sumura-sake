@@ -2,7 +2,7 @@
 import { asset } from '@/lib/paths';
 import { Shell } from '@/components/Shell';
 import { T } from '@/components/T';
-import { useContent, pick } from '@/lib/content';
+import { useContent, pick, esc, linkOf } from '@/lib/content';
 import { useSite } from '@/components/Providers';
 import { MHome } from '@/components/modern/MHome';
 
@@ -34,9 +34,16 @@ export function HomePage() {
         <T k="home-hist-head" as="div" kind="head" className="pixhead" />
         <ul className="dots">
           {c.history.length ? (
-            c.history.map((r, i) => (
-              <li key={i} dangerouslySetInnerHTML={{ __html: `<b>${r['日付'] || ''}</b>　${pick(r, lang, '本文(日本語)', lang.toUpperCase())}` }} />
-            ))
+            c.history.map((r, i) => {
+              const link = linkOf(r, lang);
+              return (
+                <li key={i}>
+                  <b>{r['日付'] || ''}</b>　{pick(r, lang, '本文(日本語)', lang.toUpperCase())}
+                  {link ? <> <a href={link.href}>{link.text}</a></> : null}
+                  {i === 0 ? <span className="new">NEW!</span> : null}
+                </li>
+              );
+            })
           ) : (
             <>
               <T k="home-hist-1" as="li" />

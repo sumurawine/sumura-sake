@@ -30,7 +30,7 @@ function extraItems(rows: Row[]): Item[] {
     id: 'x' + (i + 1),
     name: (r['商品名(日本語)'] || '').trim(),
     price: (r['価格'] || '').trim(),
-    img: (r['写真URL'] || '').trim(),
+    img: (r['写真'] || r['写真URL'] || '').trim(),
     cat: key(r['産地']),
     prod: (r['生産者'] || '').trim() || undefined,
     stock: /^(0|無|なし|品切|在庫切れ|sold ?out)$/i.test((r['在庫'] || '').trim()) ? '0' : ((r['在庫'] || '').trim() || '1'),

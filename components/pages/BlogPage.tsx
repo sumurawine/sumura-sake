@@ -6,7 +6,7 @@ import { BLOG_TITLE } from '@/lib/modernCopy';
 import { Shell } from '@/components/Shell';
 import { T } from '@/components/T';
 import { Comments, useComments } from '@/components/Comments';
-import { useContent, pick } from '@/lib/content';
+import { useContent, pick, photoOf } from '@/lib/content';
 
 export function BlogPage() {
   const { lang, eraView } = useSite();
@@ -27,17 +27,13 @@ export function BlogPage() {
         ? blog.map((r, i) => (
             <div className="panel" key={`s${i}`}>
               <div className="x-pink" style={{ fontSize: 14 }}>{r['日付']}</div>
-              <div
-                className="pixhead"
-                style={{ fontSize: 18 }}
-                dangerouslySetInnerHTML={{ __html: pick(r, lang, '題名(日本語)', '題名' + L) }}
-              />
-              {r['写真URL'] ? (
+              <div className="pixhead" style={{ fontSize: 18 }}>{pick(r, lang, '題名(日本語)', '題名' + L)}</div>
+              {photoOf(r) ? (
                 <p style={{ textAlign: 'center' }}>
-                  <img src={r['写真URL']} alt="" style={{ maxWidth: '100%', height: 'auto' }} />
+                  <img src={photoOf(r)} alt="" style={{ maxWidth: '100%', height: 'auto' }} loading="lazy" />
                 </p>
               ) : null}
-              <p dangerouslySetInnerHTML={{ __html: pick(r, lang, '本文(日本語)', '本文' + L) }} />
+              <p style={{ whiteSpace: 'pre-wrap' }}>{pick(r, lang, '本文(日本語)', '本文' + L)}</p>
               <Comments post={`s${i + 1}`} all={all} reload={reload} />
             </div>
           ))
