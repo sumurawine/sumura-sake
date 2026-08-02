@@ -35,6 +35,7 @@ export const UI: Record<string, Record<Lang, string>> = {
   detail: { jp: '▶ 詳細', en: '▶ Details', fr: '▶ Détails', zh: '▶ 详情', ko: '▶ 상세' },
   items: { jp: '点', en: ' items', fr: ' articles', zh: '款', ko: '점' },
   cta: { jp: '■ この商品について問い合わせる', en: '■ Enquire about this bottle', fr: '■ Nous contacter à ce sujet', zh: '■ 点此咨询本商品', ko: '■ 이 상품에 대해 문의하기' },
+  page: { jp: '専用ページ', en: 'Full page', fr: 'Fiche complète', zh: '专属页面', ko: '전용 페이지' },
   prod: { jp: '生産者', en: 'Producer', fr: 'Producteur', zh: '生产者', ko: '생산자' },
   err: { jp: '商品情報を読み込めませんでした。', en: 'Could not load the product list.', fr: 'Impossible de charger la liste des produits.', zh: '无法载入商品资讯。', ko: '상품 정보를 불러올 수 없습니다.' },
   modeArea: { jp: '◆ 産地から選ぶ', en: '◆ By region', fr: '◆ Par région', zh: '◆ 按产地选择', ko: '◆ 산지로 고르기' },
