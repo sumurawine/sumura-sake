@@ -69,8 +69,8 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
 
   const W = 13, D = 9, H = 3.2;          // 店内の幅・奥行・高さ
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0a0808);
-  scene.fog = new THREE.FogExp2(0x0a0808, 0.055);
+  scene.background = new THREE.Color(0x0d0a09);
+  scene.fog = new THREE.FogExp2(0x0d0a09, 0.030);
 
   const camera = new THREE.PerspectiveCamera(62, 1, 0.05, 60);
   camera.position.set(0, 1.62, D / 2 - 1.1);
@@ -80,7 +80,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.06;
+  renderer.toneMappingExposure = 1.24;
   o.mount.appendChild(renderer.domElement);
 
   const tex = (c: HTMLCanvasElement, rx: number, ry: number) => {
@@ -100,9 +100,9 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   scene.add(floor);
 
   const wallMat = new THREE.MeshStandardMaterial({
-    map: tex(grain('#241a15', '#191010', 60), 4, 2), roughness: 0.95, metalness: 0,
+    map: tex(grain('#3a2b23', '#241a15', 60), 4, 2), roughness: 0.95, metalness: 0,
   });
-  const ceilMat = new THREE.MeshStandardMaterial({ color: 0x120d0b, roughness: 1 });
+  const ceilMat = new THREE.MeshStandardMaterial({ color: 0x1b1310, roughness: 1 });
 
   const wall = (w: number, h: number, x: number, y: number, z: number, ry: number) => {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), wallMat);
@@ -128,8 +128,8 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   scene.add(doorGroup);
 
   /* 灯り -------------------------------------------------------- */
-  scene.add(new THREE.AmbientLight(0xffe6c8, 0.30));
-  scene.add(new THREE.HemisphereLight(0xffd9a8, 0x1a1210, 0.34));
+  scene.add(new THREE.AmbientLight(0xffe6c8, 0.62));
+  scene.add(new THREE.HemisphereLight(0xffd9a8, 0x241a15, 0.55));
   const spots: any[] = [];
   const spot = (x: number, z: number, inten: number, cast: boolean) => {
     const s = new THREE.SpotLight(0xffd9a2, inten, 11, Math.PI / 5.2, 0.55, 1.4);
@@ -141,9 +141,10 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
       new THREE.MeshBasicMaterial({ color: 0xffe3b8 }));
     bulb.position.copy(s.position); scene.add(bulb);
   };
-  spot(-4.2, -2.4, 14, true); spot(0, -2.4, 14, true); spot(4.2, -2.4, 14, true);
-  spot(-4.2, 1.6, 11, false); spot(4.2, 1.6, 11, false);
-  const warm = new THREE.PointLight(0xffb066, 9, 7, 1.6);
+  spot(-4.2, -2.4, 24, true); spot(0, -2.4, 24, true); spot(4.2, -2.4, 24, true);
+  spot(-4.2, 1.6, 20, false); spot(4.2, 1.6, 20, false);
+  spot(0, 2.6, 16, false);
+  const warm = new THREE.PointLight(0xffb066, 14, 8, 1.5);
   warm.position.set(0, 1.9, -2.0); scene.add(warm);
 
   /* 棚 ---------------------------------------------------------- */
@@ -275,11 +276,11 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   pick.push(clerk);
   boxes.push({ x: 0, z: -3.45, w: 0.6, d: 0.6 });
 
-  const halo = new THREE.PointLight(0xffcf9a, 3.4, 3.2, 2);
+  const halo = new THREE.PointLight(0xffcf9a, 5.2, 3.6, 2);
   halo.position.set(0, 1.75, -3.0); scene.add(halo);
 
   /* 見回しと歩き ------------------------------------------------ */
-  let yaw = Math.PI, pitch = -0.03;
+  let yaw = 0, pitch = -0.02;
   const keys: Record<string, boolean> = {};
   let locked = false, paused = false;
   const el = renderer.domElement;
