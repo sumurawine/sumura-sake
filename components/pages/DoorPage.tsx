@@ -154,13 +154,13 @@ export function DoorPage() {
         <div className="me-en">Liquor Shop Sumura</div>
         <div className="me-rule" />
         <div className="me-sub">{modern ? MODERN[lang].sub : '山口・宇部　フランス銘醸ワインの店'}</div>
-        <a className="me-btn" href="#" onClick={(e) => {
+        {aged ? <a className="me-btn" href="#" onClick={(e) => {
           e.preventDefault();
           if (!ageVerified()) { setAged(false); document.querySelector('.age-gate')?.scrollIntoView({ block: 'center' }); return; }
           router.push('/home');
         }}>
           {modern ? MODERN[lang].enter : '入店する'}
-        </a>
+        </a> : null}
       </div>
 
       {!aged ? <AgeGate lang={lang} onPass={() => { setAged(true); router.push('/home'); }} /> : null}
