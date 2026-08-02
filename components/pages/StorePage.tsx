@@ -102,9 +102,12 @@ export function StorePage() {
   useEffect(() => {
     if (!DATA) return;
     try {
-      const q = new URLSearchParams(window.location.search).get('prod');
-      if (!q) return;
-      if (DATA.items.some((it) => it.prod === q)) { setMode('prod'); setProd(q); }
+      const sp = new URLSearchParams(window.location.search);
+      const q = sp.get('prod');
+      if (q && DATA.items.some((it) => it.prod === q)) { setMode('prod'); setProd(q); return; }
+      /* 品書きからの ?cat=（産地）も受け取ります */
+      const c = sp.get('cat');
+      if (c && DATA.items.some((it) => it.cat === c)) { setMode('area'); setCat(c); }
     } catch {}
   }, [DATA]);
 
