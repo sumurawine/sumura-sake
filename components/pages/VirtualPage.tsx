@@ -24,6 +24,7 @@ const W: Record<Lang, Record<string, string>> = {
     bye: 'またのご来店を、お待ちしております。', back: 'サイトへ戻る', stay: 'もう少し見て回る',
     err: 'うまく伝わりませんでした。お手数ですが、もう一度お願いいたします。',
     need: 'ご用件をご記入ください。', needMail: 'メールアドレスをご記入ください。',
+    sndOn: '音を出す', sndOff: '音を消す',
   },
   en: {
     loading: 'Preparing the shop…', enter: 'Push the door and step inside',
@@ -38,6 +39,7 @@ const W: Record<Lang, Record<string, string>> = {
     bye: 'We look forward to your next visit.', back: 'Back to the site', stay: 'Stay a while longer',
     err: 'Something went wrong. Please try once more.',
     need: 'Please write your request.', needMail: 'Please enter your email address.',
+    sndOn: 'Sound on', sndOff: 'Sound off',
   },
   fr: {
     loading: 'Préparation de la boutique…', enter: 'Poussez la porte et entrez',
@@ -52,6 +54,7 @@ const W: Record<Lang, Record<string, string>> = {
     bye: 'Au plaisir de vous revoir.', back: 'Retour au site', stay: 'Rester encore un peu',
     err: 'Une erreur est survenue. Merci de réessayer.',
     need: 'Merci d’écrire votre demande.', needMail: 'Merci d’indiquer votre e-mail.',
+    sndOn: 'Son activé', sndOff: 'Son coupé',
   },
   zh: {
     loading: '正在准备店内…', enter: '推门进入店内',
@@ -66,6 +69,7 @@ const W: Record<Lang, Record<string, string>> = {
     bye: '期待您再次光临。', back: '返回网站', stay: '再逛一会儿',
     err: '发送失败，请再试一次。',
     need: '请填写您的需求。', needMail: '请填写电子邮箱。',
+    sndOn: '开启声音', sndOff: '关闭声音',
   },
   ko: {
     loading: '매장을 준비하고 있습니다…', enter: '문을 열고 들어가기',
@@ -80,6 +84,7 @@ const W: Record<Lang, Record<string, string>> = {
     bye: '또 방문해 주시기를 기다리겠습니다.', back: '사이트로 돌아가기', stay: '조금 더 둘러보기',
     err: '전달되지 않았습니다. 다시 한 번 부탁드립니다.',
     need: '용건을 적어 주세요.', needMail: '이메일 주소를 적어 주세요.',
+    sndOn: '소리 켜기', sndOff: '소리 끄기',
   },
 };
 
@@ -91,6 +96,7 @@ export function VirtualPage() {
 
   const [ready, setReady] = useState(false);
   const [started, setStarted] = useState(false);
+  const [snd, setSnd] = useState(true);
   const [hint, setHint] = useState<'clerk' | 'bottle' | null>(null);
   const [panel, setPanel] = useState<'none' | 'talk' | 'bottle' | 'bye'>('none');
   const [bottle, setBottle] = useState<Bottle | null>(null);
@@ -147,9 +153,13 @@ export function VirtualPage() {
     }).then((h) => {
       if (dead) { h.dispose(); return; }
       shop.current = h;
+      h.sound(snd);
     }).catch(() => setReady(true));
     return () => { dead = true; shop.current?.dispose(); shop.current = null; };
   }, [started, items, open]);
+
+  /* 音の入り切り */
+  useEffect(() => { shop.current?.sound(snd); }, [snd]);
 
   /* 店員に伝えます */
   const tell = async () => {
@@ -219,6 +229,8 @@ export function VirtualPage() {
           <div className="vs-cross" />
           {hint ? <div className="vs-hint">{hint === 'clerk' ? t.talk : t.see}</div> : null}
           <div className="vs-guide">{isTouch ? t.hintSp : t.hintPc}</div>
+          <button className="vs-snd" onClick={() => setSnd((v) => !v)}
+                  aria-label={snd ? t.sndOff : t.sndOn}>{snd ? '♪ ' + t.sndOff : '♪ ' + t.sndOn}</button>
         </>
       ) : null}
 
