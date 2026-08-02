@@ -57,7 +57,7 @@
 
   function keyOf(el) {
     var ov = el.getAttribute('data-ov'); if (ov) return ov;
-    var k = el.getAttribute('data-i18n'); if (k) return 'k:' + k;
+    var k = el.getAttribute('data-i18n'); if (k) return k;
     return autoKey(el);
   }
 
