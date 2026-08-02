@@ -7,6 +7,7 @@
   var LANGS = ['jp','en','fr','zh','ko'];
   var rows = {};        /* 見分け名 → 一行分 */
   var loose = {};       /* 昔の見分け名（位置から作ったもの）の受け皿 */
+  var anyEra = {};      /* 時代をまたいで通じる受け皿 */
   var lang = 'jp';
   var base = new WeakMap();
   var working = false;
@@ -92,8 +93,17 @@
     return parts.join('>');
   }
 
+  function eraFree(k) {
+    if (k.indexOf('t:') !== 0) return null;
+    var a = k.slice(2).split('|');
+    if (a.length < 3) return null;
+    return a[0] + '|' + a.slice(2).join('|');
+  }
+
   function rowFor(el, k) {
     if (rows[k]) return rows[k];
+    var ef = eraFree(k);
+    if (ef && anyEra[ef]) return anyEra[ef];
     var pk = pathKey(el);
     var full = 'p:' + pageName() + '|' + eraName() + '|' + pk;
     if (rows[full]) return rows[full];
@@ -174,12 +184,20 @@
   function mirror() { return /\/preview(\/|$)/.test(location.pathname); }
 
   function setRows(arr) {
+    var ax = {};
     var map = {}, lo = {}, m = mirror();
     (arr || []).forEach(function (r) {
       if (!r || !r['キー']) return;
       if (!m && String(r['公開'] || '').trim() !== '公開') return;
       var key = String(r['キー']).trim();
       map[key] = r;
+      if (key.indexOf('t:') === 0) {
+        var t = key.slice(2).split('|');
+        if (t.length >= 3) {
+          var ek = t[0] + '|' + t.slice(2).join('|');
+          if (!ax[ek] || String(r['公開'] || '').trim() === '公開') ax[ek] = r;
+        }
+      }
       if (key.indexOf('p:') === 0) {
         var body = key.slice(2);                      // ページ|時代|位置
         var i = body.lastIndexOf('|');
@@ -188,7 +206,7 @@
         lo[head + '|' + tail] = r;
       }
     });
-    rows = map; loose = lo;
+    rows = map; loose = lo; anyEra = ax;
     try { localStorage.setItem('sumura-ov', JSON.stringify(arr || [])); } catch (e) {}
   }
 
