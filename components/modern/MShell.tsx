@@ -11,6 +11,9 @@ import { VisitCounter } from '@/components/VisitCounter';
 import { LeaveOverlay, leaveLabel } from '@/components/LeaveOverlay';
 import { asset } from '@/lib/paths';
 import { Atmosphere, useStuck } from './Motion';
+import { AutoReveal } from './AutoReveal';
+import { CATS, ORDER } from '@/lib/store';
+import { EXTRA } from '@/lib/producers';
 import { useEffect, useState } from 'react';
 
 const NAV: Array<[string, string]> = [
@@ -54,6 +57,7 @@ export function MShell({ children }: { children: React.ReactNode }) {
       <div className="mx-veil" aria-hidden><i /></div>
       <div className="mx-bg" aria-hidden style={{ backgroundImage: `url(${asset('/images/photos/rouget.jpg')})` }} />
       <Atmosphere />
+      <AutoReveal />
 
       <header className={`mx-head${stuck ? ' is-stuck' : ''}`}>
         <Link href="/home" className="mx-brand">
@@ -62,10 +66,24 @@ export function MShell({ children }: { children: React.ReactNode }) {
         <button type="button" className={`mx-burger${menu ? ' is-open' : ''}`} aria-label="メニュー"
           onClick={() => setMenu((v) => !v)}><span /><span /><span /></button>
         <nav className={`mx-nav${menu ? ' is-open' : ''}`} onClick={() => setMenu(false)}>
-          {NAV.map(([href, k]) => (
-            <Link key={href} href={href} className={on(href) ? 'on' : ''}>{label(k)}</Link>
-          ))}
-          <a href="#" onClick={(e) => { e.preventDefault(); setLeaving(true); }}>{leaveLabel(lang)}</a>
+          {NAV.map(([href, k]) => {
+            const sub = subOf(href, lang);
+            return (
+              <span key={href} className={sub ? 'mx-navitem has-sub' : 'mx-navitem'}>
+                <Link href={href} className={on(href) ? 'on' : ''}>{label(k)}</Link>
+                {sub ? (
+                  <span className="mx-sub">
+                    <span className="mx-sub-in">
+                      {sub.map(([h, t]) => <Link key={h + t} href={h}>{t}</Link>)}
+                    </span>
+                  </span>
+                ) : null}
+              </span>
+            );
+          })}
+          <span className="mx-navitem">
+            <a href="#" onClick={(e) => { e.preventDefault(); setLeaving(true); }}>{leaveLabel(lang)}</a>
+          </span>
         </nav>
       </header>
 
@@ -105,4 +123,30 @@ export function MShell({ children }: { children: React.ReactNode }) {
       <LeaveOverlay open={leaving} lang={lang} onClose={() => setLeaving(false)} />
     </>
   );
+}
+
+/** 品書きの下に開く、細かなお品書き */
+const ALL_LABEL: Record<string, string> = {
+  jp: 'すべて見る', en: 'See all', fr: 'Tout voir', zh: '查看全部', ko: '전체 보기',
+};
+const PROD_ALL: Record<string, string> = {
+  jp: '生産者の一覧へ', en: 'All producers', fr: 'Tous les producteurs', zh: '生产者一览', ko: '생산자 목록',
+};
+
+function subOf(href: string, lang: any): Array<[string, string]> | null {
+  if (href === '/store') {
+    const rows: Array<[string, string]> = ORDER
+      .filter((k) => k !== 'other')
+      .map((k) => [`/store?cat=${k}`, CATS[k]?.[lang as 'jp'] || k] as [string, string]);
+    rows.push(['/store', ALL_LABEL[lang] || ALL_LABEL.jp]);
+    return rows;
+  }
+  if (href === '/producers') {
+    const rows: Array<[string, string]> = EXTRA.map(
+      (e) => [`/store?prod=${encodeURIComponent(e.jp)}`, lang === 'jp' ? e.jp : e.latin] as [string, string]
+    );
+    rows.push(['/producers', PROD_ALL[lang] || PROD_ALL.jp]);
+    return rows;
+  }
+  return null;
 }
