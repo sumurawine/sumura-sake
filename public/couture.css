@@ -1,0 +1,324 @@
+/* =========================================================
+   すむら酒店 2020年代版 ── 仕立て直し
+   ねらい：小さな画面でも読みやすく、けれども静かで、格を上げる。
+   modern.css のあとに読み込みます。
+   ========================================================= */
+
+/* ── 色と紙 ───────────────────────────────────────────── */
+html[data-era="now"]{
+  --mx-ink:#070609;
+  --mx-ink2:#0c0b0f;
+  --mx-paper:#f3f0ea;
+  --mx-dim:rgba(243,240,234,.76);
+  --mx-faint:rgba(243,240,234,.50);
+  --mx-line:rgba(243,240,234,.15);
+  --mx-hair:rgba(201,173,130,.34);
+  --mx-gold:#c9ad82;
+  --mx-wine:#7a1226;
+}
+
+/* 地は真っ黒ではなく、灯りの残る黒に */
+html[data-era="now"] body{
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(201,173,130,.055), transparent 60%),
+    radial-gradient(90% 60% at 50% 108%, rgba(122,18,38,.06), transparent 62%),
+    var(--mx-ink);
+  background-attachment:fixed;
+}
+html[data-era="now"] ::selection{ background:rgba(201,173,130,.30); color:#fff; }
+html[data-era="now"] :focus-visible{ outline:1px solid var(--mx-gold); outline-offset:3px; }
+
+/* 細い金の線の巻取り */
+html[data-era="now"] *{ scrollbar-width:thin; scrollbar-color:rgba(201,173,130,.42) transparent; }
+html[data-era="now"] ::-webkit-scrollbar{ width:6px; height:6px }
+html[data-era="now"] ::-webkit-scrollbar-thumb{ background:rgba(201,173,130,.36); border-radius:99px }
+html[data-era="now"] ::-webkit-scrollbar-track{ background:transparent }
+
+/* ── 組版 ─────────────────────────────────────────────── */
+html[data-era="now"] .mx-h1,
+html[data-era="now"] .mx-h2,
+html[data-era="now"] .mx-h3,
+html[data-era="now"] .mx-lead,
+html[data-era="now"] .mx-p,
+html[data-era="now"] .mx-note{
+  text-wrap:pretty;
+  word-break:auto-phrase;
+  overflow-wrap:anywhere;
+}
+html[data-era="now"] .mx-h1{
+  font-optical-sizing:auto; letter-spacing:-.005em;
+  font-size:clamp(44px,7vw,112px);
+}
+html[data-era="now"] .mx-h2{ letter-spacing:.045em; line-height:1.42; }
+
+/* 章番号に、金の細い線を添えます */
+html[data-era="now"] .mx-kicker{ display:flex; align-items:center; gap:14px; }
+html[data-era="now"] .mx-kicker::before{
+  content:""; flex:0 0 auto; width:38px; height:1px;
+  background:linear-gradient(90deg, var(--mx-gold), rgba(201,173,130,0));
+}
+
+/* 本文（画面の大きさによらず、必ず読める太さと行間に） */
+html[data-era="now"][data-mx="1"] .mx-lead{
+  font-size:17.5px !important; line-height:2.05 !important; letter-spacing:.035em !important;
+  color:var(--mx-dim) !important;
+}
+html[data-era="now"][data-mx="1"] .mx-p{
+  font-size:16px !important; line-height:2.15 !important; letter-spacing:.03em !important;
+  color:var(--mx-dim) !important;
+}
+html[data-era="now"][data-mx="1"] .mx-note{
+  font-size:13.5px !important; line-height:2.0 !important; letter-spacing:.03em !important;
+  color:var(--mx-faint) !important;
+}
+html[data-era="now"] .mx-cap{ font-size:11.5px; letter-spacing:.2em; color:var(--mx-faint); }
+html[data-era="now"] .mx-facts dd{ font-size:15.5px; line-height:2.0; }
+html[data-era="now"] .mx-table td{ font-size:15.5px; line-height:2.05; }
+
+/* ── 金の意匠 ─────────────────────────────────────────── */
+html[data-era="now"] .mx-rule{
+  background:linear-gradient(90deg, rgba(243,240,234,0), var(--mx-line) 18%, var(--mx-line) 82%, rgba(243,240,234,0));
+}
+html[data-era="now"] .mx-btn{
+  border-color:var(--mx-hair); letter-spacing:.24em; font-size:11.5px;
+}
+html[data-era="now"] .mx-btn:hover{ border-color:var(--mx-gold); }
+html[data-era="now"] .mx-btn::before{ background:var(--mx-gold); }
+html[data-era="now"][data-mx="1"] .mx-btn:hover{ color:#120d0b !important; }
+html[data-era="now"] .mx-link::after{ background:var(--mx-gold); height:1px; }
+html[data-era="now"] .mx-vitrine{
+  box-shadow:0 0 0 1px rgba(201,173,130,.20), 0 40px 90px -34px rgba(0,0,0,.95), 0 0 120px -46px rgba(201,173,130,.55);
+}
+
+/* 天の帯：店名の下に、細い金の線 */
+html[data-era="now"] .mx-brand small{ color:rgba(201,173,130,.62); letter-spacing:.38em; }
+html[data-era="now"] .mx-head.is-stuck{
+  background:rgba(7,6,9,.80);
+  border-bottom-color:var(--mx-hair);
+}
+
+/* 地の帯：屋号を大きく、静かに */
+html[data-era="now"] .mx-foot{ border-top-color:var(--mx-hair); }
+html[data-era="now"] .mx-foot h4{ color:rgba(201,173,130,.66); }
+
+/* ── 幕（最初の一枚）──────────────────────────────────── */
+.mx-veil{
+  position:fixed; inset:0; z-index:200; pointer-events:none;
+  background:var(--mx-ink);
+  animation:mx-veil-lift 1.9s cubic-bezier(.62,.02,.2,1) .45s forwards;
+}
+.mx-veil i{
+  position:absolute; left:50%; top:50%; width:min(280px,44vw); height:1px; margin-left:calc(min(280px,44vw) / -2);
+  background:linear-gradient(90deg, rgba(201,173,130,0), var(--mx-gold), rgba(201,173,130,0));
+  transform:scaleX(0); animation:mx-veil-line 1.15s cubic-bezier(.16,.84,.24,1) forwards;
+}
+@keyframes mx-veil-line{ from{ transform:scaleX(0); opacity:0 } 40%{ opacity:1 } to{ transform:scaleX(1); opacity:.9 } }
+@keyframes mx-veil-lift{ to{ opacity:0; visibility:hidden } }
+@media (prefers-reduced-motion:reduce){
+  .mx-veil{ animation:none; opacity:0; visibility:hidden }
+  .mx-veil i{ animation:none }
+}
+
+/* ── 小さな画面：ここからが本題 ───────────────────────── */
+@media (max-width:860px){
+  html[data-era="now"][data-mx="1"] body{ font-size:16.5px !important; line-height:1.95 !important; letter-spacing:.02em !important; }
+  html[data-era="now"][data-mx="1"] .mx-lead{
+    font-size:17px !important; line-height:1.95 !important; letter-spacing:.02em !important;
+    color:rgba(243,240,234,.84) !important;
+  }
+  html[data-era="now"][data-mx="1"] .mx-p{
+    font-size:16.5px !important; line-height:1.98 !important; letter-spacing:.015em !important;
+    color:rgba(243,240,234,.82) !important;
+  }
+  html[data-era="now"][data-mx="1"] .mx-note{ font-size:14px !important; line-height:1.95 !important; letter-spacing:.015em !important; color:rgba(243,240,234,.62) !important; }
+
+  html[data-era="now"] .mx-h1{ font-size:clamp(40px,12.5vw,64px); line-height:1.1; }
+  html[data-era="now"] .mx-h2{ font-size:clamp(22px,6.2vw,29px); line-height:1.55; letter-spacing:.025em; }
+  html[data-era="now"] .mx-h3{ font-size:17.5px; line-height:1.75; letter-spacing:.025em; }
+  html[data-era="now"] .mx-kicker{ font-size:10px; letter-spacing:.24em; margin-bottom:18px; }
+  html[data-era="now"] .mx-kicker::before{ width:26px }
+  html[data-era="now"] .mx-hero-sub{ font-size:13px; letter-spacing:.12em; line-height:1.9; }
+  html[data-era="now"] .mx-cap{ font-size:12px; letter-spacing:.12em; line-height:1.8; }
+  html[data-era="now"] .mx-in,html[data-era="now"] .mx-in-n{ padding:0 24px; }
+
+  /* 数字と仕様：一段に */
+  html[data-era="now"] .mx-facts{ grid-template-columns:1fr; }
+  html[data-era="now"] .mx-facts > div{ padding:24px 22px; }
+  html[data-era="now"] .mx-facts dt{ font-size:10px; letter-spacing:.22em; }
+  html[data-era="now"] .mx-facts dd{ font-size:16px; line-height:1.9; }
+
+  /* 表は縦に積みます（横に潰れて読めなくなるのを防ぎます） */
+  html[data-era="now"] .mx-table th,
+  html[data-era="now"] .mx-table td{ display:block; width:auto; white-space:normal; }
+  html[data-era="now"] .mx-table th{ padding:22px 0 6px; border:0; font-size:10px; letter-spacing:.22em; }
+  html[data-era="now"] .mx-table td{ padding:0 0 20px; font-size:16px; line-height:1.95; }
+
+  html[data-era="now"] .mx-foot a{ font-size:15px; letter-spacing:.04em; }
+  html[data-era="now"] .mx-foot li{ margin-bottom:14px; }
+  html[data-era="now"] .mx-foot-end{ font-size:11px; letter-spacing:.14em; line-height:1.9; }
+  html[data-era="now"] .mx-btn{ padding:16px 30px; font-size:12px; letter-spacing:.18em; }
+  html[data-era="now"] .mx-field{ font-size:16.5px; }
+  html[data-era="now"] .mx-label{ font-size:11px; letter-spacing:.2em; }
+
+  /* 表紙の文字が写真に負けないように */
+  html[data-era="now"] .mx-hero-shade{
+    background:
+      linear-gradient(to bottom, rgba(7,6,9,.52) 0%, rgba(7,6,9,.28) 30%, rgba(7,6,9,.80) 78%, var(--mx-ink) 100%),
+      radial-gradient(90% 70% at 26% 40%, rgba(7,6,9,0) 22%, rgba(7,6,9,.66) 100%);
+  }
+  html[data-era="now"] .mx-bleed-shade{
+    background:linear-gradient(to bottom, var(--mx-ink) 0%, rgba(7,6,9,.62) 22%, rgba(7,6,9,.62) 72%, var(--mx-ink) 100%);
+  }
+  html[data-era="now"] .mx-photo img{ filter:brightness(.82) contrast(1.03) saturate(.88); }
+
+  /* 品書き（メニュー）：一枚の扉のように */
+  html[data-era="now"] .mx-nav{
+    background:
+      radial-gradient(100% 60% at 50% 0%, rgba(201,173,130,.10), transparent 62%),
+      rgba(9,7,10,.975) !important;
+    gap:0 !important; justify-content:center !important;
+  }
+  html[data-era="now"] .mx-nav a{
+    font-family:var(--mx-jp) !important; font-size:18px !important; letter-spacing:.14em !important;
+    color:rgba(243,240,234,.86) !important; padding:17px 30px !important; width:min(320px,74vw); text-align:center;
+    border-bottom:1px solid rgba(243,240,234,.08);
+  }
+  html[data-era="now"] .mx-nav a:last-child{ border-bottom:0; }
+  html[data-era="now"] .mx-nav a::after{ display:none; }
+  html[data-era="now"] .mx-nav.is-open a{ animation:mx-menu-in .6s cubic-bezier(.16,.84,.24,1) both; }
+  html[data-era="now"] .mx-nav.is-open a:nth-child(1){ animation-delay:.05s }
+  html[data-era="now"] .mx-nav.is-open a:nth-child(2){ animation-delay:.10s }
+  html[data-era="now"] .mx-nav.is-open a:nth-child(3){ animation-delay:.15s }
+  html[data-era="now"] .mx-nav.is-open a:nth-child(4){ animation-delay:.20s }
+  html[data-era="now"] .mx-nav.is-open a:nth-child(5){ animation-delay:.25s }
+  html[data-era="now"] .mx-nav.is-open a:nth-child(6){ animation-delay:.30s }
+  html[data-era="now"] .mx-nav.is-open a:nth-child(7){ animation-delay:.35s }
+  html[data-era="now"] .mx-nav.is-open a:nth-child(8){ animation-delay:.40s }
+  html[data-era="now"] .mx-nav.is-open a:nth-child(9){ animation-delay:.45s }
+  @keyframes mx-menu-in{ from{ opacity:0; transform:translateY(14px) } to{ opacity:1; transform:none } }
+}
+
+@media (max-width:520px){
+  html[data-era="now"] .mx-in,html[data-era="now"] .mx-in-n{ padding:0 20px; }
+  html[data-era="now"] .mx-h1{ font-size:clamp(36px,13vw,54px); }
+  html[data-era="now"] .mx-nav a{ font-size:17px !important; padding:15px 24px !important; }
+}
+
+/* ── 入口と退店の画面 ─────────────────────────────────── */
+html[data-era="now"] .door-lead,
+html[data-mx="1"] #tw-leave-ov .tw-bye-t{
+  text-wrap:pretty; word-break:auto-phrase;
+}
+@media (max-width:860px){
+  html[data-mx="1"] #tw-leave-ov .tw-bye-t{
+    font-size:clamp(20px,5.6vw,26px) !important; line-height:1.85 !important; letter-spacing:.05em !important;
+    padding:0 24px !important;
+  }
+  html[data-mx="1"] #tw-leave-ov .tw-bye-a{ font-size:12.5px !important; letter-spacing:.18em !important; padding:15px 32px !important; }
+}
+
+/* ── 二度目の仕上げ ───────────────────────────────────── */
+
+/* 天の帯は、下がるほど薄く小さく（本文を隠さないように） */
+@media (max-width:860px){
+  html[data-era="now"] .mx-head.is-stuck{ padding:10px 20px !important; }
+  html[data-era="now"] .mx-head.is-stuck .mx-brand{ font-size:15px !important; }
+  html[data-era="now"] .mx-head.is-stuck .mx-brand small{ display:none !important; }
+  html[data-era="now"] .mx-head.is-stuck .mx-burger{ transform:scale(.86); }
+}
+
+/* 時間旅行と言語は、そっと端に。触れたときだけはっきり出ます */
+@media (max-width:860px){
+  html[data-mx="1"] #timewarp.tw-closed{
+    width:auto !important; padding:0 !important; border-radius:999px !important;
+    background:rgba(9,7,10,.52) !important; border:1px solid rgba(201,173,130,.26) !important;
+    backdrop-filter:blur(12px) saturate(1.1); opacity:.62; transition:opacity .4s ease;
+  }
+  html[data-mx="1"] #timewarp.tw-closed:hover,
+  html[data-mx="1"] #timewarp.tw-closed:focus-within{ opacity:1; }
+  html[data-mx="1"] #timewarp.tw-closed .tw-t{
+    writing-mode:horizontal-tb !important; font-size:0 !important; letter-spacing:0 !important;
+    padding:0 !important; margin:0 !important; display:block !important; line-height:0 !important;
+  }
+  html[data-mx="1"] #timewarp.tw-closed .tw-t::first-letter{ font-size:15px !important; line-height:1 !important; }
+  html[data-mx="1"] #timewarp.tw-closed .tw-toggle{
+    width:38px !important; height:38px !important; padding:0 !important; font-size:15px !important;
+    line-height:38px !important; border:0 !important; background:transparent !important; color:rgba(243,240,234,.7) !important;
+  }
+  html[data-era="now"] #lang-bar.lb-quiet{ opacity:.62; transition:opacity .4s ease; }
+  html[data-era="now"] #lang-bar.lb-quiet:hover,
+  html[data-era="now"] #lang-bar.lb-quiet:focus-within{ opacity:1; }
+  html[data-era="now"] #lang-bar.lb-quiet button{ padding:6px 8px !important; font-size:9.5px !important; }
+}
+
+/* 章の見出しが帯に隠れないように、少しだけ余白を足します */
+@media (max-width:860px){
+  html[data-era="now"] .mx-sec{ padding:74px 0 !important; }
+  html[data-era="now"] .mx-sec .mx-h2:first-child,
+  html[data-era="now"] .mx-sec .mx-kicker:first-child{ scroll-margin-top:96px; }
+}
+
+/* 表紙の文字は、写真がどれでも読めるように */
+@media (max-width:860px){
+  html[data-era="now"] .mx-hero .mx-h1{ text-shadow:0 2px 30px rgba(0,0,0,.85), 0 0 90px rgba(0,0,0,.6); }
+  html[data-era="now"] .mx-hero .mx-kicker,
+  html[data-era="now"] .mx-hero-sub{ text-shadow:0 1px 18px rgba(0,0,0,.9); color:rgba(243,240,234,.82) !important; }
+  html[data-era="now"] .mx-scroll{ bottom:76px; }
+  html[data-era="now"] .mx-scroll span{ font-size:9px; letter-spacing:.26em; }
+}
+
+/* 一覧の横流しは、端に金の霞をかけて「続き」を示します */
+html[data-era="now"] .mx-rail{ position:relative; }
+@media (max-width:860px){
+  html[data-era="now"] .mx-rail{ padding-left:24px; padding-right:24px; }
+  html[data-era="now"] .mx-rail > *{ flex-basis:min(66vw,240px); }
+}
+
+/* ── 入口の一枚 ───────────────────────────────────────── */
+html[data-era="now"] #modern-entrance .me-jp{
+  font-size:clamp(34px,7vw,54px) !important; letter-spacing:.14em !important; line-height:1.2 !important;
+}
+html[data-era="now"] #modern-entrance .me-en{ font-size:11px !important; color:rgba(201,173,130,.66) !important; }
+html[data-era="now"] #modern-entrance .me-rule{
+  width:64px !important; height:1px !important; margin:26px auto !important;
+  background:linear-gradient(90deg, rgba(201,173,130,0), var(--mx-gold), rgba(201,173,130,0)) !important;
+}
+html[data-era="now"] #modern-entrance .me-sub{
+  font-family:var(--mx-jp) !important; font-size:16px !important; line-height:2.0 !important;
+  letter-spacing:.05em !important; color:rgba(243,240,234,.80) !important;
+  max-width:20em; margin-left:auto !important; margin-right:auto !important;
+  text-wrap:pretty; word-break:auto-phrase;
+}
+html[data-era="now"] #modern-entrance .me-btn{
+  border-color:var(--mx-hair) !important; letter-spacing:.26em !important;
+}
+html[data-era="now"] #modern-entrance .me-btn:hover{ background:var(--mx-gold) !important; color:#120d0b !important; }
+html[data-era="now"] #age-note{ font-size:12.5px !important; line-height:1.95 !important; letter-spacing:.03em !important; max-width:26em; margin-left:auto; margin-right:auto; }
+
+/* 入口でも、上の道具は控えめに */
+html[data-era="now"] #timewarp.tw-closed{
+  background:rgba(9,7,10,.52) !important; border:1px solid rgba(201,173,130,.26) !important;
+  color:rgba(243,240,234,.72) !important; box-shadow:none !important;
+}
+html[data-era="now"] #timewarp.tw-closed .tw-t,
+html[data-era="now"] #timewarp.tw-closed .tw-toggle{ color:rgba(243,240,234,.72) !important; }
+
+@media (max-width:860px){
+  html[data-era="now"] #modern-entrance .me-jp{ font-size:clamp(32px,9vw,44px) !important; }
+  html[data-era="now"] #modern-entrance .me-sub{ font-size:16px !important; padding:0 26px; }
+  html[data-era="now"] #modern-entrance .me-btn{ padding:16px 34px !important; font-size:12px !important; }
+  html[data-era="now"] #age-note{ font-size:12px !important; padding:0 26px; }
+  /* 入口でも小さく丸く */
+  html[data-era="now"] #timewarp.tw-closed{
+    width:auto !important; padding:0 !important; border-radius:999px !important; opacity:.62;
+  }
+  html[data-era="now"] #timewarp.tw-closed .tw-t{
+    writing-mode:horizontal-tb !important; font-size:0 !important; letter-spacing:0 !important;
+    padding:0 !important; margin:0 !important; display:block !important; line-height:0 !important;
+  }
+  html[data-era="now"] #timewarp.tw-closed .tw-t::first-letter{ font-size:15px !important; line-height:1 !important; }
+  html[data-era="now"] #timewarp.tw-closed .tw-toggle{
+    width:38px !important; height:38px !important; padding:0 !important; font-size:15px !important;
+    line-height:38px !important; border:0 !important; background:transparent !important;
+  }
+}

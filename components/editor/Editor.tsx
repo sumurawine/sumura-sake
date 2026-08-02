@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { editMode, loadOverrides, overrides, isMirror } from '@/lib/overrides';
+import { editMode, setEditMode, loadOverrides, overrides, isMirror } from '@/lib/overrides';
 import { applyOverrides, keyOf, baseText, isTarget } from '@/lib/domtext';
 import { NewProduct } from './NewProduct';
 import { bridgeUrl, setBridgeUrl, call, openBridge } from './Bridge';
@@ -41,6 +41,7 @@ export function Editor() {
   const [allowed, setAllowed] = useState(false);
   const [urlDraft, setUrlDraft] = useState('');
   const [sure, setSure] = useState(false);
+  const [editing, setEditing] = useState(false);
   const hover = useRef<HTMLElement | null>(null);
 
   const toast = useCallback((t: string, ms = 2600) => {
@@ -49,14 +50,19 @@ export function Editor() {
   }, []);
 
   useEffect(() => {
-    if (!editMode()) return;
+    if (!isMirror()) return;             // 鏡サイトの外では、道具立てを出しません
     setOn(true);
-    document.documentElement.setAttribute('data-edit', '1');
+    setEditing(editMode());
     loadOverrides(true);
     if (!bridgeUrl()) { setNeedUrl(true); return; }
     verify();
-    return () => { document.documentElement.removeAttribute('data-edit'); };
   }, [toast]);
+
+  /** 編集モードの入り切りを、画面にも伝えます */
+  useEffect(() => {
+    if (editing && allowed) document.documentElement.setAttribute('data-edit', '1');
+    else document.documentElement.removeAttribute('data-edit');
+  }, [editing, allowed]);
 
   /** ご本人かどうかを確かめます。管理画面は「自分のみ」なので、他の方では返事が来ません */
   const verify = useCallback(() => {
@@ -71,7 +77,7 @@ export function Editor() {
 
   /** 触れる場所に印をつけます */
   useEffect(() => {
-    if (!on || !allowed) return;
+    if (!on || !allowed || !editing) return;
     const over = (e: MouseEvent) => {
       const el = pickable(e.target as HTMLElement);
       if (hover.current && hover.current !== el) hover.current.classList.remove('ed-hot');
@@ -104,7 +110,7 @@ export function Editor() {
       document.removeEventListener('click', click, true);
       if (hover.current) hover.current.classList.remove('ed-hot');
     };
-  }, [on, allowed]);
+  }, [on, allowed, editing]);
 
   const saveText = async () => {
     if (!target) return;
@@ -166,17 +172,21 @@ export function Editor() {
   };
 
   if (!on) return null;
+  if (!allowed && !needUrl) return null;
 
   return (
     <>
       <div className="ed-bar">
-        <span className="ed-badge">編集モード（鏡）</span>
+        <button className={editing ? 'ed-b ed-primary' : 'ed-b'}
+                onClick={() => { const v = !editing; setEditMode(v); setEditing(v); setTarget(null);
+                                 toast(v ? '文字や写真をクリックすると直せます' : 'ふつうに見て回れます。リンクも押せます'); }}>
+          {editing ? '編集中：とめる' : '編集する'}
+        </button>
         {who ? <span className="ed-who">{who}</span> : <span className="ed-who">確認中…</span>}
-        <button className="ed-b" onClick={() => { loadOverrides(true).then(() => location.reload()); }}>読み直す</button>
-        {allowed && /store/.test(location.pathname) ? <NewProduct /> : null}
-        <button className="ed-b" onClick={() => setNeedUrl(true)}>つなぎ先</button>
+        {editing ? <button className="ed-b" onClick={() => { loadOverrides(true).then(() => location.reload()); }}>読み直す</button> : null}
+        {editing && /store/.test(location.pathname) ? <NewProduct /> : null}
+        {editing ? <button className="ed-b" onClick={() => setNeedUrl(true)}>つなぎ先</button> : null}
         <button className="ed-b" onClick={() => { window.open(location.href.replace('/preview/', '/'), '_blank'); }}>本番を見る</button>
-        <button className="ed-b" onClick={() => { sessionStorage.removeItem('sumura-edit'); location.href = location.pathname; }}>編集をやめる</button>
       </div>
 
       {needUrl ? (

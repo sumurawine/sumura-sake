@@ -51,6 +51,7 @@ export function MShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <div className="mx-veil" aria-hidden><i /></div>
       <div className="mx-bg" aria-hidden style={{ backgroundImage: `url(${asset('/images/photos/rouget.jpg')})` }} />
       <Atmosphere />
 

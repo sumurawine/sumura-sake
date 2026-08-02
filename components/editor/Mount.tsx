@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { setOverrideLookup } from '@/lib/i18n';
-import { loadOverrides, onOverrides, ovText, ovImage, editMode, overrides } from '@/lib/overrides';
+import { loadOverrides, onOverrides, ovText, ovImage, isMirror, overrides } from '@/lib/overrides';
 import { applyOverrides, watchOverrides } from '@/lib/domtext';
 import { useSite } from '@/components/Providers';
 import { Editor, imageKey } from './Editor';
@@ -44,7 +44,7 @@ export function EditorMount() {
   }, []);
 
   const [on, setOn] = useState(false);
-  useEffect(() => { setOn(editMode()); }, []);
+  useEffect(() => { setOn(isMirror()); }, []);
 
   return on ? <Editor /> : null;
 }

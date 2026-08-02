@@ -45,6 +45,8 @@ export function loadOverrides(force = false): Promise<Record<string, OvRow>> {
   inflight = fetch(SUMURA_API + v, { redirect: 'follow' })
     .then((r) => r.json())
     .then((j) => {
+      /* 描く前に当てる仕掛けにも渡します（控えとして端末にも残ります） */
+      try { (window as any).SumuraOv?.setRows(j?.rows || []); } catch {}
       const map: Record<string, OvRow> = {};
       const mirror = isMirror();
       (j?.rows || []).forEach((r: OvRow) => {
@@ -94,14 +96,22 @@ export function ovLink(key: string, lang: Lang): { text: string; href: string } 
   return { text: t || href, href };
 }
 
-/** 編集モードかどうか。?edit=1 で入り、その端末では覚えます */
+/** 編集モードかどうか。鏡サイトでのみ、印がついているときに入ります */
 export function editMode(): boolean {
   if (typeof window === 'undefined') return false;
   if (!isMirror()) return false;          // 本番では編集できません
   try {
     const q = new URLSearchParams(window.location.search).get('edit');
-    if (q === '1') { sessionStorage.setItem('sumura-edit', '1'); return true; }
-    if (q === '0') { sessionStorage.removeItem('sumura-edit'); return false; }
-    return sessionStorage.getItem('sumura-edit') === '1';
+    if (q === '1') { localStorage.setItem('sumura-edit', '1'); return true; }
+    if (q === '0') { localStorage.removeItem('sumura-edit'); return false; }
+    return localStorage.getItem('sumura-edit') === '1';
   } catch { return false; }
+}
+
+/** 編集モードの入り切り。押した時点で覚えます */
+export function setEditMode(on: boolean): void {
+  try {
+    if (on) localStorage.setItem('sumura-edit', '1');
+    else localStorage.removeItem('sumura-edit');
+  } catch {}
 }
