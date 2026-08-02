@@ -86,14 +86,15 @@ export function AgeGate({ lang, onPass }: { lang: Lang; onPass: () => void }) {
   const dRef = useRef<HTMLInputElement>(null);
 
   const age = useMemo(() => ageOn(Number(y), Number(m), Number(d)), [y, m, d]);
-  const full = y.length === 4 && m !== '' && d !== '';
+  const full = y.length === 4 && m !== '' && d !== '' && Number(m) >= 1 && Number(d) >= 1;
 
   useEffect(() => { setMsg(''); }, [y, m, d]);
 
-  const num = (v: string, max: number) => {
-    const s = v.replace(/[^0-9]/g, '').slice(0, String(max).length);
-    return s;
-  };
+  const num = (v: string, len: number) => v.replace(/[^0-9]/g, '').slice(0, len);
+
+  /* 「2」と打てば2月、「7」と打てば7日。0を足していただく必要はありません */
+  const monthDone = (v: string) => v.length === 2 || Number(v) >= 2;
+  const dayDone = (v: string) => v.length === 2 || Number(v) >= 4;
 
   const submit = () => {
     if (!full || age == null) { setMsg(t.wait); return; }
@@ -110,17 +111,19 @@ export function AgeGate({ lang, onPass }: { lang: Lang; onPass: () => void }) {
       <div className="ag-row">
         <label className="ag-f">
           <input inputMode="numeric" autoComplete="bday-year" placeholder="1990" maxLength={4}
-                 value={y} onChange={(e) => { const v = num(e.target.value, 9999); setY(v); if (v.length === 4) mRef.current?.focus(); }} />
+                 value={y} onChange={(e) => { const v = num(e.target.value, 4); setY(v); if (v.length === 4) mRef.current?.focus(); }}
+                 onKeyDown={(e) => { if (e.key === 'Enter') submit(); }} />
           <span>{t.y}</span>
         </label>
         <label className="ag-f ag-s">
-          <input ref={mRef} inputMode="numeric" autoComplete="bday-month" placeholder="1" maxLength={2}
-                 value={m} onChange={(e) => { const v = num(e.target.value, 12); setM(v); if (v.length === 2) dRef.current?.focus(); }} />
+          <input ref={mRef} inputMode="numeric" autoComplete="bday-month" placeholder="2" maxLength={2}
+                 value={m} onChange={(e) => { const v = num(e.target.value, 2); setM(v); if (monthDone(v)) dRef.current?.focus(); }}
+                 onKeyDown={(e) => { if (e.key === 'Enter') submit(); }} />
           <span>{t.m}</span>
         </label>
         <label className="ag-f ag-s">
-          <input ref={dRef} inputMode="numeric" autoComplete="bday-day" placeholder="1" maxLength={2}
-                 value={d} onChange={(e) => setD(num(e.target.value, 31))}
+          <input ref={dRef} inputMode="numeric" autoComplete="bday-day" placeholder="7" maxLength={2}
+                 value={d} onChange={(e) => setD(num(e.target.value, 2))}
                  onKeyDown={(e) => { if (e.key === 'Enter') submit(); }} />
           <span>{t.d}</span>
         </label>
