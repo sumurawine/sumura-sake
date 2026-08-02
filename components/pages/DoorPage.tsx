@@ -163,7 +163,7 @@ export function DoorPage() {
         </a>
       </div>
 
-      {!aged ? <AgeGate lang={lang} onPass={() => setAged(true)} /> : null}
+      {!aged ? <AgeGate lang={lang} onPass={() => { setAged(true); router.push('/home'); }} /> : null}
 
       <T k="index-age" as="div" id="age-note" />
 
