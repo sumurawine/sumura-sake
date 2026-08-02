@@ -714,3 +714,36 @@ html[data-era="now"] .ct-nl span{ color:rgba(243,240,234,.76); font-size:14px; }
   .vs-ox{ left:134px; bottom:26px; }
   .vs-stick{ width:100px; height:100px; right:14px; bottom:18px; }
 }
+
+/* ── バーチャル店舗：読みやすさと、携帯の操作 ───────────── */
+.vs-gate p{ color:rgba(243,240,234,.86); font-size:14.5px; line-height:2.05; }
+.vs-gate .vs-kick{ color:rgba(201,173,130,.92); }
+a.vs-back, .vs-back{ color:rgba(243,240,234,.78) !important; text-decoration:none; }
+a.vs-back:hover, .vs-back:hover{ color:#f3f0ea !important; }
+.vs-panel label{ font-size:12px; letter-spacing:.14em; color:rgba(243,240,234,.88); margin:18px 0 7px; }
+.vs-card-w{ color:rgba(243,240,234,.82); }
+.vs-guide{ color:rgba(243,240,234,.72); }
+
+.vs-shot{
+  display:block; width:100%; max-height:210px; object-fit:cover; margin:0 0 12px;
+  border:1px solid rgba(201,173,130,.28); border-radius:2px; background:rgba(255,255,255,.04);
+}
+.vs-buying{
+  font-size:13.5px; line-height:1.8; color:#c9ad82; padding-bottom:10px;
+  border-bottom:1px solid rgba(201,173,130,.28);
+}
+.vs-ok{ font-size:14px; line-height:1.95; color:#c9ad82; }
+.vs-nl{
+  display:flex !important; align-items:flex-start; gap:10px; margin:16px 0 0 !important;
+  font-size:12.5px !important; letter-spacing:.06em !important; line-height:1.7;
+  color:rgba(243,240,234,.88) !important; cursor:pointer;
+}
+.vs-nl input{ width:16px !important; height:16px; margin-top:2px; accent-color:#c9ad82; flex:0 0 auto; }
+
+/* 携帯：手に取るボタンだけを、親指の届くところに */
+.vs-take{
+  position:absolute; right:18px; bottom:96px; z-index:13; font:inherit; font-size:12.5px;
+  letter-spacing:.14em; color:#f3f0ea; background:rgba(9,7,10,.72);
+  border:1px solid rgba(201,173,130,.5); border-radius:26px; padding:14px 22px; cursor:pointer;
+}
+.vs-take:active{ background:rgba(201,173,130,.5); }
