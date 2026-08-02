@@ -37,8 +37,8 @@ jobs:
 
       - name: ビルド
         env:
-          BASE_PATH: /sumura-sake
-          ASSET_BASE: /sumura-sake
+          BASE_PATH: ''
+          ASSET_BASE: ''
         run: npm run build
 
       - name: Jekyll を無効化（_next/ を配信するため）
@@ -52,7 +52,7 @@ jobs:
           npm install --no-audit --no-fund
           pip install --quiet --break-system-packages pillow numpy || pip install --quiet pillow numpy || true
           python3 scripts/make-visuals.py || true
-          BASE_PATH=/sumura-sake/preview ASSET_BASE=/sumura-sake/preview npm run build
+          BASE_PATH=/preview ASSET_BASE=/preview npm run build
           mkdir -p "$GITHUB_WORKSPACE/out/preview"
           cp -r out/. "$GITHUB_WORKSPACE/out/preview/"
 
