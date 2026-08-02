@@ -27,6 +27,7 @@ const W: Record<Lang, Record<string, string>> = {
     sndOn: '音を出す', sndOff: '音を消す',
     kWalk: 'W A S D 歩く', kLook: 'マウス 見回す', kTake: 'クリック 手に取る',
     callC: '店員を呼ぶ', talkC: '店員に話しかける', oBtn: '手に取る', xBtn: '閉じる',
+    coming: '店員がこちらへ向かっております…',
   },
   en: {
     loading: 'Preparing the shop…', enter: 'Push the door and step inside',
@@ -44,6 +45,7 @@ const W: Record<Lang, Record<string, string>> = {
     sndOn: 'Sound on', sndOff: 'Sound off',
     kWalk: 'W A S D  walk', kLook: 'Mouse  look', kTake: 'Click  pick up',
     callC: 'Call the clerk', talkC: 'Speak to the clerk', oBtn: 'Pick up', xBtn: 'Close',
+    coming: 'The clerk is on the way…',
   },
   fr: {
     loading: 'Préparation de la boutique…', enter: 'Poussez la porte et entrez',
@@ -61,6 +63,7 @@ const W: Record<Lang, Record<string, string>> = {
     sndOn: 'Son activé', sndOff: 'Son coupé',
     kWalk: 'W A S D  marcher', kLook: 'Souris  regarder', kTake: 'Clic  prendre',
     callC: 'Appeler le sommelier', talkC: 'Parler au sommelier', oBtn: 'Prendre', xBtn: 'Fermer',
+    coming: 'Le sommelier arrive…',
   },
   zh: {
     loading: '正在准备店内…', enter: '推门进入店内',
@@ -78,6 +81,7 @@ const W: Record<Lang, Record<string, string>> = {
     sndOn: '开启声音', sndOff: '关闭声音',
     kWalk: 'W A S D 行走', kLook: '鼠标 环视', kTake: '点击 取用',
     callC: '呼叫店员', talkC: '与店员交谈', oBtn: '取用', xBtn: '关闭',
+    coming: '店员正在过来…',
   },
   ko: {
     loading: '매장을 준비하고 있습니다…', enter: '문을 열고 들어가기',
@@ -95,6 +99,7 @@ const W: Record<Lang, Record<string, string>> = {
     sndOn: '소리 켜기', sndOff: '소리 끄기',
     kWalk: 'W A S D 걷기', kLook: '마우스 둘러보기', kTake: '클릭 집기',
     callC: '점원 부르기', talkC: '점원에게 말 걸기', oBtn: '집기', xBtn: '닫기',
+    coming: '점원이 오고 있습니다…',
   },
 };
 
@@ -108,6 +113,7 @@ export function VirtualPage() {
   const [started, setStarted] = useState(false);
   const [snd, setSnd] = useState(true);
   const [near, setNear] = useState(false);
+  const [coming, setComing] = useState(false);
   const [hint, setHint] = useState<'clerk' | 'bottle' | null>(null);
   const [panel, setPanel] = useState<'none' | 'talk' | 'bottle' | 'bye'>('none');
   const [bottle, setBottle] = useState<Bottle | null>(null);
@@ -161,6 +167,7 @@ export function VirtualPage() {
         else { const b = items.find((x) => x.id === id) || null; setBottle(b); open('bottle'); }
       },
       onNear: (v) => setNear(v),
+      onArrive: () => { setComing(false); setReply(''); setPicks([]); open('talk'); },
       onDoor: () => open('bye'),
     }).then((h) => {
       if (dead) { h.dispose(); return; }
@@ -241,8 +248,11 @@ export function VirtualPage() {
           <div className="vs-cross" />
           {hint ? <div className="vs-hint">{hint === 'clerk' ? t.talk : t.see}</div> : null}
 
-          <button className="vs-call" onClick={() => { setReply(''); setPicks([]); open('talk'); }}>
-            <span className="vs-cap">C</span>{near ? t.talkC : t.callC}
+          <button className="vs-call" onClick={() => {
+            if (near) { setReply(''); setPicks([]); open('talk'); }
+            else { setComing(true); shop.current?.callClerk(); }
+          }}>
+            <span className="vs-cap">C</span>{coming ? t.coming : near ? t.talkC : t.callC}
           </button>
 
           {!isTouch ? (
@@ -257,8 +267,8 @@ export function VirtualPage() {
               onMove={(x, y) => shop.current?.moveVec(x, y)}
               onLook={(x, y) => shop.current?.lookVel(x, y)}
               onO={() => shop.current?.use()}
-              onX={() => { setReply(''); setPicks([]); open('talk'); }}
-              oLabel={t.oBtn} xLabel={near ? t.talkC : t.callC}
+              onX={() => { if (near) { setReply(''); setPicks([]); open('talk'); } else { setComing(true); shop.current?.callClerk(); } }}
+              oLabel={t.oBtn} xLabel={coming ? t.coming : near ? t.talkC : t.callC}
             />
           )}
 
