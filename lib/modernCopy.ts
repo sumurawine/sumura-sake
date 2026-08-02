@@ -13,6 +13,7 @@ type Copy = {
   newsHead: string; newsMore: string;
   soldout: string; yen: string;
   capRouget: string; capRoch: string; capGillet: string;
+  capCheval: string; capOld: string;
   gallery: string; galleryHead: string;
 };
 
@@ -49,6 +50,7 @@ export const MC: Record<Lang, Copy> = {
     newsMore: 'お知らせの一覧へ',
     soldout: '在庫切れ', yen: '',
     capRouget: 'エマニュエル・ルジェ ／ エシェゾー グラン・クリュ', capRoch: 'ジュヴレ・シャンベルタン、ヴォーヌ・ロマネ ／ 届いたばかりの並び', capGillet: 'サヴィニー・レ・ボーヌ ／ 灯りの下で',
+    capCheval: 'シャトー シュヴァル ブラン 1929 ／ サンテミリオン', capOld: '当店では、状態の確かなこうした古酒の取り扱いもございます。生まれ年の一本、節目の贈りもの、いつかの記念日に。お探しの年号がございましたら、どうぞお声がけくださいませ。',
     gallery: 'お店の風景', galleryHead: '棚から、いくつかをご紹介いたします。',
   },
   en: {
@@ -83,6 +85,7 @@ export const MC: Record<Lang, Copy> = {
     newsMore: 'All news',
     soldout: 'Sold out', yen: '',
     capRouget: 'Emmanuel Rouget / Échézeaux Grand Cru', capRoch: 'Gevrey-Chambertin and Vosne-Romanée, just arrived', capGillet: 'Savigny-lès-Beaune, under the lamp',
+    capCheval: 'Château Cheval Blanc 1929 / Saint-Émilion', capOld: 'We also carry older vintages such as this one, in condition we can vouch for. A bottle from a birth year, a gift for a milestone, something for a day still to come. If you are looking for a particular year, please do ask.',
     gallery: 'The shop', galleryHead: 'A few from the shelves.',
   },
   fr: {
@@ -117,6 +120,7 @@ export const MC: Record<Lang, Copy> = {
     newsMore: 'Toutes les actualités',
     soldout: 'Épuisé', yen: '',
     capRouget: 'Emmanuel Rouget / Échézeaux Grand Cru', capRoch: 'Gevrey-Chambertin et Vosne-Romanée, à peine arrivés', capGillet: 'Savigny-lès-Beaune, sous la lampe',
+    capCheval: 'Château Cheval Blanc 1929 / Saint-Émilion', capOld: 'Nous proposons également de vieux millésimes comme celui-ci, dont l’état est garanti. Une bouteille de l’année de naissance, un cadeau pour une grande occasion, un vin pour un jour à venir. Si vous cherchez un millésime précis, n’hésitez pas à nous le demander.',
     gallery: 'La maison', galleryHead: 'Quelques flacons des rayons.',
   },
   zh: {
@@ -151,6 +155,7 @@ export const MC: Record<Lang, Copy> = {
     newsMore: '消息一览',
     soldout: '售罄', yen: '',
     capRouget: '埃玛纽埃尔·卢梭 ／ 埃雪索 特级园', capRoch: '热夫雷·香贝丹与沃恩·罗曼尼 ／ 刚到货的一列', capGillet: '萨维尼·莱·博讷 ／ 灯下',
+    capCheval: '白马庄 1929 ／ 圣爱美浓', capOld: '本店亦经手此类状态可靠的老年份佳酿。出生年份的一瓶、重要日子的赠礼、留待将来的纪念。若您有想找的年份，欢迎随时垂询。',
     gallery: '店内一景', galleryHead: '取自架上的数瓶。',
   },
   ko: {
@@ -185,6 +190,7 @@ export const MC: Record<Lang, Copy> = {
     newsMore: '소식 전체',
     soldout: '품절', yen: '',
     capRouget: '에마뉘엘 루제 / 에셰조 그랑 크뤼', capRoch: '주브레 샹베르탱과 본 로마네 / 막 들어온 줄', capGillet: '사비니 레 본 / 등불 아래',
+    capCheval: '샤토 슈발 블랑 1929 / 생테밀리옹', capOld: '저희 가게에서는 상태가 확실한 이러한 올드 빈티지도 취급하고 있습니다. 태어난 해의 한 병, 기념일 선물, 언젠가의 특별한 날을 위해. 찾으시는 연도가 있으시면 편히 말씀해 주세요.',
     gallery: '가게의 풍경', galleryHead: '선반에서 몇 병을.',
   },
 };
