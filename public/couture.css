@@ -216,3 +216,60 @@ html[data-mx="1"] #tw-leave-ov .tw-bye-t{
   }
   html[data-mx="1"] #tw-leave-ov .tw-bye-a{ font-size:12.5px !important; letter-spacing:.18em !important; padding:15px 32px !important; }
 }
+
+/* ── 二度目の仕上げ ───────────────────────────────────── */
+
+/* 天の帯は、下がるほど薄く小さく（本文を隠さないように） */
+@media (max-width:860px){
+  html[data-era="now"] .mx-head.is-stuck{ padding:10px 20px !important; }
+  html[data-era="now"] .mx-head.is-stuck .mx-brand{ font-size:15px !important; }
+  html[data-era="now"] .mx-head.is-stuck .mx-brand small{ display:none !important; }
+  html[data-era="now"] .mx-head.is-stuck .mx-burger{ transform:scale(.86); }
+}
+
+/* 時間旅行と言語は、そっと端に。触れたときだけはっきり出ます */
+@media (max-width:860px){
+  html[data-mx="1"] #timewarp.tw-closed{
+    width:auto !important; padding:0 !important; border-radius:999px !important;
+    background:rgba(9,7,10,.52) !important; border:1px solid rgba(201,173,130,.26) !important;
+    backdrop-filter:blur(12px) saturate(1.1); opacity:.62; transition:opacity .4s ease;
+  }
+  html[data-mx="1"] #timewarp.tw-closed:hover,
+  html[data-mx="1"] #timewarp.tw-closed:focus-within{ opacity:1; }
+  html[data-mx="1"] #timewarp.tw-closed .tw-t{
+    writing-mode:horizontal-tb !important; font-size:0 !important; letter-spacing:0 !important;
+    padding:0 !important; margin:0 !important; display:block !important; line-height:0 !important;
+  }
+  html[data-mx="1"] #timewarp.tw-closed .tw-t::first-letter{ font-size:15px !important; line-height:1 !important; }
+  html[data-mx="1"] #timewarp.tw-closed .tw-toggle{
+    width:38px !important; height:38px !important; padding:0 !important; font-size:15px !important;
+    line-height:38px !important; border:0 !important; background:transparent !important; color:rgba(243,240,234,.7) !important;
+  }
+  html[data-era="now"] #lang-bar.lb-quiet{ opacity:.62; transition:opacity .4s ease; }
+  html[data-era="now"] #lang-bar.lb-quiet:hover,
+  html[data-era="now"] #lang-bar.lb-quiet:focus-within{ opacity:1; }
+  html[data-era="now"] #lang-bar.lb-quiet button{ padding:6px 8px !important; font-size:9.5px !important; }
+}
+
+/* 章の見出しが帯に隠れないように、少しだけ余白を足します */
+@media (max-width:860px){
+  html[data-era="now"] .mx-sec{ padding:74px 0 !important; }
+  html[data-era="now"] .mx-sec .mx-h2:first-child,
+  html[data-era="now"] .mx-sec .mx-kicker:first-child{ scroll-margin-top:96px; }
+}
+
+/* 表紙の文字は、写真がどれでも読めるように */
+@media (max-width:860px){
+  html[data-era="now"] .mx-hero .mx-h1{ text-shadow:0 2px 30px rgba(0,0,0,.85), 0 0 90px rgba(0,0,0,.6); }
+  html[data-era="now"] .mx-hero .mx-kicker,
+  html[data-era="now"] .mx-hero-sub{ text-shadow:0 1px 18px rgba(0,0,0,.9); color:rgba(243,240,234,.82) !important; }
+  html[data-era="now"] .mx-scroll{ bottom:76px; }
+  html[data-era="now"] .mx-scroll span{ font-size:9px; letter-spacing:.26em; }
+}
+
+/* 一覧の横流しは、端に金の霞をかけて「続き」を示します */
+html[data-era="now"] .mx-rail{ position:relative; }
+@media (max-width:860px){
+  html[data-era="now"] .mx-rail{ padding-left:24px; padding-right:24px; }
+  html[data-era="now"] .mx-rail > *{ flex-basis:min(66vw,240px); }
+}
