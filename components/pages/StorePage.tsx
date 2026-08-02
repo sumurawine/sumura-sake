@@ -15,6 +15,8 @@ import {
   type Item, type ProductData, type I18nData,
 } from '@/lib/store';
 import { loadContent, type Row } from '@/lib/content';
+import Link from 'next/link';
+import { slugMap, winePath } from '@/lib/slug';
 
 /** 管理画面（スプレッドシート）で足した商品を、いつもの商品一覧に混ぜます */
 function extraItems(rows: Row[]): Item[] {
@@ -74,6 +76,7 @@ export function StorePage() {
   const [DATA, setDATA] = useState<ProductData | null>(null);
   const [I18N, setI18N] = useState<I18nData | null>(null);
   const [err, setErr] = useState(false);
+  const [SLUG, setSLUG] = useState<Record<string, string>>({});
 
   const [mode, setMode] = useState<Mode>('area');
   const [cat, setCat] = useState('all');
@@ -92,6 +95,8 @@ export function StorePage() {
       .then(([d, i, c]) => {
         const rows = (c && c.items) || [];
         const add = extraItems(rows);
+        // 一本ずつの品書きの住所は、もとの在庫だけから作ります（番号がずれないように）
+        setSLUG(slugMap(d.items || [], i));
         setDATA(add.length ? { ...d, items: [...add, ...d.items], count: d.items.length + add.length } : d);
         setI18N(add.length ? mergeI18n(i, rows, add) : i);
       })
@@ -252,6 +257,12 @@ export function StorePage() {
                         {out ? <><br /><span className="hint">{u('soldout', lang)}</span></> : null}
                         <br />
                         <button className="btn" style={{ marginTop: 5 }} onClick={() => setModal(it)}>{dec(u('detail', lang))}</button>
+                        {SLUG[it.id] ? (
+                          <><br />
+                            <Link className="hint" style={{ display: 'inline-block', marginTop: 4 }}
+                                  href={winePath(SLUG[it.id], lang)}>{u('page', lang)}</Link>
+                          </>
+                        ) : null}
                       </div>
                     </div>
                   );
