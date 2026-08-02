@@ -3,7 +3,7 @@ import type { Lang } from './i18n';
 /** 2020年代版だけで使う文言。5言語すべて用意しています。 */
 type Copy = {
   heroKicker: string; heroLead: string; scroll: string;
-  quote: string; quoteBy: string;
+  quote: string; quoteBy: string; quoteVs: string;
   ch1: string; ch1Head: string; ch1Cap: string;
   ch2: string; ch2Head: string; ch2Note: string; ch2More: string;
   factsHead: string; fItems: string; fAreas: string; fMakers: string;
@@ -24,6 +24,7 @@ export const MC: Record<Lang, Copy> = {
     scroll: 'SCROLL',
     quote: '一本のワインは、土地の歴史と、造り手の手仕事と、瓶の中で過ぎた歳月の結晶でございます。',
     quoteBy: '店主',
+    quoteVs: 'バーチャル店舗へ入店する',
     ch1: '01 ── 私どもについて',
     ch1Head: 'ワインを選ぶという、私どもの仕事。',
     ch1Cap: '山口県宇部市の当店',
@@ -59,6 +60,7 @@ export const MC: Record<Lang, Copy> = {
     scroll: 'SCROLL',
     quote: 'A bottle of wine is the crystallisation of a land’s history, a maker’s craft, and the years that passed inside the glass.',
     quoteBy: 'The owner',
+    quoteVs: 'Step into the virtual shop',
     ch1: '01 ── About us',
     ch1Head: 'Choosing the bottle is the work.',
     ch1Cap: 'Our shop in Ube, Yamaguchi',
@@ -94,6 +96,7 @@ export const MC: Record<Lang, Copy> = {
     scroll: 'SCROLL',
     quote: 'Une bouteille de vin est la cristallisation de l’histoire d’une terre, du savoir-faire d’un vigneron et des années passées dans le verre.',
     quoteBy: 'Le propriétaire',
+    quoteVs: 'Entrer dans la boutique virtuelle',
     ch1: '01 ── À notre sujet',
     ch1Head: 'Choisir la bouteille, voilà notre métier.',
     ch1Cap: 'Notre boutique à Ube, Yamaguchi',
@@ -129,6 +132,7 @@ export const MC: Record<Lang, Copy> = {
     scroll: 'SCROLL',
     quote: '一瓶葡萄酒，是土地的历史、酿造者的手艺与瓶中岁月的结晶。',
     quoteBy: '店主',
+    quoteVs: '进入虚拟店铺',
     ch1: '01 ── 关于本店',
     ch1Head: '选酒，即是本店的本职。',
     ch1Cap: '位于山口县宇部市的店铺',
@@ -164,6 +168,7 @@ export const MC: Record<Lang, Copy> = {
     scroll: 'SCROLL',
     quote: '한 병의 와인은 땅의 역사와 만드는 이의 손길, 그리고 병 속에서 흐른 세월의 결정입니다.',
     quoteBy: '점주',
+    quoteVs: '버추얼 매장에 입장하기',
     ch1: '01 ── 저희에 대하여',
     ch1Head: '와인을 고르는 일, 그것이 저희의 일입니다.',
     ch1Cap: '야마구치현 우베시의 점포',
