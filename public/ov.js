@@ -155,7 +155,13 @@
   loadCache();
 
   /* 中身が置かれるそばから当てます。画面に出る前に済ませます */
-  var mo = new MutationObserver(function () { if (!working) { apply(); } });
+  /* はじめの数秒は即座に当てます（描かれる前に直すため）。
+     その後は少し待ってからにして、画面を重くしません */
+  var t0 = Date.now();
+  var mo = new MutationObserver(function () {
+    if (working) return;
+    if (Date.now() - t0 < 4000) apply(); else soon();
+  });
   function start() {
     if (!document.body) { requestAnimationFrame(start); return; }
     apply();
