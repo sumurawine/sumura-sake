@@ -7,7 +7,6 @@ import { PROD_NAV } from '@/lib/producersNav';
 import { MODERN } from '@/lib/decor';
 import { LEGAL_TITLE } from '@/lib/modernCopy';
 import { useSite } from '@/components/Providers';
-import { VisitCounter } from '@/components/VisitCounter';
 import { LeaveOverlay, leaveLabel } from '@/components/LeaveOverlay';
 import { asset } from '@/lib/paths';
 import { Atmosphere, useStuck } from './Motion';
@@ -16,7 +15,12 @@ import { CATS, ORDER } from '@/lib/store';
 import { EXTRA } from '@/lib/producers';
 import { useEffect, useState } from 'react';
 
+const VIRTUAL: Record<string, string> = {
+  jp: 'バーチャル店舗へ', en: 'Virtual shop', fr: 'Boutique virtuelle', zh: '虚拟店铺', ko: '가상 매장',
+};
+
 const NAV: Array<[string, string]> = [
+  ['/virtual', 'nav:virtual'],
   ['/store', 'nav:store'],
   ['/producers', 'nav:producers'],
   ['/about', 'nav:about'],
@@ -48,6 +52,7 @@ export function MShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   const label = (k: string) =>
+    k === 'nav:virtual' ? (VIRTUAL[lang] || VIRTUAL.jp) :
     k === 'nav:secret' ? MODERN[lang].priv : k === 'nav:legal' ? LEGAL_TITLE[lang]
     : k === 'nav:producers' ? PROD_NAV[lang] : tr(lang, k);
   const on = (href: string) => path === href || path === href + '/';
@@ -113,9 +118,7 @@ export function MShell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="mx-foot-end">
             <span>© 2026 SUMURA</span>
-            <span style={{ display: 'inline-flex', gap: 8, alignItems: 'center' }}>
-              {tr(lang, 'tk-vis-pre')} <VisitCounter /> {tr(lang, 'tk-vis-post')}
-            </span>
+
           </div>
         </div>
       </footer>
