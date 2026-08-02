@@ -8,4 +8,4 @@ Disallow: /room-primeur
 Disallow: /room-game
 Disallow: /thanks
 
-Sitemap: https://sumurawine.github.io/sumura-sake/sitemap.xml
+Sitemap: https://sumura-sake.jp/sitemap.xml
