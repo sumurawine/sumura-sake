@@ -747,3 +747,11 @@ a.vs-back:hover, .vs-back:hover{ color:#f3f0ea !important; }
   border:1px solid rgba(201,173,130,.5); border-radius:26px; padding:14px 22px; cursor:pointer;
 }
 .vs-take:active{ background:rgba(201,173,130,.5); }
+
+/* 申し込み欄の項目名を、はっきりと */
+.vs-panel label, .vs-form label{
+  color:#f3f0ea !important; font-size:13px !important; letter-spacing:.08em !important;
+  opacity:1 !important; margin:18px 0 8px !important;
+}
+.vs-nl, .vs-nl span{ color:#f3f0ea !important; font-size:13px !important; opacity:1 !important; }
+.vs-panel input::placeholder, .vs-panel textarea::placeholder{ color:rgba(243,240,234,.42); }
