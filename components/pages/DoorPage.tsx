@@ -53,6 +53,8 @@ function creak() {
 
 const DOOR_SHOTS = [
   '/images/shop-sign.webp',
+  '/images/photos/cheval-blanc-1929.jpg',
+  '/images/photos/shelf-row.jpg',
   '/images/photos/gillet.jpg',
   '/images/showa30.webp',
   '/images/photos/rouget.jpg',
