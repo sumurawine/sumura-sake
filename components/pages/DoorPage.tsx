@@ -6,6 +6,7 @@ import { asset } from '@/lib/paths';
 import { useSite } from '@/components/Providers';
 import { T } from '@/components/T';
 import { MODERN } from '@/lib/decor';
+import { AgeGate, ageVerified } from '@/components/AgeGate';
 import { isModern } from '@/lib/era';
 import type { Lang } from '@/lib/i18n';
 
@@ -76,8 +77,13 @@ export function DoorPage() {
   const [txtKey, setTxtKey] = useState(0);
   const busy = useRef(false);
 
+  /* 満20歳以上であることを確かめてから、扉が開きます */
+  const [aged, setAged] = useState(true);
+  useEffect(() => { setAged(ageVerified()); }, []);
+
   const open = useCallback((e?: React.MouseEvent) => {
     if (e) e.preventDefault();
+    if (!ageVerified()) { setAged(false); document.querySelector('.age-gate')?.scrollIntoView({ block: 'center' }); return; }
     if (busy.current) return;
     busy.current = true;
     const w = KN[lang] || KN.jp;
@@ -148,10 +154,16 @@ export function DoorPage() {
         <div className="me-en">Liquor Shop Sumura</div>
         <div className="me-rule" />
         <div className="me-sub">{modern ? MODERN[lang].sub : '山口・宇部　フランス銘醸ワインの店'}</div>
-        <a className="me-btn" href="#" onClick={(e) => { e.preventDefault(); router.push('/home'); }}>
+        <a className="me-btn" href="#" onClick={(e) => {
+          e.preventDefault();
+          if (!ageVerified()) { setAged(false); document.querySelector('.age-gate')?.scrollIntoView({ block: 'center' }); return; }
+          router.push('/home');
+        }}>
           {modern ? MODERN[lang].enter : '入店する'}
         </a>
       </div>
+
+      {!aged ? <AgeGate lang={lang} onPass={() => setAged(true)} /> : null}
 
       <T k="index-age" as="div" id="age-note" />
 
