@@ -73,7 +73,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   scene.fog = new THREE.FogExp2(0x0d0a09, 0.030);
 
   const camera = new THREE.PerspectiveCamera(62, 1, 0.05, 60);
-  camera.position.set(0, 1.62, D / 2 - 1.1);
+  camera.position.set(0, 1.62, D / 2 - 1.35);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -181,8 +181,8 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     rack(W / 2 - 0.3, -1.6, 5.4, -Math.PI / 2),
     rack(-2.6, -D / 2 + 0.3, 4.4, 0),
     rack(2.6, -D / 2 + 0.3, 4.4, 0),
-    rack(-2.2, 1.2, 4.0, Math.PI),
-    rack(2.2, 1.2, 4.0, Math.PI),
+    rack(-3.9, 1.6, 3.0, Math.PI / 2),
+    rack(3.9, 1.6, 3.0, -Math.PI / 2),
   ];
 
   /* 瓶 ---------------------------------------------------------- */
@@ -230,7 +230,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   const list = o.bottles.slice();
   let bi = 0;
   racks.forEach((g, ri) => {
-    const w = [5.4, 5.4, 4.4, 4.4, 4.0, 4.0][ri];
+    const w = [5.4, 5.4, 4.4, 4.4, 3.0, 3.0][ri];
     for (let s = 0; s < 5; s++) {
       const y = 0.325 + s * 0.42;
       const n = Math.floor(w / 0.115);
