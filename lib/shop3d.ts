@@ -2,6 +2,7 @@
 
 /**
  * バーチャル店舗の三次元の間取り。
+ * 二〇〇〇年代初頭の家庭用ゲーム機ふうの、粗い画づくりでこしらえてあります。
  * three.js は網の上から借りてきて使いますので、荷物は増えません。
  */
 
@@ -13,6 +14,7 @@ export type ShopHandle = {
   dispose: () => void;
   pause: (v: boolean) => void;
   lock: () => void;
+  sound: (v: boolean) => void;
 };
 
 export type ShopOpts = {
@@ -24,20 +26,97 @@ export type ShopOpts = {
   onReady: () => void;
 };
 
-/** 木や漆喰の肌合いを、その場で描いて作ります */
-function grain(base: string, line: string, n = 90): HTMLCanvasElement {
+/* ── 音 ─────────────────────────────────────────────
+   足音も扉の軋みも、その場でこしらえます。音の荷物は持ちません。 */
+function makeAudio() {
+  let ctx: any = null;
+  let bus: any = null;
+  let noise: any = null;
+  let room: any = null;
+  let on = true;
+  let foot = 0;
+
+  const start = () => {
+    if (ctx || typeof window === 'undefined') return;
+    const AC = (window as any).AudioContext || (window as any).webkitAudioContext;
+    if (!AC) return;
+    ctx = new AC();
+    bus = ctx.createGain();
+    bus.gain.value = on ? 0.9 : 0;
+    bus.connect(ctx.destination);
+
+    const n = ctx.createBuffer(1, ctx.sampleRate * 1.2, ctx.sampleRate);
+    const d = n.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    noise = n;
+
+    /* 店内のしずかな空気 */
+    const src = ctx.createBufferSource();
+    src.buffer = n; src.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 240;
+    const g = ctx.createGain(); g.gain.value = 0.05;
+    src.connect(lp); lp.connect(g); g.connect(bus); src.start();
+    room = g;
+  };
+
+  const burst = (freq: number, q: number, vol: number, len: number, type = 'bandpass') => {
+    if (!ctx || !noise) return;
+    const s = ctx.createBufferSource();
+    s.buffer = noise;
+    s.playbackRate.value = 0.8 + Math.random() * 0.4;
+    const f = ctx.createBiquadFilter();
+    f.type = type as any; f.frequency.value = freq; f.Q.value = q;
+    const g = ctx.createGain();
+    const t = ctx.currentTime;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+    s.connect(f); f.connect(g); g.connect(bus);
+    s.start(t); s.stop(t + len + 0.02);
+  };
+
+  const tone = (f0: number, f1: number, vol: number, len: number, type = 'triangle') => {
+    if (!ctx) return;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    const t = ctx.currentTime;
+    o.type = type as any;
+    o.frequency.setValueAtTime(f0, t);
+    o.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t + len);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+    o.connect(g); g.connect(bus);
+    o.start(t); o.stop(t + len + 0.02);
+  };
+
+  return {
+    start,
+    set(v: boolean) { on = v; if (bus) bus.gain.value = v ? 0.9 : 0; if (v) start(); },
+    /* 板張りの床を踏む音。左右で音色を変えます */
+    step(run: boolean) {
+      foot ^= 1;
+      burst(foot ? 640 : 480, 1.1, run ? 0.30 : 0.20, run ? 0.10 : 0.13);
+      burst(foot ? 150 : 128, 2.2, run ? 0.22 : 0.15, 0.09);
+    },
+    creak() { tone(180, 96, 0.05, 0.55, 'sawtooth'); burst(900, 0.8, 0.05, 0.5); },
+    chime() { tone(1180, 1180, 0.06, 0.16); setTimeout(() => tone(1580, 1580, 0.05, 0.30), 110); },
+    clink() { tone(2400, 1900, 0.035, 0.09); },
+    close() { try { ctx?.close(); } catch { /* しずかに */ } ctx = null; room = null; },
+  };
+}
+
+/** 粗い肌合いを、その場で描いて作ります */
+function grain(base: string, line: string, n = 40): HTMLCanvasElement {
   const c = document.createElement('canvas');
-  c.width = c.height = 256;
+  c.width = c.height = 64;
   const g = c.getContext('2d')!;
-  g.fillStyle = base; g.fillRect(0, 0, 256, 256);
-  g.strokeStyle = line; g.lineWidth = 1;
+  g.fillStyle = base; g.fillRect(0, 0, 64, 64);
+  g.fillStyle = line;
   for (let i = 0; i < n; i++) {
-    g.globalAlpha = 0.04 + Math.random() * 0.10;
-    g.beginPath();
-    const y = Math.random() * 256;
-    g.moveTo(0, y);
-    g.bezierCurveTo(80, y + (Math.random() * 8 - 4), 170, y + (Math.random() * 8 - 4), 256, y);
-    g.stroke();
+    g.globalAlpha = 0.10 + Math.random() * 0.22;
+    g.fillRect((Math.random() * 64) | 0, (Math.random() * 64) | 0, 1 + ((Math.random() * 3) | 0), 1);
   }
   g.globalAlpha = 1;
   return c;
@@ -46,67 +125,65 @@ function grain(base: string, line: string, n = 90): HTMLCanvasElement {
 /** 瓶の肩に貼る、紙のラベル */
 function labelTex(name: string, prod: string): HTMLCanvasElement {
   const c = document.createElement('canvas');
-  c.width = 256; c.height = 160;
+  c.width = 128; c.height = 80;
   const g = c.getContext('2d')!;
-  g.fillStyle = '#efe9dc'; g.fillRect(0, 0, 256, 160);
-  g.strokeStyle = 'rgba(120,90,60,.55)'; g.lineWidth = 2;
-  g.strokeRect(9, 9, 238, 142);
+  g.fillStyle = '#e9e2d2'; g.fillRect(0, 0, 128, 80);
+  g.strokeStyle = 'rgba(110,80,52,.6)'; g.lineWidth = 2;
+  g.strokeRect(5, 5, 118, 70);
   g.fillStyle = '#3a2a1c';
   g.textAlign = 'center';
-  g.font = '600 15px "Shippori Mincho","Hiragino Mincho ProN",serif';
-  const words = String(prod || '').slice(0, 22);
-  g.fillText(words, 128, 44);
-  g.font = '13px "Shippori Mincho","Hiragino Mincho ProN",serif';
-  const t = String(name || '').replace(/\s*\/.*$/, '').slice(0, 46);
+  g.font = '600 11px "Shippori Mincho","Hiragino Mincho ProN",serif';
+  g.fillText(String(prod || '').slice(0, 16), 64, 26);
+  g.font = '9px "Shippori Mincho","Hiragino Mincho ProN",serif';
+  const t = String(name || '').replace(/\s*\/.*$/, '').slice(0, 34);
   const lines: string[] = [];
-  for (let i = 0; i < t.length; i += 15) lines.push(t.slice(i, i + 15));
-  lines.slice(0, 4).forEach((l, i) => g.fillText(l, 128, 78 + i * 19));
+  for (let i = 0; i < t.length; i += 13) lines.push(t.slice(i, i + 13));
+  lines.slice(0, 3).forEach((l, i) => g.fillText(l, 64, 44 + i * 12));
   return c;
 }
 
 export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   const THREE: any = await (new Function('u', 'return import(u)'))(THREE_URL);
+  const au = makeAudio();
 
   const W = 13, D = 9, H = 3.2;          // 店内の幅・奥行・高さ
+  const SKY = 0x120c0a;
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0d0a09);
-  scene.fog = new THREE.FogExp2(0x0d0a09, 0.030);
+  scene.background = new THREE.Color(SKY);
+  scene.fog = new THREE.FogExp2(SKY, 0.052);
 
-  const camera = new THREE.PerspectiveCamera(62, 1, 0.05, 60);
-  camera.position.set(0, 1.62, D / 2 - 1.35);
+  const camera = new THREE.PerspectiveCamera(66, 1, 0.05, 60);
+  camera.position.set(0, 1.62, D / 2 - 2.9);   // 扉からは、すこし離れた辺りから
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.24;
+  const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(0.62);                 // わざと粗く。あの頃の画の粒
+  renderer.shadowMap.enabled = false;
+  renderer.toneMapping = THREE.NoToneMapping;
   o.mount.appendChild(renderer.domElement);
+  renderer.domElement.style.imageRendering = 'pixelated';
 
   const tex = (c: HTMLCanvasElement, rx: number, ry: number) => {
     const t = new THREE.CanvasTexture(c);
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.repeat.set(rx, ry);
-    t.anisotropy = 8;
+    t.magFilter = THREE.NearestFilter;
+    t.minFilter = THREE.NearestMipmapNearestFilter;
     return t;
   };
+  const lam = (p: any) => new THREE.MeshLambertMaterial(p);
 
   /* 床・壁・天井 ------------------------------------------------ */
-  const floorMat = new THREE.MeshStandardMaterial({
-    map: tex(grain('#3a2a1d', '#241709', 130), 8, 6), roughness: 0.62, metalness: 0.04,
-  });
+  const floorMat = lam({ map: tex(grain('#4a3524', '#2a1b0e', 60), 10, 7) });
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), floorMat);
-  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true;
+  floor.rotation.x = -Math.PI / 2;
   scene.add(floor);
 
-  const wallMat = new THREE.MeshStandardMaterial({
-    map: tex(grain('#3a2b23', '#241a15', 60), 4, 2), roughness: 0.95, metalness: 0,
-  });
-  const ceilMat = new THREE.MeshStandardMaterial({ color: 0x1b1310, roughness: 1 });
+  const wallMat = lam({ map: tex(grain('#4b3a2f', '#31241c', 30), 6, 2) });
+  const ceilMat = lam({ color: 0x241a14 });
 
   const wall = (w: number, h: number, x: number, y: number, z: number, ry: number) => {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), wallMat);
-    m.position.set(x, y, z); m.rotation.y = ry; m.receiveShadow = true; scene.add(m); return m;
+    m.position.set(x, y, z); m.rotation.y = ry; scene.add(m); return m;
   };
   wall(W, H, 0, H / 2, -D / 2, 0);
   wall(W, H, 0, H / 2, D / 2, Math.PI);
@@ -117,40 +194,31 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
 
   /* 扉（入口） -------------------------------------------------- */
   const doorGroup = new THREE.Group();
-  const doorMat = new THREE.MeshStandardMaterial({ color: 0x2a1a12, roughness: 0.5, metalness: 0.12 });
+  const doorMat = lam({ color: 0x3a2417 });
   const door = new THREE.Mesh(new THREE.BoxGeometry(1.15, 2.25, 0.07), doorMat);
   door.position.set(0.575, 1.125, 0);
   doorGroup.add(door);
-  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.045, 16, 12),
-    new THREE.MeshStandardMaterial({ color: 0xc9ad82, roughness: 0.25, metalness: 0.9 }));
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.05, 6, 4), lam({ color: 0xd8bd8e }));
   knob.position.set(1.04, 1.1, 0.06); doorGroup.add(knob);
   doorGroup.position.set(-0.575, 0, D / 2 - 0.06);
   scene.add(doorGroup);
 
-  /* 灯り -------------------------------------------------------- */
-  scene.add(new THREE.AmbientLight(0xffe6c8, 0.62));
-  scene.add(new THREE.HemisphereLight(0xffd9a8, 0x241a15, 0.55));
-  const spots: any[] = [];
-  const spot = (x: number, z: number, inten: number, cast: boolean) => {
-    const s = new THREE.SpotLight(0xffd9a2, inten, 11, Math.PI / 5.2, 0.55, 1.4);
-    s.position.set(x, H - 0.12, z);
-    s.target.position.set(x, 0, z);
-    if (cast) { s.castShadow = true; s.shadow.mapSize.set(1024, 1024); s.shadow.bias = -0.0012; }
-    scene.add(s); scene.add(s.target); spots.push(s);
-    const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 10),
-      new THREE.MeshBasicMaterial({ color: 0xffe3b8 }));
-    bulb.position.copy(s.position); scene.add(bulb);
+  /* 灯り（影は落としません。あの頃の作法で） -------------------- */
+  scene.add(new THREE.AmbientLight(0xffe0be, 1.05));
+  scene.add(new THREE.HemisphereLight(0xffd6a4, 0x2b1f18, 0.7));
+  const lampMat = new THREE.MeshBasicMaterial({ color: 0xffe6bc });
+  const lamp = (x: number, z: number, inten: number, dist: number) => {
+    const p = new THREE.PointLight(0xffd2a0, inten, dist, 1.6);
+    p.position.set(x, H - 0.34, z); scene.add(p);
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.07, 6, 4), lampMat);
+    bulb.position.copy(p.position); scene.add(bulb);
   };
-  spot(-4.2, -2.4, 24, true); spot(0, -2.4, 24, true); spot(4.2, -2.4, 24, true);
-  spot(-4.2, 1.6, 20, false); spot(4.2, 1.6, 20, false);
-  spot(0, 2.6, 16, false);
-  const warm = new THREE.PointLight(0xffb066, 14, 8, 1.5);
-  warm.position.set(0, 1.9, -2.0); scene.add(warm);
+  lamp(-4.2, -2.4, 5.2, 8); lamp(0, -2.4, 5.2, 8); lamp(4.2, -2.4, 5.2, 8);
+  lamp(-4.2, 1.6, 4.4, 7); lamp(4.2, 1.6, 4.4, 7);
+  lamp(0, 2.6, 3.6, 7);
 
   /* 棚 ---------------------------------------------------------- */
-  const woodMat = new THREE.MeshStandardMaterial({
-    map: tex(grain('#2c1f16', '#171009', 80), 2, 1), roughness: 0.68, metalness: 0.05,
-  });
+  const woodMat = lam({ map: tex(grain('#3b2a1c', '#1f1409', 34), 3, 1) });
   const shelves: any[] = [];
   const boxes: Array<{ x: number; z: number; w: number; d: number }> = [];
 
@@ -159,14 +227,14 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     const depth = 0.42, hh = 2.05;
     const side = (sx: number) => {
       const m = new THREE.Mesh(new THREE.BoxGeometry(0.05, hh, depth), woodMat);
-      m.position.set(sx, hh / 2, 0); m.castShadow = true; g.add(m);
+      m.position.set(sx, hh / 2, 0); g.add(m);
     };
     side(-w / 2); side(w / 2);
     const back = new THREE.Mesh(new THREE.BoxGeometry(w, hh, 0.04), woodMat);
     back.position.set(0, hh / 2, -depth / 2); g.add(back);
     for (let i = 0; i < 5; i++) {
       const b = new THREE.Mesh(new THREE.BoxGeometry(w, 0.045, depth), woodMat);
-      b.position.set(0, 0.30 + i * 0.42, 0); b.castShadow = true; b.receiveShadow = true; g.add(b);
+      b.position.set(0, 0.30 + i * 0.42, 0); g.add(b);
     }
     g.position.set(x, 0, z); g.rotation.y = rotY;
     scene.add(g); shelves.push(g);
@@ -185,24 +253,17 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     rack(3.9, 1.6, 3.0, -Math.PI / 2),
   ];
 
-  /* 瓶 ---------------------------------------------------------- */
+  /* 瓶（面の数はうんと控えめに） -------------------------------- */
   const bottleGeo = new THREE.LatheGeometry(
     [
-      new THREE.Vector2(0.000, 0.00), new THREE.Vector2(0.038, 0.00), new THREE.Vector2(0.039, 0.02),
-      new THREE.Vector2(0.039, 0.135), new THREE.Vector2(0.036, 0.155), new THREE.Vector2(0.019, 0.185),
-      new THREE.Vector2(0.0135, 0.21), new THREE.Vector2(0.0135, 0.275), new THREE.Vector2(0.017, 0.285),
-      new THREE.Vector2(0.017, 0.30),
-    ], 18
+      new THREE.Vector2(0.000, 0.00), new THREE.Vector2(0.038, 0.00),
+      new THREE.Vector2(0.039, 0.135), new THREE.Vector2(0.019, 0.185),
+      new THREE.Vector2(0.0135, 0.21), new THREE.Vector2(0.0135, 0.30),
+    ], 7
   );
-  const glassA = new THREE.MeshPhysicalMaterial({
-    color: 0x1a2a16, roughness: 0.18, metalness: 0.0, transmission: 0.35,
-    thickness: 0.5, clearcoat: 0.6, clearcoatRoughness: 0.2,
-  });
-  const glassB = new THREE.MeshPhysicalMaterial({
-    color: 0x3a1418, roughness: 0.2, metalness: 0.0, transmission: 0.30,
-    thickness: 0.5, clearcoat: 0.6, clearcoatRoughness: 0.22,
-  });
-  const capMat = new THREE.MeshStandardMaterial({ color: 0x7a1226, roughness: 0.45, metalness: 0.35 });
+  const glassA = lam({ color: 0x203a1c });
+  const glassB = lam({ color: 0x4a181c });
+  const capMat = lam({ color: 0x7a1226 });
 
   const pick: any[] = [];      // 触れる瓶
   const labelGeo = new THREE.PlaneGeometry(0.062, 0.04);
@@ -210,13 +271,13 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   function putBottle(parent: any, x: number, y: number, z: number, b?: Bottle) {
     const g = new THREE.Group();
     const body = new THREE.Mesh(bottleGeo, Math.random() > 0.45 ? glassA : glassB);
-    body.castShadow = true;
     g.add(body);
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.035, 12), capMat);
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.035, 7), capMat);
     cap.position.y = 0.295; g.add(cap);
     if (b) {
-      const m = new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(labelTex(b.name, b.prod)), toneMapped: false });
-      const lab = new THREE.Mesh(labelGeo, m);
+      const t = new THREE.CanvasTexture(labelTex(b.name, b.prod));
+      t.magFilter = THREE.NearestFilter;
+      const lab = new THREE.Mesh(labelGeo, new THREE.MeshBasicMaterial({ map: t }));
       lab.position.set(0, 0.088, 0.0395);
       g.add(lab);
       g.userData.bottle = b;
@@ -245,38 +306,63 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   /* 帳場と店員 -------------------------------------------------- */
   const counter = new THREE.Group();
   const top = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.09, 0.72), woodMat);
-  top.position.y = 1.02; top.castShadow = true; top.receiveShadow = true; counter.add(top);
-  const front = new THREE.Mesh(new THREE.BoxGeometry(3.0, 1.0, 0.6),
-    new THREE.MeshStandardMaterial({ color: 0x1e150f, roughness: 0.8 }));
+  top.position.y = 1.02; counter.add(top);
+  const front = new THREE.Mesh(new THREE.BoxGeometry(3.0, 1.0, 0.6), lam({ color: 0x2b1e15 }));
   front.position.y = 0.5; counter.add(front);
   counter.position.set(0, 0, -2.6);
   scene.add(counter);
   boxes.push({ x: 0, z: -2.6, w: 3.0, d: 0.72 });
 
+  /* 燕尾の黒服に、七三分けの店員 */
   const clerk = new THREE.Group();
-  const skin = new THREE.MeshStandardMaterial({ color: 0xe6c6a8, roughness: 0.8 });
-  const cloth = new THREE.MeshStandardMaterial({ color: 0x241a15, roughness: 0.9 });
-  const apron = new THREE.MeshStandardMaterial({ color: 0x6f4a34, roughness: 0.85 });
-  const legs = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.22, 0.86, 14), cloth);
-  legs.position.y = 0.43; legs.castShadow = true; clerk.add(legs);
-  const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.235, 0.20, 0.66, 16), cloth);
-  torso.position.y = 1.18; torso.castShadow = true; clerk.add(torso);
-  const ap = new THREE.Mesh(new THREE.BoxGeometry(0.40, 0.86, 0.05), apron);
-  ap.position.set(0, 1.02, 0.20); clerk.add(ap);
-  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.10, 10), skin);
-  neck.position.y = 1.55; clerk.add(neck);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.135, 20, 16), skin);
-  head.position.y = 1.70; head.castShadow = true; clerk.add(head);
-  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.142, 20, 16, 0, Math.PI * 2, 0, Math.PI * 0.62),
-    new THREE.MeshStandardMaterial({ color: 0x14100e, roughness: 0.95 }));
-  hair.position.y = 1.715; clerk.add(hair);
+  const skin = lam({ color: 0xdcb493 });
+  const black = lam({ color: 0x14100f });
+  const white = lam({ color: 0xf0ece2 });
+  const hairM = lam({ color: 0x1a120c });
+  const box = (w: number, h: number, d: number, m: any, x: number, y: number, z: number, ry = 0) => {
+    const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
+    b.position.set(x, y, z); b.rotation.y = ry; clerk.add(b); return b;
+  };
+  /* 靴と黒の細身の脚 */
+  box(0.15, 0.07, 0.28, black, -0.10, 0.035, 0.03);
+  box(0.15, 0.07, 0.28, black, 0.10, 0.035, 0.03);
+  box(0.16, 0.80, 0.19, black, -0.10, 0.47, 0);
+  box(0.16, 0.80, 0.19, black, 0.10, 0.47, 0);
+  /* 上衣 */
+  const jacket = box(0.46, 0.62, 0.27, black, 0, 1.16, 0);
+  /* 白いシャツの胸元と、蝶ネクタイ */
+  box(0.17, 0.44, 0.02, white, 0, 1.22, 0.136);
+  box(0.055, 0.055, 0.03, black, 0, 1.16, 0.148);   // 前ボタン
+  box(0.115, 0.05, 0.035, black, 0, 1.425, 0.142);  // 蝶ネクタイ
+  /* 襟（拝絹の折り返し） */
+  box(0.10, 0.34, 0.02, black, -0.11, 1.30, 0.142, 0.16);
+  box(0.10, 0.34, 0.02, black, 0.11, 1.30, 0.142, -0.16);
+  /* 胸の白い飾り布 */
+  box(0.06, 0.025, 0.02, white, -0.155, 1.34, 0.139);
+  /* 腕と手 */
+  box(0.115, 0.56, 0.16, black, -0.285, 1.17, 0.01);
+  box(0.115, 0.56, 0.16, black, 0.285, 1.17, 0.01);
+  box(0.10, 0.10, 0.13, skin, -0.285, 0.845, 0.01);
+  box(0.10, 0.10, 0.13, skin, 0.285, 0.845, 0.01);
+  /* 首と、角ばった顔 */
+  box(0.11, 0.09, 0.11, skin, 0, 1.50, 0);
+  const head = box(0.215, 0.255, 0.205, skin, 0, 1.665, 0);
+  box(0.032, 0.022, 0.02, black, -0.055, 1.705, 0.105);  // 眼
+  box(0.032, 0.022, 0.02, black, 0.055, 1.705, 0.105);
+  box(0.075, 0.018, 0.02, hairM, 0, 1.756, 0.104);       // 眉
+  /* 七三分け。左三分、右七分、その間に分け目 */
+  box(0.148, 0.075, 0.215, hairM, 0.036, 1.812, -0.004); // 七の側（すこし高く）
+  box(0.058, 0.062, 0.212, hairM, -0.078, 1.806, -0.004); // 三の側
+  box(0.215, 0.055, 0.075, hairM, 0, 1.775, -0.077);     // 後ろ髪
+  box(0.14, 0.045, 0.03, hairM, 0.038, 1.775, 0.093);    // 前髪の流れ
+  box(0.055, 0.032, 0.03, hairM, -0.078, 1.772, 0.093);
   clerk.position.set(0, 0, -3.45);
   clerk.userData.clerk = true;
   scene.add(clerk);
   pick.push(clerk);
   boxes.push({ x: 0, z: -3.45, w: 0.6, d: 0.6 });
 
-  const halo = new THREE.PointLight(0xffcf9a, 5.2, 3.6, 2);
+  const halo = new THREE.PointLight(0xffcf9a, 3.4, 3.6, 1.6);
   halo.position.set(0, 1.75, -3.0); scene.add(halo);
 
   /* 見回しと歩き ------------------------------------------------ */
@@ -287,11 +373,12 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
 
   const onKey = (e: KeyboardEvent, v: boolean) => {
     const k = e.key.toLowerCase();
+    if (v) au.start();
     if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'shift'].includes(k)) {
       keys[k] = v;
       if (v && !paused) e.preventDefault();
     }
-    if (v && (k === 'e' || k === ' ') && look.kind && !paused) o.onUse(look.kind, look.id);
+    if (v && (k === 'e' || k === ' ') && look.kind && !paused) { au.clink(); o.onUse(look.kind, look.id); }
   };
   const kd = (e: KeyboardEvent) => onKey(e, true);
   const ku = (e: KeyboardEvent) => onKey(e, false);
@@ -308,9 +395,10 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   document.addEventListener('pointerlockchange', onLockChange);
 
   const clickCanvas = () => {
+    au.start();
     if (paused) return;
     if (!locked) { el.requestPointerLock?.(); return; }
-    if (look.kind) o.onUse(look.kind, look.id);
+    if (look.kind) { au.clink(); o.onUse(look.kind, look.id); }
   };
   el.addEventListener('click', clickCanvas);
 
@@ -318,6 +406,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   const touch: Record<number, { x: number; y: number; move: boolean }> = {};
   let mv = { x: 0, y: 0 };
   const ts = (e: TouchEvent) => {
+    au.start();
     for (const t of Array.from(e.changedTouches)) {
       touch[t.identifier] = { x: t.clientX, y: t.clientY, move: t.clientX < innerWidth / 2 };
     }
@@ -363,6 +452,9 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   let lookT = 0;
 
   let doorOpen = 0, doorFired = false, alive = true;
+  let armed = false;           // 一度おくへ進むまで、扉は退店になりません
+  let walked = 0;              // 足音の歩幅かせぎ
+  let bob = 0;
   const clock = new THREE.Clock();
 
   function resize() {
@@ -387,21 +479,33 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
       if (keys['a'] || keys['arrowleft']) side -= 1;
       if (keys['d'] || keys['arrowright']) side += 1;
       fwd -= mv.y; side += mv.x;
-      const sp = (keys['shift'] ? 3.0 : 1.85) * dt;
+      const run = !!keys['shift'];
+      const sp = (run ? 3.0 : 1.85) * dt;
       if (fwd || side) {
         const len = Math.hypot(fwd, side) || 1;
         const dx = (Math.sin(yaw) * -fwd + Math.cos(yaw) * side) / len * sp;
         const dz = (Math.cos(yaw) * -fwd - Math.sin(yaw) * side) / len * sp;
-        const [nx, nz] = slide(camera.position.x + dx, camera.position.z + dz, camera.position.x, camera.position.z);
+        const px = camera.position.x, pz = camera.position.z;
+        const [nx, nz] = slide(px + dx, pz + dz, px, pz);
         camera.position.x = nx; camera.position.z = nz;
-        camera.position.y = 1.62 + Math.sin(performance.now() * 0.008) * 0.012;
+        const gone = Math.hypot(nx - px, nz - pz);
+        walked += gone;
+        bob += gone * 4.6;
+        camera.position.y = 1.62 + Math.sin(bob) * 0.022;
+        if (walked > (run ? 0.78 : 0.62)) { walked = 0; au.step(run); }
+      } else if (walked) {
+        walked = 0;
+        camera.position.y += (1.62 - camera.position.y) * Math.min(1, dt * 8);
       }
 
       /* 扉のそば */
-      const nearDoor = camera.position.z > D / 2 - 1.9 && Math.abs(camera.position.x) < 1.2;
+      if (camera.position.z < D / 2 - 2.25) armed = true;
+      const nearDoor = armed && camera.position.z > D / 2 - 1.55 && Math.abs(camera.position.x) < 1.15;
+      const was = doorOpen;
       doorOpen += ((nearDoor ? 1 : 0) - doorOpen) * Math.min(1, dt * 3.4);
       doorGroup.rotation.y = -doorOpen * 1.15;
-      if (nearDoor && doorOpen > 0.75 && !doorFired && !first) { doorFired = true; o.onDoor(); }
+      if (was < 0.06 && doorOpen >= 0.06) au.creak();
+      if (nearDoor && doorOpen > 0.75 && !doorFired) { doorFired = true; o.onDoor(); }
       if (!nearDoor) doorFired = false;
 
       /* 見ているもの */
@@ -423,7 +527,8 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
       /* 店員はこちらを向きます */
       const dx2 = camera.position.x - clerk.position.x, dz2 = camera.position.z - clerk.position.z;
       clerk.rotation.y += (Math.atan2(dx2, dz2) - clerk.rotation.y) * Math.min(1, dt * 2.2);
-      head.position.y = 1.70 + Math.sin(performance.now() * 0.0016) * 0.006;
+      head.position.y = 1.665 + Math.sin(performance.now() * 0.0016) * 0.006;
+      jacket.scale.y = 1 + Math.sin(performance.now() * 0.0021) * 0.006;
     }
     renderer.render(scene, camera);
     if (first) { first = false; o.onReady(); }
@@ -433,22 +538,24 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   return {
     dispose() {
       alive = false;
+      au.close();
       removeEventListener('keydown', kd); removeEventListener('keyup', ku);
       removeEventListener('mousemove', onMove); removeEventListener('resize', resize);
       document.removeEventListener('pointerlockchange', onLockChange);
       el.removeEventListener('click', clickCanvas);
       el.removeEventListener('touchstart', ts); el.removeEventListener('touchmove', tm);
       el.removeEventListener('touchend', te); el.removeEventListener('touchcancel', te);
-      try { document.exitPointerLock?.(); } catch {}
+      try { document.exitPointerLock?.(); } catch { /* しずかに */ }
       renderer.dispose();
       el.remove();
     },
     pause(v: boolean) {
       paused = v;
-      if (v) { try { document.exitPointerLock?.(); } catch {} }
+      if (v) { try { document.exitPointerLock?.(); } catch { /* しずかに */ } }
       for (const k in keys) keys[k] = false;
       mv = { x: 0, y: 0 };
     },
-    lock() { el.requestPointerLock?.(); },
+    lock() { au.start(); el.requestPointerLock?.(); },
+    sound(v: boolean) { au.set(v); },
   };
 }
