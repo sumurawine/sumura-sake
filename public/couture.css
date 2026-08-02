@@ -616,3 +616,21 @@ html[data-era="now"] .ag-msg{ color:#e0a08a; }
     border-radius:3px 3px 0 0; border-left:0; border-right:0; border-bottom:0; padding:20px; }
   .vs-guide{ bottom:12px; font-size:10.5px; }
 }
+
+/* ── 六度目：時間旅行の形・お問い合わせの同時登録 ─────── */
+
+/* 畳んだ時間旅行は、言語の切替と同じ角のある形に */
+html[data-era="now"] #timewarp.tw-closed,
+html[data-mx="1"] #timewarp.tw-closed{
+  border-radius:2px !important;
+}
+@media (max-width:860px){
+  html[data-era="now"] #timewarp.tw-closed,
+  html[data-mx="1"] #timewarp.tw-closed{ border-radius:2px !important; }
+}
+
+/* お問い合わせ：メルマガも同時に */
+.ct-nl{ display:flex; align-items:flex-start; gap:9px; margin:18px 0 4px; cursor:pointer; line-height:1.8; }
+.ct-nl input{ margin-top:.35em; width:16px; height:16px; flex:0 0 auto; accent-color:#c9ad82; cursor:pointer; }
+.ct-nl span{ font-size:13.5px; letter-spacing:.03em; }
+html[data-era="now"] .ct-nl span{ color:rgba(243,240,234,.76); font-size:14px; }
