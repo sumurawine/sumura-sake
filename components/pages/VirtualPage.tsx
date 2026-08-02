@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, type PointerEvent as PE } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSite } from '@/components/Providers';
 import { createShop, type ShopHandle, type Bottle } from '@/lib/shop3d';
@@ -28,6 +28,8 @@ const W: Record<Lang, Record<string, string>> = {
     kWalk: 'W A S D 歩く', kLook: 'マウス 見回す', kTake: 'クリック 手に取る',
     callC: '店員を呼ぶ', talkC: '店員に話しかける', oBtn: '手に取る', xBtn: '閉じる',
     coming: '店員がこちらへ向かっております…',
+    nameL: 'お名前', nl: 'メールマガジンを受け取る（任意）', body: 'この一本について、お伝えする内容',
+    more: 'ほかにもお探しのものはございますか。', yesMore: 'はい、もう一度うかがう', noMore: 'いいえ、これで', needName: 'お名前をご記入ください。',
   },
   en: {
     loading: 'Preparing the shop…', enter: 'Push the door and step inside',
@@ -46,6 +48,8 @@ const W: Record<Lang, Record<string, string>> = {
     kWalk: 'W A S D  walk', kLook: 'Mouse  look', kTake: 'Click  pick up',
     callC: 'Call the clerk', talkC: 'Speak to the clerk', oBtn: 'Pick up', xBtn: 'Close',
     coming: 'The clerk is on the way…',
+    nameL: 'Your name', nl: 'Receive our newsletter (optional)', body: 'What we will pass on',
+    more: 'Is there anything else you are looking for?', yesMore: 'Yes, ask again', noMore: 'No, that is all', needName: 'Please enter your name.',
   },
   fr: {
     loading: 'Préparation de la boutique…', enter: 'Poussez la porte et entrez',
@@ -64,6 +68,8 @@ const W: Record<Lang, Record<string, string>> = {
     kWalk: 'W A S D  marcher', kLook: 'Souris  regarder', kTake: 'Clic  prendre',
     callC: 'Appeler le sommelier', talkC: 'Parler au sommelier', oBtn: 'Prendre', xBtn: 'Fermer',
     coming: 'Le sommelier arrive…',
+    nameL: 'Votre nom', nl: 'Recevoir notre lettre (facultatif)', body: 'Ce que nous transmettrons',
+    more: 'Cherchez-vous autre chose ?', yesMore: 'Oui, demander encore', noMore: 'Non, c’est tout', needName: 'Veuillez indiquer votre nom.',
   },
   zh: {
     loading: '正在准备店内…', enter: '推门进入店内',
@@ -82,6 +88,8 @@ const W: Record<Lang, Record<string, string>> = {
     kWalk: 'W A S D 行走', kLook: '鼠标 环视', kTake: '点击 取用',
     callC: '呼叫店员', talkC: '与店员交谈', oBtn: '取用', xBtn: '关闭',
     coming: '店员正在过来…',
+    nameL: '姓名', nl: '订阅本店通讯（任意）', body: '将转达的内容',
+    more: '还有其他想找的酒吗？', yesMore: '有，再问一次', noMore: '没有了', needName: '请填写姓名。',
   },
   ko: {
     loading: '매장을 준비하고 있습니다…', enter: '문을 열고 들어가기',
@@ -100,6 +108,8 @@ const W: Record<Lang, Record<string, string>> = {
     kWalk: 'W A S D 걷기', kLook: '마우스 둘러보기', kTake: '클릭 집기',
     callC: '점원 부르기', talkC: '점원에게 말 걸기', oBtn: '집기', xBtn: '닫기',
     coming: '점원이 오고 있습니다…',
+    nameL: '성함', nl: '뉴스레터 받기 (선택)', body: '전달할 내용',
+    more: '다른 찾으시는 것이 있으신가요?', yesMore: '네, 다시 여쭙기', noMore: '아니요, 괜찮습니다', needName: '성함을 입력해 주세요.',
   },
 };
 
@@ -127,6 +137,10 @@ export function VirtualPage() {
   const [mail, setMail] = useState('');
   const [note, setNote] = useState('');
   const [buying, setBuying] = useState<Pick | Bottle | null>(null);
+  const [uname, setUname] = useState('');
+  const [nl, setNl] = useState(false);
+  const [done, setDone] = useState(false);
+  const [imgs, setImgs] = useState<Record<string, string>>({});
 
   /* 在庫を読み込みます */
   useEffect(() => {
@@ -138,6 +152,9 @@ export function VirtualPage() {
         const rows: Bottle[] = (j?.items || [])
           .filter((it: any) => String(it.stock || '0') !== '0')
           .map((it: any) => ({ id: it.id, name: it.name, price: it.price, prod: it.prod || '', cat: it.cat || '' }));
+        const im: Record<string, string> = {};
+        (j?.items || []).forEach((it: any) => { if (it.img) im[String(it.id)] = String(it.img); });
+        setImgs(im);
         setItems(rows.length ? rows : (j?.items || []).slice(0, 60));
       })
       .catch(() => setItems([]));
@@ -201,6 +218,7 @@ export function VirtualPage() {
 
   /* 買いたい・相談したいを、お店へ伝えます */
   const sendShop = async () => {
+    if (!uname.trim()) { setMsg(t.needName); return; }
     if (!mail.trim()) { setMsg(t.needMail); return; }
     setBusy(true); setMsg('');
     const what = buying
@@ -211,13 +229,25 @@ export function VirtualPage() {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
-          action: 'contact', name: 'バーチャル店舗のお客様', email: mail.trim(),
+          action: 'contact', name: uname.trim(), email: mail.trim(),
           message: what + '\n\n【ご用件】\n' + ask + '\n\n【ご要望】\n' + note,
         }),
       });
-      setMsg(t.sent); setBuying(null); setNote('');
+      if (nl) {
+        await fetch(SUMURA_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'subscribe', email: mail.trim(), lang, hp: '' }),
+        }).catch(() => {});
+      }
+      setMsg(t.sent); setBuying(null); setNote(''); setDone(true);
     } catch { setMsg(t.err); }
     setBusy(false);
+  };
+
+  const again = () => {
+    setDone(false); setMsg(''); setBuying(null);
+    setAsk(''); setReply(''); setPicks([]); setNote('');
   };
 
   const isTouch = typeof window !== 'undefined' && matchMedia('(hover: none)').matches;
@@ -263,13 +293,10 @@ export function VirtualPage() {
               <span><span className="vs-cap">C</span>{near ? t.talkC : t.callC}</span>
             </div>
           ) : (
-            <Pads
-              onMove={(x, y) => shop.current?.moveVec(x, y)}
-              onLook={(x, y) => shop.current?.lookVel(x, y)}
-              onO={() => shop.current?.use()}
-              onX={() => { if (near) { setReply(''); setPicks([]); open('talk'); } else { setComing(true); shop.current?.callClerk(); } }}
-              oLabel={t.oBtn} xLabel={coming ? t.coming : near ? t.talkC : t.callC}
-            />
+            <>
+              <div className="vs-keys">{t.hintSp}</div>
+              <button className="vs-take" onClick={() => shop.current?.use()}>{t.oBtn}</button>
+            </>
           )}
 
           <button className="vs-snd" onClick={() => setSnd((v) => !v)}
@@ -290,27 +317,44 @@ export function VirtualPage() {
 
           {picks.map((p) => (
             <div key={p.id} className="vs-card">
+              {imgs[String(p.id)] ? (
+                <img className="vs-shot" src={imgs[String(p.id)]} alt="" loading="lazy" />
+              ) : null}
               <div className="vs-card-n">{p.name}</div>
               <div className="vs-card-p">{p.price}</div>
               {p.why ? <div className="vs-card-w">{p.why}</div> : null}
-              <button className="vs-btn vs-sm" onClick={() => { setBuying(p); setMsg(''); }}>{t.buy}</button>
+              <button className="vs-btn vs-sm" onClick={() => { setBuying(p); setDone(false); setMsg(''); setNote(p.name); }}>{t.buy}</button>
             </div>
           ))}
 
-          {reply || picks.length ? (
-            <div className="vs-card vs-ask">
-              <div className="vs-card-w">{buying ? '' : t.note}</div>
-              {!buying ? <button className="vs-btn vs-sm" onClick={() => { setBuying(null); setMsg(''); setNote(ask); }}>{t.sendShop}</button> : null}
-            </div>
-          ) : null}
-
-          {(buying !== null || (reply && !picks.length)) ? (
+          {done ? (
             <div className="vs-form">
+              <div className="vs-ok">{t.sent}</div>
+              <div className="vs-clerk" style={{ marginTop: 14 }}>{t.more}</div>
+              <div className="vs-row">
+                <button className="vs-btn vs-primary" onClick={again}>{t.yesMore}</button>
+                <button className="vs-btn" onClick={() => { setDone(false); close(); }}>{t.noMore}</button>
+              </div>
+            </div>
+          ) : buying !== null || (reply && !picks.length) ? (
+            <div className="vs-form">
+              {buying ? <div className="vs-buying">{(buying as any).name}</div> : null}
+              <label>{t.nameL}</label>
+              <input value={uname} onChange={(e) => setUname(e.target.value)} placeholder="宇部 太郎" />
               <label>{t.mail}</label>
               <input value={mail} onChange={(e) => setMail(e.target.value)} inputMode="email" placeholder="you@example.com" />
-              <label>{t.note}</label>
-              <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} />
+              <label>{t.body}</label>
+              <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={3} />
+              <label className="vs-nl">
+                <input type="checkbox" checked={nl} onChange={(e) => setNl(e.target.checked)} />
+                <span>{t.nl}</span>
+              </label>
               <button className="vs-btn vs-primary" disabled={busy} onClick={sendShop}>{t.sendShop}</button>
+            </div>
+          ) : reply || picks.length ? (
+            <div className="vs-card vs-ask">
+              <div className="vs-card-w">{t.note}</div>
+              <button className="vs-btn vs-sm" onClick={() => { setBuying(null); setDone(false); setMsg(''); setNote(ask); }}>{t.sendShop}</button>
             </div>
           ) : null}
 
@@ -340,63 +384,5 @@ export function VirtualPage() {
         </div>
       ) : null}
     </div>
-  );
-}
-
-
-/* ── 携帯の操作盤：左に十字と丸バツ、右に見回しの棒 ────────── */
-function Pads(p: {
-  onMove: (x: number, y: number) => void;
-  onLook: (x: number, y: number) => void;
-  onO: () => void; onX: () => void; oLabel: string; xLabel: string;
-}) {
-  const held = useRef<Record<string, boolean>>({});
-  const knob = useRef<HTMLDivElement | null>(null);
-  const send = () => {
-    const h = held.current;
-    p.onMove((h.r ? 1 : 0) - (h.l ? 1 : 0), (h.d ? 1 : 0) - (h.u ? 1 : 0));
-  };
-  const dir = (k: string) => ({
-    onPointerDown: (e: PE) => { e.preventDefault(); held.current[k] = true; send(); },
-    onPointerUp: () => { held.current[k] = false; send(); },
-    onPointerLeave: () => { held.current[k] = false; send(); },
-    onPointerCancel: () => { held.current[k] = false; send(); },
-  });
-
-  const grab = useRef<{ id: number; x: number; y: number } | null>(null);
-  const stick = {
-    onPointerDown: (e: PE) => {
-      e.preventDefault();
-      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
-      grab.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
-    },
-    onPointerMove: (e: PE) => {
-      const g = grab.current; if (!g || g.id !== e.pointerId) return;
-      const dx = Math.max(-1, Math.min(1, (e.clientX - g.x) / 46));
-      const dy = Math.max(-1, Math.min(1, (e.clientY - g.y) / 46));
-      if (knob.current) knob.current.style.transform = `translate(${dx * 26}px, ${dy * 26}px)`;
-      p.onLook(dx, dy);
-    },
-    onPointerUp: () => { grab.current = null; p.onLook(0, 0); if (knob.current) knob.current.style.transform = ''; },
-    onPointerCancel: () => { grab.current = null; p.onLook(0, 0); if (knob.current) knob.current.style.transform = ''; },
-  };
-
-  return (
-    <>
-      <div className="vs-dpad">
-        <button className="d-u" {...dir('u')} aria-label="up" />
-        <button className="d-l" {...dir('l')} aria-label="left" />
-        <button className="d-r" {...dir('r')} aria-label="right" />
-        <button className="d-d" {...dir('d')} aria-label="down" />
-        <span className="d-c" />
-      </div>
-      <div className="vs-ox">
-        <button className="vs-o" onPointerDown={(e) => { e.preventDefault(); p.onO(); }}>◯<i>{p.oLabel}</i></button>
-        <button className="vs-x" onPointerDown={(e) => { e.preventDefault(); p.onX(); }}>✕<i>{p.xLabel}</i></button>
-      </div>
-      <div className="vs-stick" {...stick}>
-        <div className="vs-knob" ref={knob} />
-      </div>
-    </>
   );
 }
