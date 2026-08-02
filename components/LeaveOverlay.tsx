@@ -32,7 +32,7 @@ function thud() {
   } catch {}
 }
 
-const LEAVE_SHOTS = ['/images/photos/rouget.jpg','/images/photos/roch.jpg','/images/photos/gillet.jpg','/images/shop-sign.webp'];
+const LEAVE_SHOTS = ['/images/photos/cheval-blanc-1929.jpg','/images/photos/cros-parantoux.jpg','/images/photos/shelf-row.jpg','/images/photos/meo-camuzet.jpg','/images/shop-sign.webp'];
 
 export function LeaveOverlay({ open, lang, onClose }: { open: boolean; lang: Lang; onClose?: () => void }) {
   const { era } = useSite();

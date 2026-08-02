@@ -10,7 +10,7 @@ import { CATS, isOut, nameOf, type I18nData, type Item, type ProductData } from 
 import { MShell } from './MShell';
 import { Chars, Reveal, useParallax } from './Motion';
 
-const HERO_SHOTS = ['/images/photos/gillet.jpg', '/images/photos/rouget.jpg', '/images/photos/roch.jpg'];
+const HERO_SHOTS = ['/images/photos/shelf-row.jpg', '/images/photos/cheval-blanc-1929.jpg', '/images/photos/meo-camuzet.jpg', '/images/photos/gillet.jpg', '/images/photos/rouget.jpg'];
 
 function Hero({ lang }: { lang: Lang }) {
   const c = MC[lang];
@@ -90,15 +90,30 @@ function Gallery({ lang }: { lang: Lang }) {
         <div className="mx-duo">
           <div>
             <Reveal className="mx-photo" threshold={0.2}>
-              <img src={asset('/images/photos/rouget.jpg')} alt="" loading="lazy" />
+              <img src={asset('/images/photos/cheval-blanc-1929.jpg')} alt="" loading="lazy" />
+            </Reveal>
+            <Reveal as="p" delay={1} className="mx-cap">{c.capCheval}</Reveal>
+            <Reveal as="p" delay={2} className="mx-p" style={{ marginTop: 14 }}>{c.capOld}</Reveal>
+          </div>
+          <div>
+            <Reveal delay={2} className="mx-photo" threshold={0.2}>
+              <img src={asset('/images/photos/meo-camuzet.jpg')} alt="" loading="lazy" />
+            </Reveal>
+            <Reveal as="p" delay={3} className="mx-cap">{c.capRoch}</Reveal>
+          </div>
+        </div>
+        <div className="mx-duo" style={{ marginTop: 40 }}>
+          <div>
+            <Reveal className="mx-photo" threshold={0.2}>
+              <img src={asset('/images/photos/cros-parantoux.jpg')} alt="" loading="lazy" />
             </Reveal>
             <Reveal as="p" delay={1} className="mx-cap">{c.capRouget}</Reveal>
           </div>
           <div>
             <Reveal delay={2} className="mx-photo" threshold={0.2}>
-              <img src={asset('/images/photos/roch.jpg')} alt="" loading="lazy" />
+              <img src={asset('/images/photos/shelf-row.jpg')} alt="" loading="lazy" />
             </Reveal>
-            <Reveal as="p" delay={3} className="mx-cap">{c.capRoch}</Reveal>
+            <Reveal as="p" delay={3} className="mx-cap">{c.capGillet}</Reveal>
           </div>
         </div>
       </div>
@@ -180,7 +195,7 @@ function Cellar({ lang }: { lang: Lang }) {
   const bg = useParallax(0.12);
   return (
     <section className="mx-bleed">
-      <div ref={bg} className="mx-bleed-bg" style={{ backgroundImage: `url(${asset('/images/photos/rouget.jpg')})` }} />
+      <div ref={bg} className="mx-bleed-bg" style={{ backgroundImage: `url(${asset('/images/photos/cros-parantoux.jpg')})` }} />
       <div className="mx-bleed-shade" />
       <div className="mx-in">
         <div style={{ maxWidth: 620 }}>

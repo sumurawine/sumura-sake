@@ -20,7 +20,6 @@ const VIRTUAL: Record<string, string> = {
 };
 
 const NAV: Array<[string, string]> = [
-  ['/virtual', 'nav:virtual'],
   ['/store', 'nav:store'],
   ['/producers', 'nav:producers'],
   ['/about', 'nav:about'],
@@ -29,6 +28,7 @@ const NAV: Array<[string, string]> = [
   ['/access', 'nav:access'],
   ['/contact', 'nav:contact'],
   ['/secret', 'nav:secret'],
+  ['/virtual', 'nav:virtual'],
 ];
 
 const FOOT_A: Array<[string, string]> = [
@@ -60,7 +60,7 @@ export function MShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="mx-veil" aria-hidden><i /></div>
-      <div className="mx-bg" aria-hidden style={{ backgroundImage: `url(${asset('/images/photos/rouget.jpg')})` }} />
+      <div className="mx-bg" aria-hidden style={{ backgroundImage: `url(${asset(backOf(path))})` }} />
       <Atmosphere />
       <AutoReveal />
 
@@ -152,4 +152,23 @@ function subOf(href: string, lang: any): Array<[string, string]> | null {
     return rows;
   }
   return null;
+}
+
+/** ページごとに、後ろに置く一枚を変えます */
+const BACKS: Array<[string, string]> = [
+  ['/store', '/images/photos/shelf-row.jpg'],
+  ['/producers', '/images/photos/cheval-blanc-1929.jpg'],
+  ['/about', '/images/photos/meo-camuzet.jpg'],
+  ['/blog', '/images/photos/gillet.jpg'],
+  ['/news', '/images/photos/cros-parantoux.jpg'],
+  ['/access', '/images/shop-sign.webp'],
+  ['/contact', '/images/photos/roch.jpg'],
+  ['/legal', '/images/photos/shelf-row.jpg'],
+  ['/secret', '/images/photos/cheval-blanc-1929.jpg'],
+];
+
+function backOf(path: string): string {
+  const p = String(path || '').replace(/\/$/, '');
+  const hit = BACKS.find(([h]) => p === h || p.indexOf(h + '/') === 0);
+  return hit ? hit[1] : '/images/photos/rouget.jpg';
 }
