@@ -34,18 +34,70 @@ export type ShopOpts = {
 
 /* ── 音 ─────────────────────────────────────────────
    足音も扉の軋みも、店内の演奏も、その場でこしらえます。
-   曲は当店のためだけに書いた、静かな短調のバラード。
-   十六小節でひと巡りし、旋律は毎度すこしずつ違います。 */
+   曲は当店のために書き下ろした八つの小品。ハーレムの跳ねる左手、
+   夜更けのバラード、緩やかなブルウス。弾き手は言葉のない声で
+   旋律をなぞります。ひと巡りするのに、ゆうに三十分はかかります。 */
 function makeAudio() {
   let ctx: any = null;
-  let bus: any = null;
-  let mus: any = null;
-  let wet: any = null;
+  let bus: any = null;      // 効果音
+  let mus: any = null;      // 演奏
+  let conv: any = null;     // 穴倉の響き
   let noise: any = null;
   let on = true;
   let foot = 0;
   let timer: any = null;
-  let bar = 0, next = 0;
+  let next = 0;
+
+  /* 和音の作り。根音からの隔たりで書きます */
+  const CH: Record<string, number[]> = {
+    m9: [0, 3, 7, 10, 14], M9: [0, 4, 7, 11, 14], d9: [0, 4, 7, 10, 14],
+    m7b5: [0, 3, 6, 10], alt: [0, 4, 7, 10, 13], m6: [0, 3, 7, 9],
+    d7: [0, 4, 7, 10], M6: [0, 4, 7, 9],
+  };
+  const SC: Record<string, number[]> = {
+    m9: [0, 2, 3, 5, 7, 8, 10], M9: [0, 2, 4, 5, 7, 9, 11], d9: [0, 2, 4, 5, 7, 9, 10],
+    m7b5: [0, 2, 3, 5, 6, 8, 10], alt: [0, 1, 3, 4, 6, 8, 10], m6: [0, 2, 3, 5, 7, 9, 10],
+    d7: [0, 2, 4, 5, 7, 9, 10], M6: [0, 2, 4, 5, 7, 9, 11],
+  };
+
+  type Tune = { n: string; bpm: number; sw: number; ch: number; prog: Array<[number, string, number]> };
+  const TUNES: Tune[] = [
+    { n: '夜の扉', bpm: 62, sw: 0, ch: 2, prog: [
+      [36, 'm9', 2], [41, 'm9', 2], [34, 'd9', 2], [39, 'M9', 2],
+      [32, 'M9', 2], [38, 'm7b5', 1], [31, 'alt', 1], [36, 'm9', 2]] },
+    { n: '棚のあいだで', bpm: 108, sw: 0.62, ch: 2, prog: [
+      [39, 'M6', 2], [44, 'm9', 1], [49, 'd9', 1], [42, 'M9', 2], [37, 'd9', 2],
+      [42, 'm9', 1], [47, 'alt', 1], [40, 'M9', 2], [45, 'm7b5', 1], [38, 'alt', 1], [39, 'M6', 2]] },
+    { n: '蝋燭のブルウス', bpm: 74, sw: 0.64, ch: 3, prog: [
+      [33, 'd7', 4], [38, 'd7', 2], [33, 'd7', 2],
+      [40, 'd9', 1], [38, 'd7', 1], [33, 'd7', 2]] },
+    { n: '古酒に寄せて', bpm: 58, sw: 0, ch: 2, prog: [
+      [38, 'm9', 2], [43, 'm9', 2], [36, 'd9', 2], [41, 'M9', 2],
+      [34, 'M9', 2], [40, 'm7b5', 1], [33, 'alt', 1], [38, 'm9', 2]] },
+    { n: '樽の陰で', bpm: 120, sw: 0.6, ch: 2, prog: [
+      [34, 'M6', 2], [39, 'm9', 1], [44, 'd9', 1], [37, 'M9', 2], [32, 'd9', 2],
+      [37, 'm9', 1], [42, 'alt', 1], [35, 'M9', 2], [40, 'm7b5', 1], [33, 'alt', 1], [34, 'M6', 2]] },
+    { n: '雨の宇部', bpm: 66, sw: 0, ch: 2, prog: [
+      [41, 'm9', 2], [46, 'm7b5', 1], [39, 'alt', 1], [44, 'm9', 2], [37, 'd9', 2],
+      [42, 'M9', 2], [35, 'M9', 2], [40, 'm7b5', 1], [33, 'alt', 1], [41, 'm9', 2]] },
+    { n: '仕舞いの一杯', bpm: 88, sw: 0.6, ch: 2, prog: [
+      [37, 'm6', 2], [42, 'm7b5', 1], [35, 'alt', 1], [40, 'm9', 2], [33, 'd9', 2],
+      [38, 'M9', 2], [43, 'm9', 1], [36, 'alt', 1], [37, 'm6', 2]] },
+    { n: '朝までの唄', bpm: 96, sw: 0.62, ch: 2, prog: [
+      [32, 'M6', 2], [37, 'm9', 1], [42, 'd9', 1], [35, 'M9', 2], [40, 'm7b5', 1], [33, 'alt', 1],
+      [32, 'M6', 2], [37, 'd9', 2], [30, 'M9', 2], [37, 'm9', 1], [42, 'alt', 1]] },
+  ];
+  /* 小節ごとに開いた形へ */
+  const bars = (t: Tune) => {
+    const out: Array<[number, string]> = [];
+    t.prog.forEach(([r, c, n]) => { for (let i = 0; i < n; i++) out.push([r, c]); });
+    return out;
+  };
+  const FORM = TUNES.map(bars);
+
+  let ti = 0, bi = 0, round = 0;
+  let melo = 0;                   // 旋律のいまの高さ
+  let voxEnd = 0;
 
   const start = () => {
     if (ctx || typeof window === 'undefined') return;
@@ -53,9 +105,8 @@ function makeAudio() {
     if (!AC) return;
     ctx = new AC();
     bus = ctx.createGain(); bus.gain.value = on ? 0.9 : 0; bus.connect(ctx.destination);
-    mus = ctx.createGain(); mus.gain.value = on ? 0.24 : 0; mus.connect(ctx.destination);
+    mus = ctx.createGain(); mus.gain.value = on ? 0.26 : 0; mus.connect(ctx.destination);
 
-    /* 穴倉の響き。反響の形もその場で作ります */
     const len = Math.floor(ctx.sampleRate * 2.6);
     const ir = ctx.createBuffer(2, len, ctx.sampleRate);
     for (let c = 0; c < 2; c++) {
@@ -65,8 +116,8 @@ function makeAudio() {
         d[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 2.6) * (i < 900 ? i / 900 : 1);
       }
     }
-    const conv = ctx.createConvolver(); conv.buffer = ir;
-    wet = ctx.createGain(); wet.gain.value = 0.34;
+    conv = ctx.createConvolver(); conv.buffer = ir;
+    const wet = ctx.createGain(); wet.gain.value = 0.32;
     conv.connect(wet); wet.connect(mus);
 
     const n = ctx.createBuffer(1, ctx.sampleRate * 1.2, ctx.sampleRate);
@@ -80,9 +131,8 @@ function makeAudio() {
     const g = ctx.createGain(); g.gain.value = 0.04;
     src.connect(lp); lp.connect(g); g.connect(bus); src.start();
 
-    (start as any).conv = conv;
-    next = ctx.currentTime + 0.4;
-    timer = setInterval(tick, 160);
+    next = ctx.currentTime + 0.5;
+    timer = setInterval(tick, 180);
   };
 
   const burst = (freq: number, q: number, vol: number, len: number) => {
@@ -112,8 +162,9 @@ function makeAudio() {
     o.start(t); o.stop(t + len + 0.02);
   };
 
-  /* ピアノの一音。低いほど長く鳴り、倍音はやわらかく */
   const hz = (m: number) => 440 * Math.pow(2, (m - 69) / 12);
+
+  /* ピアノの一音 */
   const key = (m: number, at: number, len: number, vol: number) => {
     if (!ctx) return;
     const f = hz(m);
@@ -121,8 +172,8 @@ function makeAudio() {
     const lp = ctx.createBiquadFilter();
     lp.type = 'lowpass'; lp.frequency.value = 1500 + f * 2.4; lp.Q.value = 0.4;
     g.gain.setValueAtTime(0, at);
-    g.gain.linearRampToValueAtTime(vol, at + 0.018);
-    g.gain.exponentialRampToValueAtTime(vol * 0.34, at + 0.35);
+    g.gain.linearRampToValueAtTime(vol, at + 0.016);
+    g.gain.exponentialRampToValueAtTime(vol * 0.32, at + 0.3);
     g.gain.exponentialRampToValueAtTime(0.0001, at + len);
     [[1, 1], [2, 0.26], [3, 0.10], [4.01, 0.045], [5.98, 0.02]].forEach(([mul, amp]) => {
       const o = ctx.createOscillator();
@@ -132,60 +183,114 @@ function makeAudio() {
       o.connect(og); og.connect(g);
       o.start(at); o.stop(at + len + 0.08);
     });
-    g.connect(lp);
-    lp.connect(mus);
-    if ((start as any).conv) lp.connect((start as any).conv);
+    g.connect(lp); lp.connect(mus);
+    if (conv) lp.connect(conv);
   };
 
-  const BPM = 64;
-  const beat = 60 / BPM;
+  /* 言葉のない歌声。母音の共鳴を三つ重ね、揺れを添えます */
+  const voice = (m: number, at: number, dur: number, vol: number, from?: number) => {
+    if (!ctx) return;
+    const f = hz(m);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, at);
+    g.gain.linearRampToValueAtTime(vol, at + 0.09);
+    g.gain.setValueAtTime(vol, at + dur * 0.7);
+    g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
 
-  /* 十六小節。ハ短調のあたりを、ゆっくり巡ります */
-  const ROOT = [36, 36, 41, 41, 34, 34, 39, 39, 32, 32, 38, 38, 31, 31, 36, 36];
-  const VOI: number[][] = [
-    [51, 55, 58, 62], [51, 55, 58, 62], [48, 53, 56, 63], [48, 53, 56, 63],
-    [50, 53, 56, 60], [50, 53, 56, 60], [50, 55, 58, 62], [50, 55, 58, 62],
-    [51, 55, 60, 63], [51, 55, 60, 63], [48, 53, 56, 60], [48, 53, 56, 60],
-    [50, 53, 56, 59], [50, 53, 56, 59], [51, 55, 58, 62], [51, 55, 58, 62],
-  ];
-  /* 旋律の言い回し。［拍, 音］の組で、ときどき黙ります */
-  const CELLS: Array<Array<[number, number]>> = [
-    [[0, 70], [2.5, 67]],
-    [[1, 72], [2, 70], [3.5, 67]],
-    [[0, 75], [2, 72]],
-    [[1.5, 63], [3, 67]],
-    [],
-    [[0, 67], [1.5, 70], [3, 74]],
-    [[2, 79], [3.5, 75]],
-    [],
-    [[0.5, 70], [2, 68], [3, 65]],
-    [[1, 74], [2.5, 72]],
-  ];
+    const o = ctx.createOscillator();
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(hz(from == null ? m - 0.35 : from), at);
+    o.frequency.linearRampToValueAtTime(f, at + 0.075);
+    const vib = ctx.createOscillator(); vib.type = 'sine'; vib.frequency.value = 5.1 + Math.random() * 0.5;
+    const vg = ctx.createGain();
+    vg.gain.setValueAtTime(0, at);
+    vg.gain.linearRampToValueAtTime(f * 0.012, at + Math.min(0.4, dur * 0.5));
+    vib.connect(vg); vg.connect(o.frequency);
 
-  const play = (at: number, b: number) => {
-    const i = b % 16;
-    const r = ROOT[i], v = VOI[i];
-    const hum = () => (Math.random() - 0.5) * 0.02;
-
-    /* 左手：根音を長く。四小節ごとに五度を添えます */
-    key(r, at + hum(), beat * 3.6, 0.155);
-    if (i % 4 === 2) key(r + 7, at + beat * 2 + hum(), beat * 2.0, 0.085);
-
-    /* 和音：一拍目の裏か、二拍目に、そっと置きます */
-    const cAt = at + (i % 2 === 0 ? beat * 0.5 : beat * 1.5);
-    v.forEach((m, k) => key(m, cAt + k * 0.012 + hum(), beat * 2.6, 0.052 - k * 0.004));
-
-    /* 旋律 */
-    const cell = CELLS[(b * 7 + ((b / 16) | 0) * 3) % CELLS.length];
-    cell.forEach(([q, m]) => {
-      if (Math.random() < 0.14) return;
-      key(m, at + q * beat + hum(), beat * (2.4 + Math.random()), 0.055 + Math.random() * 0.018);
+    const sum = ctx.createGain(); sum.gain.value = 1;
+    const vow = Math.random() > 0.5 ? [[500, 8, 1], [1150, 10, 0.46], [2600, 11, 0.16]]
+                                    : [[400, 9, 1], [900, 11, 0.40], [2500, 12, 0.13]];
+    vow.forEach(([fr, q, a]) => {
+      const bp = ctx.createBiquadFilter(); bp.type = 'bandpass';
+      bp.frequency.value = fr as number; bp.Q.value = q as number;
+      const ag = ctx.createGain(); ag.gain.value = a as number;
+      o.connect(bp); bp.connect(ag); ag.connect(sum);
     });
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3300;
+    sum.connect(lp); lp.connect(g); g.connect(mus);
+    if (conv) g.connect(conv);
+    o.start(at); o.stop(at + dur + 0.12);
+    vib.start(at); vib.stop(at + dur + 0.12);
+    if (at + dur > voxEnd) voxEnd = at + dur;
+  };
+
+  /* 旋律の言い回し：［拍, 長さ］ */
+  const CELLS: Array<Array<[number, number]>> = [
+    [[0, 2], [2.5, 1.4]], [[0, 1], [1.5, 1], [3, 1.2]], [[1, 2.6]], [],
+    [[0, 1.4], [2, 2]], [[0.5, 1], [1.5, 0.6], [2.5, 1.4]], [[0, 3.4]],
+    [[2, 1], [3, 1]], [[0, 0.9], [1, 0.9], [2, 0.9], [3, 1.1]],
+  ];
+
+  const play = (at: number) => {
+    const t = TUNES[ti], form = FORM[ti];
+    const beat = 60 / t.bpm;
+    const [root, ctype] = form[bi];
+    const iv = CH[ctype], sc = SC[ctype];
+    const hum = () => (Math.random() - 0.5) * 0.018;
+
+    /* 左手 */
+    if (t.sw) {
+      /* 跳ねる左手：一と三で根音、二と四で和音 */
+      for (let q = 0; q < 4; q++) {
+        const tt = at + q * beat;
+        if (q % 2 === 0) key(root - (q === 2 ? 0 : 0) + (q === 2 ? 7 : 0), tt + hum(), beat * 0.9, 0.15);
+        else iv.slice(1, 4).forEach((v) => key(root + 24 + (v % 12), tt + hum(), beat * 0.5, 0.05));
+      }
+    } else {
+      key(root, at + hum(), beat * 3.6, 0.15);
+      if (bi % 4 === 2) key(root + 7, at + beat * 2 + hum(), beat * 1.8, 0.08);
+    }
+
+    /* 和音を、そっと */
+    const cAt = at + (t.sw ? beat * 1.5 : (bi % 2 === 0 ? beat * 0.5 : beat * 1.5));
+    iv.slice(1).forEach((v, k) => {
+      const m = root + 24 + (v % 12);
+      key(m, cAt + k * 0.011 + hum(), beat * (t.sw ? 1.2 : 2.4), 0.05 - k * 0.004);
+    });
+
+    /* 旋律。声がなぞり、ピアノがそっと添えます */
+    const cell = CELLS[(bi * 5 + round * 3 + ti) % CELLS.length];
+    let prev = melo;
+    cell.forEach(([q, dur], k) => {
+      if (Math.random() < 0.10) return;
+      const pool = (k === 0 || Math.random() < 0.55)
+        ? iv.map((v) => root + 36 + v)
+        : sc.map((v) => root + 36 + v);
+      /* 前の音に近いところを選びます */
+      let best = pool[0], bd = 99;
+      const want = melo + (Math.random() * 7 - 3.5);
+      pool.forEach((m) => { const d = Math.abs(m - want); if (d < bd) { bd = d; best = m; } });
+      while (best > 79) best -= 12;
+      while (best < 62) best += 12;
+      const sh = t.sw && q % 1 !== 0 ? 0 : 0;
+      const tt = at + (q + sh) * beat + hum();
+      const ln = dur * beat * 0.95;
+      voice(best, tt, ln, 0.075 + Math.random() * 0.02, k === 0 ? undefined : prev);
+      key(best, tt, ln * 0.9, 0.038);
+      prev = best; melo = best;
+    });
+
+    bi++;
+    if (bi >= form.length) {
+      bi = 0; round++;
+      if (round >= TUNES[ti].ch) { round = 0; ti = (ti + 1) % TUNES.length; melo = 70; }
+    }
+    return beat * 4;
   };
 
   const tick = () => {
     if (!ctx || !on) return;
-    while (next < ctx.currentTime + 1.2) { play(next, bar++); next += beat * 4; }
+    while (next < ctx.currentTime + 1.4) next += play(next);
   };
 
   return {
@@ -193,14 +298,17 @@ function makeAudio() {
     set(v: boolean) {
       on = v;
       if (bus) bus.gain.value = v ? 0.9 : 0;
-      if (mus) mus.gain.value = v ? 0.24 : 0;
+      if (mus) mus.gain.value = v ? 0.26 : 0;
       if (v) { start(); if (ctx) next = Math.max(next, ctx.currentTime + 0.3); }
     },
     dist(d: number) {
       if (!mus || !on) return;
-      mus.gain.value = 0.30 * Math.max(0.30, Math.min(1, 3.8 / Math.max(1.3, d)));
+      mus.gain.value = 0.32 * Math.max(0.30, Math.min(1, 3.8 / Math.max(1.3, d)));
     },
-    phase() { return ctx ? (ctx.currentTime / beat) % 4 : 0; },
+    /* いま歌っているか（口の動きに使います） */
+    vox() { return ctx && ctx.currentTime < voxEnd ? 1 : 0; },
+    phase() { return ctx ? (ctx.currentTime / (60 / TUNES[ti].bpm)) % 4 : 0; },
+    tune() { return TUNES[ti].n; },
     step(run: boolean, soft = false) {
       foot ^= 1;
       const k = soft ? 0.45 : 1;
@@ -228,7 +336,6 @@ function noiseOver(g: CanvasRenderingContext2D, s: number, n: number, a: number)
   g.globalAlpha = 1;
 }
 
-/** 荒く割った岩。角を欠けさせ、目地に苔と湿りを置きます */
 function rock(base: string, mortar: string, rows = 5, cols = 5): HTMLCanvasElement {
   const S = 256;
   const c = document.createElement('canvas');
@@ -244,7 +351,6 @@ function rock(base: string, mortar: string, rows = 5, cols = 5): HTMLCanvasEleme
       const x = off + i * w, y = r * h;
       const pad = 3 + Math.random() * 2;
       const v = 0.68 + Math.random() * 0.56;
-      /* 石の面。四隅を不揃いに削ります */
       g.beginPath();
       g.moveTo(x + pad + Math.random() * 5, y + pad + Math.random() * 4);
       g.lineTo(x + w - pad - Math.random() * 5, y + pad + Math.random() * 5);
@@ -252,7 +358,6 @@ function rock(base: string, mortar: string, rows = 5, cols = 5): HTMLCanvasEleme
       g.lineTo(x + pad + Math.random() * 5, y + h - pad - Math.random() * 4);
       g.closePath();
       g.fillStyle = shade(base, v); g.fill();
-      /* 面のなかのむら */
       for (let k = 0; k < 26; k++) {
         g.globalAlpha = 0.05 + Math.random() * 0.13;
         g.fillStyle = Math.random() > 0.5 ? '#000' : shade(base, v + 0.3);
@@ -260,12 +365,10 @@ function rock(base: string, mortar: string, rows = 5, cols = 5): HTMLCanvasEleme
         g.fillRect(x + pad + Math.random() * (w - bw - pad * 2), y + pad + Math.random() * (h - bh - pad * 2), bw, bh);
       }
       g.globalAlpha = 1;
-      /* 下端の影と、上端の当たり */
       g.fillStyle = 'rgba(0,0,0,.34)'; g.fillRect(x + pad, y + h - pad - 2.5, w - pad * 2, 2.5);
       g.fillStyle = 'rgba(255,240,220,.10)'; g.fillRect(x + pad, y + pad, w - pad * 2, 1.5);
     }
   }
-  /* 湿りと苔 */
   for (let i = 0; i < 90; i++) {
     g.globalAlpha = 0.05 + Math.random() * 0.10;
     g.fillStyle = Math.random() > 0.4 ? '#1b2418' : '#0b0a08';
@@ -278,7 +381,6 @@ function rock(base: string, mortar: string, rows = 5, cols = 5): HTMLCanvasEleme
   return c;
 }
 
-/** 木の肌 */
 function wood(base: string, dark: string): HTMLCanvasElement {
   const S = 256;
   const c = document.createElement('canvas');
@@ -297,8 +399,7 @@ function wood(base: string, dark: string): HTMLCanvasElement {
   g.globalAlpha = 1;
   for (let i = 0; i < 5; i++) {
     const x = Math.random() * S, y = Math.random() * S;
-    g.globalAlpha = 0.22;
-    g.strokeStyle = dark; g.lineWidth = 1.4;
+    g.globalAlpha = 0.22; g.strokeStyle = dark; g.lineWidth = 1.4;
     for (let k = 1; k < 5; k++) { g.beginPath(); g.ellipse(x, y, k * 3.4, k * 2.1, 0.5, 0, 7); g.stroke(); }
   }
   g.globalAlpha = 1;
@@ -306,7 +407,6 @@ function wood(base: string, dark: string): HTMLCanvasElement {
   return c;
 }
 
-/** 鍵盤の絵 */
 function keysTex(): HTMLCanvasElement {
   const c = document.createElement('canvas');
   c.width = 512; c.height = 64;
@@ -321,7 +421,6 @@ function keysTex(): HTMLCanvasElement {
   return c;
 }
 
-/** 瓶の肩に貼る、紙のラベル */
 function labelTex(name: string, prod: string): HTMLCanvasElement {
   const c = document.createElement('canvas');
   c.width = 192; c.height = 120;
@@ -367,18 +466,16 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.repeat.set(rx, ry);
     t.magFilter = THREE.LinearFilter;
-    t.minFilter = THREE.LinearMipmapLinearFilter;      // ちらつきを抑えます
+    t.minFilter = THREE.LinearMipmapLinearFilter;
     t.anisotropy = Math.min(8, maxAniso);
-    t.generateMipmaps = true;
     return t;
   };
   const lam = (p: any) => new THREE.MeshLambertMaterial(p);
   const boxes: Array<{ x: number; z: number; w: number; d: number }> = [];
   const place = (g: any, x: number, y: number, z: number, ry = 0) => { g.position.set(x, y, z); g.rotation.y = ry; scene.add(g); return g; };
 
-  /* 岩の床・腰壁・穹窿 ------------------------------------------ */
-  const floorMat = lam({ map: tex(rock('#6d6559', '#231e19', 4, 4), 7, 5) });
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), floorMat);
+  /* 岩の床・腰壁・穹窿 */
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), lam({ map: tex(rock('#6d6559', '#231e19', 4, 4), 7, 5) }));
   floor.rotation.x = -Math.PI / 2; scene.add(floor);
 
   const wallMat = lam({ map: tex(rock('#7a6f60', '#201b16', 5, 5), 5, 1.2), side: THREE.DoubleSide });
@@ -389,19 +486,17 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   };
   wall(W, WH, 0, WH / 2, -D / 2, 0, wallMat);
   wall(W, WH, 0, WH / 2, D / 2, Math.PI, wallMat);
-  /* 妻壁は穹窿より大きくとって、隙間ができないように */
   wall(D + 1.2, WH + RISE + 2.2, -W / 2, (WH + RISE) / 2, 0, Math.PI / 2, endMat);
   wall(D + 1.2, WH + RISE + 2.2, W / 2, (WH + RISE) / 2, 0, -Math.PI / 2, endMat);
 
-  const vaultMat = lam({ map: tex(rock('#6f6557', '#1c1813', 6, 8), 8, 3), side: THREE.BackSide });
   const vault = new THREE.Mesh(
-    new THREE.CylinderGeometry(D / 2 + 0.03, D / 2 + 0.03, W + 0.08, 26, 1, true, 0, Math.PI), vaultMat);
+    new THREE.CylinderGeometry(D / 2 + 0.03, D / 2 + 0.03, W + 0.08, 26, 1, true, 0, Math.PI),
+    lam({ map: tex(rock('#6f6557', '#1c1813', 6, 8), 8, 3), side: THREE.BackSide }));
   vault.rotation.z = Math.PI / 2;
-  vault.scale.set(RISE / (D / 2), 1, 1);       // 高さだけを抑えて、幅は部屋いっぱい
+  vault.scale.set(RISE / (D / 2), 1, 1);
   vault.position.y = WH;
   scene.add(vault);
 
-  /* 横断する岩の肋と、その足元の柱 */
   const ribMat = lam({ map: tex(rock('#5f564a', '#171310', 3, 3), 5, 1), side: THREE.DoubleSide });
   [-4.3, 0, 4.3].forEach((x) => {
     const rib = new THREE.Mesh(
@@ -410,35 +505,35 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     rib.scale.set((RISE + 0.18) / (D / 2 + 0.20), 1, 1);
     rib.position.set(x, WH, 0); scene.add(rib);
     [-1, 1].forEach((s) => {
+      if (x === 0 && s === 1) return;                 // 扉の来るところは、柱を立てません
       const col = new THREE.Mesh(new THREE.BoxGeometry(0.38, WH, 0.38), ribMat);
       col.position.set(x, WH / 2, s * (D / 2 - 0.16)); scene.add(col);
     });
   });
 
-  /* 奥の壁のくぼみ */
   const nicheMat = lam({ map: tex(rock('#4c453b', '#12100d', 4, 4), 2, 1), side: THREE.DoubleSide });
   [-4.3, 0, 4.3].forEach((x) => {
     const n = new THREE.Mesh(new THREE.BoxGeometry(2.7, 1.6, 0.34), nicheMat);
     n.position.set(x, 1.16, -D / 2 + 0.19); scene.add(n);
   });
 
-  /* 扉（入口） -------------------------------------------------- */
-  const oakTex = wood('#4a3320', '#1d1108');
-  const oakMat = lam({ map: tex(oakTex, 2, 1) });
+  /* 扉（入口） */
+  const oakMat = lam({ map: tex(wood('#4a3320', '#1d1108'), 2, 1) });
   const darkWood = lam({ map: tex(wood('#33241a', '#140c05'), 2, 1) });
   const doorGroup = new THREE.Group();
-  const door = new THREE.Mesh(new THREE.BoxGeometry(1.15, 2.25, 0.07), darkWood);
-  door.position.set(0.575, 1.125, 0); doorGroup.add(door);
-  [0.4, 0.9, 1.4, 1.9].forEach((y) => {
-    const band = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.05, 0.09), lam({ color: 0x241a14 }));
-    band.position.set(0.575, y, 0); doorGroup.add(band);
+  const DH = 1.98;
+  const door = new THREE.Mesh(new THREE.BoxGeometry(1.12, DH, 0.07), darkWood);
+  door.position.set(0.56, DH / 2, 0); doorGroup.add(door);
+  [0.36, 0.82, 1.28, 1.74].forEach((y) => {
+    const band = new THREE.Mesh(new THREE.BoxGeometry(1.07, 0.05, 0.09), lam({ color: 0x241a14 }));
+    band.position.set(0.56, y, 0); doorGroup.add(band);
   });
   const knob = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 6), lam({ color: 0xd8bd8e }));
-  knob.position.set(1.04, 1.1, 0.06); doorGroup.add(knob);
-  doorGroup.position.set(-0.575, 0, D / 2 - 0.06);
+  knob.position.set(1.0, 1.0, 0.06); doorGroup.add(knob);
+  doorGroup.position.set(-0.56, 0, D / 2 - 0.06);
   scene.add(doorGroup);
 
-  /* 灯り。蝋燭のゆらぎ ------------------------------------------ */
+  /* 灯り */
   scene.add(new THREE.AmbientLight(0xffdcb4, 0.62));
   scene.add(new THREE.HemisphereLight(0xffcc98, 0x241d18, 0.44));
   const flames: any[] = [];
@@ -477,9 +572,9 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   flames.push({ p: cp, fl: null, base: 6.4, seed: 3.1, v: 1 });
   const rope = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.8, 5), lam({ color: 0x191411 }));
   rope.position.y = 0.42; chand.add(rope);
-  place(chand, 0, 2.5, -0.6);
+  place(chand, 1.6, 2.5, -0.6);
 
-  /* 棚 ---------------------------------------------------------- */
+  /* 棚 */
   const shelfMat = lam({ map: tex(wood('#3d2c1e', '#180f07'), 3, 1) });
   const shelves: any[] = [];
   function rack(x: number, z: number, w: number, rotY: number) {
@@ -503,15 +598,15 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     return g;
   }
   const racks = [
-    rack(-W / 2 + 0.3, -1.9, 4.6, Math.PI / 2),
+    rack(-W / 2 + 0.3, -2.2, 3.8, Math.PI / 2),
     rack(W / 2 - 0.3, -1.9, 4.6, -Math.PI / 2),
     rack(-2.6, -D / 2 + 0.3, 4.4, 0),
     rack(2.6, -D / 2 + 0.3, 4.4, 0),
     rack(W / 2 - 0.3, 2.2, 2.4, -Math.PI / 2),
   ];
-  const RW = [4.6, 4.6, 4.4, 4.4, 2.4];
+  const RW = [3.8, 4.6, 4.4, 4.4, 2.4];
 
-  /* 瓶 ---------------------------------------------------------- */
+  /* 瓶 */
   const bottleGeo = new THREE.LatheGeometry(
     [
       new THREE.Vector2(0.000, 0.00), new THREE.Vector2(0.038, 0.00),
@@ -543,7 +638,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   }
 
   const list = o.bottles.slice();
-  let bi = 0;
+  let bnum = 0;
   racks.forEach((g, ri) => {
     const w = RW[ri];
     for (let s = 0; s < 5; s++) {
@@ -551,8 +646,8 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
       const n = Math.floor(w / 0.115);
       for (let i = 0; i < n; i++) {
         const x = -w / 2 + 0.09 + i * 0.115;
-        const named = (s === 1 || s === 2) && i % 3 === 0 && bi < list.length;
-        putBottle(g, x, y, 0.02, named ? list[bi++] : undefined);
+        const named = (s === 1 || s === 2) && i % 3 === 0 && bnum < list.length;
+        putBottle(g, x, y, 0.02, named ? list[bnum++] : undefined);
       }
     }
   });
@@ -566,7 +661,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     }
   });
 
-  /* 樽（胴のふくらんだ、ちゃんとした樽） ------------------------ */
+  /* 樽 */
   const hoopMat = lam({ color: 0x2b2320 });
   const staveGeo = new THREE.LatheGeometry(
     [
@@ -591,7 +686,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     boxes.push({ x, z, w: 0.76, d: 0.76 });
     return g;
   }
-  barrel(-5.5, 3.4, false); barrel(-4.6, 3.6, false);
+  barrel(-5.7, 3.4, false); barrel(-4.8, 3.6, false);
   barrel(5.4, 3.3, false);
   barrel(-5.9, -3.6, true, Math.PI / 2); barrel(-5.9, -2.7, true, Math.PI / 2);
 
@@ -604,7 +699,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   crate(4.9, 0.21, 3.3, 0.2); crate(4.9, 0.63, 3.3, -0.1); crate(5.6, 0.21, 2.7, 0.5);
   boxes.push({ x: 5.2, z: 3.1, w: 1.6, d: 1.2 });
 
-  /* 立ち呑みの卓、硝子、そして籠に寝かせた一本 ------------------ */
+  /* 立ち呑みの卓、硝子、パニエ */
   const tbl = new THREE.Group();
   const tableTop = new THREE.Mesh(new THREE.CylinderGeometry(0.54, 0.54, 0.07, 18), oakMat);
   tableTop.position.y = 1.05; tbl.add(tableTop);
@@ -628,103 +723,122 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     g.scale.setScalar(s);
     return g;
   }
-  place(wineGlass(), 2.30, 1.09, 2.20);
-  place(wineGlass(), 2.66, 1.09, 2.40);
+  place(wineGlass(), 2.26, 1.09, 2.16);
+  place(wineGlass(), 2.72, 1.09, 2.44);
 
-  /* パニエ（葡萄酒を寝かせて運ぶ籠） */
+  /* パニエ：籠の底に瓶がぴたりと収まるように */
   const panier = new THREE.Group();
-  const wicker = lam({ map: tex(wood('#8a6a3f', '#4a3418'), 3, 1), side: THREE.DoubleSide });
+  const wicker = lam({ map: tex(wood('#9a7847', '#523a1c'), 3, 1), side: THREE.DoubleSide });
+  const R = 0.062;
   const cradle = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.085, 0.085, 0.30, 14, 1, true, Math.PI * 0.08, Math.PI * 0.84), wicker);
-  cradle.rotation.z = Math.PI / 2; cradle.position.y = 0.055; panier.add(cradle);
-  [-0.15, 0.15].forEach((z) => {
-    const e = new THREE.Mesh(new THREE.RingGeometry(0.062, 0.092, 14, 1, Math.PI * 0.08, Math.PI * 0.84), wicker);
-    e.position.set(z, 0.055, 0); e.rotation.y = Math.PI / 2; e.rotation.z = Math.PI / 2; panier.add(e);
+    new THREE.CylinderGeometry(R, R, 0.34, 16, 1, true, Math.PI * 1.06, Math.PI * 0.88), wicker);
+  cradle.rotation.z = Math.PI / 2;
+  panier.add(cradle);
+  [-0.17, 0.17].forEach((x) => {
+    const e = new THREE.Mesh(new THREE.RingGeometry(R - 0.012, R + 0.014, 16, 1, Math.PI * 1.06, Math.PI * 0.88), wicker);
+    e.position.set(x, 0, 0); e.rotation.y = Math.PI / 2;
+    panier.add(e);
   });
-  const hand = new THREE.Mesh(new THREE.TorusGeometry(0.075, 0.009, 5, 12, Math.PI), wicker);
-  hand.position.set(0, 0.09, 0); hand.rotation.y = Math.PI / 2; panier.add(hand);
+  const hnd = new THREE.Mesh(new THREE.TorusGeometry(0.062, 0.008, 5, 14, Math.PI * 0.9), wicker);
+  hnd.rotation.y = Math.PI / 2; hnd.rotation.z = Math.PI * 0.05; hnd.position.y = 0.005;
+  panier.add(hnd);
   const laid = new THREE.Mesh(bottleGeo, glassB);
-  laid.rotation.z = Math.PI / 2; laid.position.set(-0.15, 0.055, 0); panier.add(laid);
+  laid.rotation.z = Math.PI / 2; laid.position.set(0.15, 0, 0);
+  panier.add(laid);
   const laidCap = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.035, 8), capMat);
-  laidCap.rotation.z = Math.PI / 2; laidCap.position.set(0.145, 0.055, 0); panier.add(laidCap);
-  place(panier, 2.60, 1.09, 2.02, -0.5);
+  laidCap.rotation.z = Math.PI / 2; laidCap.position.set(-0.145, 0, 0);
+  panier.add(laidCap);
+  place(panier, 2.52, 1.145, 2.30, -0.55);
 
-  /* 帳場 -------------------------------------------------------- */
+  /* 帳場 */
+  const CZ = -2.6, CW = 3.0;
   const counter = new THREE.Group();
-  const top = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.09, 0.72), oakMat);
+  const top = new THREE.Mesh(new THREE.BoxGeometry(CW, 0.09, 0.72), oakMat);
   top.position.y = 1.02; counter.add(top);
-  const front = new THREE.Mesh(new THREE.BoxGeometry(3.0, 1.0, 0.6), darkWood);
+  const front = new THREE.Mesh(new THREE.BoxGeometry(CW, 1.0, 0.6), darkWood);
   front.position.y = 0.5; counter.add(front);
-  place(counter, 0, 0, -2.6);
-  boxes.push({ x: 0, z: -2.6, w: 3.0, d: 0.72 });
+  place(counter, 0, 0, CZ);
+  boxes.push({ x: 0, z: CZ, w: CW, d: 0.72 });
 
-  /* 黒服の紳士 -------------------------------------------------- */
+  /* 紳士のこしらえ */
   const skin = lam({ color: 0xdcb493 });
   const black = lam({ color: 0x14100f });
   const white = lam({ color: 0xf0ece2 });
   const hairM = lam({ color: 0x1a120c });
   const silver = lam({ color: 0xc9c3b4 });
+  const mouthM = lam({ color: 0x3a1f1a });
 
-  function gentleman(jacket: any, sommelier: boolean) {
+  function gentleman(jacket: any, sommelier: boolean, seated: boolean) {
     const g = new THREE.Group();
     const p: any = {};
-    const bx = (w: number, h: number, d: number, m: any, x: number, y: number, z: number, ry = 0, par?: any) => {
+    const U = seated ? -0.25 : 0;                     // 腰かけた分だけ、上体を下げます
+    const bx = (w: number, h: number, d: number, m: any, x: number, y: number, z: number, ry = 0) => {
       const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
-      b.position.set(x, y, z); b.rotation.y = ry; (par || g).add(b); return b;
+      b.position.set(x, y, z); b.rotation.y = ry; g.add(b); return b;
     };
-    p.shoeL = bx(0.15, 0.07, 0.28, black, -0.10, 0.035, 0.03);
-    p.shoeR = bx(0.15, 0.07, 0.28, black, 0.10, 0.035, 0.03);
-    p.legL = bx(0.16, 0.80, 0.19, black, -0.10, 0.47, 0);
-    p.legR = bx(0.16, 0.80, 0.19, black, 0.10, 0.47, 0);
-    p.torso = bx(0.46, 0.62, 0.27, jacket, 0, 1.16, 0);
-    bx(0.17, 0.44, 0.02, white, 0, 1.22, 0.136);
-    bx(0.055, 0.055, 0.03, black, 0, 1.16, 0.148);
-    bx(0.115, 0.05, 0.035, black, 0, 1.425, 0.142);
-    bx(0.10, 0.34, 0.02, jacket === black ? black : jacket, -0.11, 1.30, 0.142, 0.16);
-    bx(0.10, 0.34, 0.02, jacket === black ? black : jacket, 0.11, 1.30, 0.142, -0.16);
-    bx(0.06, 0.025, 0.02, white, -0.155, 1.34, 0.139);
-    p.armL = bx(0.115, 0.56, 0.16, jacket, -0.285, 1.17, 0.01);
-    p.armR = bx(0.115, 0.56, 0.16, jacket, 0.285, 1.17, 0.01);
-    p.handL = bx(0.10, 0.10, 0.13, skin, -0.285, 0.845, 0.01);
-    p.handR = bx(0.10, 0.10, 0.13, skin, 0.285, 0.845, 0.01);
-    bx(0.11, 0.09, 0.11, skin, 0, 1.50, 0);
-    p.head = bx(0.215, 0.255, 0.205, skin, 0, 1.665, 0);
-    bx(0.032, 0.022, 0.02, black, -0.055, 1.705, 0.105);
-    bx(0.032, 0.022, 0.02, black, 0.055, 1.705, 0.105);
-    bx(0.075, 0.018, 0.02, hairM, 0, 1.756, 0.104);
-    bx(0.148, 0.075, 0.215, hairM, 0.036, 1.812, -0.004);
-    bx(0.058, 0.062, 0.212, hairM, -0.078, 1.806, -0.004);
-    bx(0.215, 0.055, 0.075, hairM, 0, 1.775, -0.077);
-    bx(0.14, 0.045, 0.03, hairM, 0.038, 1.775, 0.093);
-    bx(0.055, 0.032, 0.03, hairM, -0.078, 1.772, 0.093);
+    if (seated) {
+      [-0.11, 0.11].forEach((sx) => {
+        bx(0.165, 0.175, 0.44, black, sx, 0.63, 0.22);        // 腿
+        bx(0.15, 0.50, 0.165, black, sx, 0.38, 0.40);          // 脛
+        bx(0.145, 0.065, 0.27, black, sx, 0.135, 0.47);        // 靴
+      });
+    } else {
+      p.shoeL = bx(0.15, 0.07, 0.28, black, -0.10, 0.035, 0.03);
+      p.shoeR = bx(0.15, 0.07, 0.28, black, 0.10, 0.035, 0.03);
+      p.legL = bx(0.16, 0.80, 0.19, black, -0.10, 0.47, 0);
+      p.legR = bx(0.16, 0.80, 0.19, black, 0.10, 0.47, 0);
+    }
+    p.torso = bx(0.46, 0.62, 0.27, jacket, 0, 1.16 + U, 0);
+    bx(0.17, 0.44, 0.02, white, 0, 1.22 + U, 0.136);
+    bx(0.055, 0.055, 0.03, black, 0, 1.16 + U, 0.148);
+    bx(0.115, 0.05, 0.035, black, 0, 1.425 + U, 0.142);
+    bx(0.10, 0.34, 0.02, jacket, -0.11, 1.30 + U, 0.142, 0.16);
+    bx(0.10, 0.34, 0.02, jacket, 0.11, 1.30 + U, 0.142, -0.16);
+    bx(0.06, 0.025, 0.02, white, -0.155, 1.34 + U, 0.139);
+    p.armL = bx(0.115, 0.56, 0.16, jacket, -0.285, 1.17 + U, seated ? 0.13 : 0.01);
+    p.armR = bx(0.115, 0.56, 0.16, jacket, 0.285, 1.17 + U, seated ? 0.13 : 0.01);
+    if (seated) { p.armL.rotation.x = -0.62; p.armR.rotation.x = -0.62; }
+    p.handL = bx(0.10, 0.10, 0.13, skin, -0.20, 0.845 + U + (seated ? 0.10 : 0), seated ? 0.66 : 0.01);
+    p.handR = bx(0.10, 0.10, 0.13, skin, 0.20, 0.845 + U + (seated ? 0.10 : 0), seated ? 0.66 : 0.01);
+    if (!seated) { p.handL.position.x = -0.285; p.handR.position.x = 0.285; }
+    bx(0.11, 0.09, 0.11, skin, 0, 1.50 + U, 0);
+    p.head = bx(0.215, 0.255, 0.205, skin, 0, 1.665 + U, 0);
+    bx(0.032, 0.022, 0.02, black, -0.055, 1.705 + U, 0.105);
+    bx(0.032, 0.022, 0.02, black, 0.055, 1.705 + U, 0.105);
+    bx(0.075, 0.018, 0.02, hairM, 0, 1.756 + U, 0.104);
+    p.mouth = bx(0.052, 0.014, 0.02, mouthM, 0, 1.605 + U, 0.104);
+    bx(0.148, 0.075, 0.215, hairM, 0.036, 1.812 + U, -0.004);
+    bx(0.058, 0.062, 0.212, hairM, -0.078, 1.806 + U, -0.004);
+    bx(0.215, 0.055, 0.075, hairM, 0, 1.775 + U, -0.077);
+    bx(0.14, 0.045, 0.03, hairM, 0.038, 1.775 + U, 0.093);
+    bx(0.055, 0.032, 0.03, hairM, -0.078, 1.772 + U, 0.093);
     if (sommelier) {
-      /* 腰から下の黒い前掛け */
       bx(0.47, 0.72, 0.03, black, 0, 0.62, 0.152);
       bx(0.50, 0.05, 0.04, black, 0, 0.97, 0.152);
-      /* 首から提げたタストヴァン */
-      const cordL = bx(0.012, 0.30, 0.012, black, -0.055, 1.36, 0.128); cordL.rotation.z = 0.16;
-      const cordR = bx(0.012, 0.30, 0.012, black, 0.055, 1.36, 0.128); cordR.rotation.z = -0.16;
+      const cordL = bx(0.012, 0.30, 0.012, black, -0.055, 1.36 + U, 0.128); cordL.rotation.z = 0.16;
+      const cordR = bx(0.012, 0.30, 0.012, black, 0.055, 1.36 + U, 0.128); cordR.rotation.z = -0.16;
       const cup = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.044, 0.018, 14), silver);
-      cup.position.set(0, 1.205, 0.152); g.add(cup);
-      const dimple = new THREE.Mesh(new THREE.SphereGeometry(0.013, 8, 6), silver);
-      dimple.position.set(0.022, 1.214, 0.152); g.add(dimple);
+      cup.position.set(0, 1.205 + U, 0.152); g.add(cup);
+      const dim = new THREE.Mesh(new THREE.SphereGeometry(0.013, 8, 6), silver);
+      dim.position.set(0.022, 1.214 + U, 0.152); g.add(dim);
       const grip = new THREE.Mesh(new THREE.BoxGeometry(0.030, 0.010, 0.022), silver);
-      grip.position.set(-0.058, 1.207, 0.152); g.add(grip);
+      grip.position.set(-0.058, 1.207 + U, 0.152); g.add(grip);
     }
+    p.U = U;
     return { g, p };
   }
 
-  const cl = gentleman(black, true);
+  const cl = gentleman(black, true, false);
   const clerk = cl.g;
   clerk.userData.clerk = true;
-  const HOME = { x: 0, z: -3.45 };
+  const HOME = { x: 0, z: -3.35 };
   place(clerk, HOME.x, 0, HOME.z);
   pick.push(clerk);
   const halo = new THREE.PointLight(0xffcf9a, 2.6, 3.8, 1.6);
   scene.add(halo);
 
-  /* 竪型ピアノと、その弾き手 ------------------------------------ */
-  const PX = -W / 2 + 0.78, PZ = 2.5;
+  /* 竪型ピアノと弾き手。部屋の左半分で、扉のほうを向いて */
+  const PX = -3.5, PZ = 1.05;
   const piano = new THREE.Group();
   const pm = lam({ map: tex(wood('#2c1c12', '#100804'), 1.4, 1) });
   const body = new THREE.Mesh(new THREE.BoxGeometry(1.48, 1.18, 0.58), pm);
@@ -742,55 +856,29 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   });
   const pedal = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.03, 0.12), lam({ color: 0xa8925f }));
   pedal.position.set(0, 0.10, 0.08); piano.add(pedal);
-  place(piano, PX, 0, PZ, Math.PI / 2);
-  boxes.push({ x: PX, z: PZ, w: 0.9, d: 1.7 });
+  place(piano, PX, 0, PZ, Math.PI);                      // 鍵盤が扉のほうを向きます
+  boxes.push({ x: PX, z: PZ + 0.14, w: 1.6, d: 0.92 });
 
-  /* 天板の一杯 */
-  const pianoGlass = place(wineGlass(1.15), PX + 0.10, 1.36, PZ - 0.42);
+  const pianoGlass = place(wineGlass(1.15), PX + 0.42, 1.36, PZ + 0.10);
   const glassHome = pianoGlass.position.clone();
 
-  /* 腰かけた姿の弾き手：白の上衣に黒の袴、帽子はなし */
   const cream = lam({ color: 0xe9e3d4 });
-  const pl = gentleman(cream, false);
-  const pia = pl.g;
+  const pl = gentleman(cream, false, true);
   const P = pl.p;
-  /* 腰かけの高さに合わせて組み直します（脚は腿と脛に分けます） */
-  [P.legL, P.legR, P.shoeL, P.shoeR].forEach((m: any) => pia.remove(m));
-  const seatY = 0.62;
-  const thigh = (sx: number) => {
-    const t = new THREE.Mesh(new THREE.BoxGeometry(0.165, 0.175, 0.44), black);
-    t.position.set(sx, seatY + 0.01, 0.22); pia.add(t);
-    const s = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.50, 0.165), black);
-    s.position.set(sx, seatY - 0.24, 0.40); pia.add(s);
-    const f = new THREE.Mesh(new THREE.BoxGeometry(0.145, 0.065, 0.27), black);
-    f.position.set(sx, seatY - 0.485, 0.47); pia.add(f);
-  };
-  thigh(-0.11); thigh(0.11);
-  P.torso.position.y = seatY + 0.54;
-  [P.armL, P.armR].forEach((a: any, i: number) => {
-    a.position.set(i ? 0.285 : -0.285, seatY + 0.52, 0.13);
-    a.rotation.x = -0.62;
-  });
-  P.handL.position.set(-0.20, seatY + 0.30, 0.46);
-  P.handR.position.set(0.20, seatY + 0.30, 0.46);
-  pia.children.forEach((c: any) => {
-    if (c === P.torso || c === P.armL || c === P.armR || c === P.handL || c === P.handR) return;
-    if (c.position.y > 0.9) c.position.y += seatY - 0.02;      // 胸から上をまとめて持ち上げます
-  });
-  const handHomeR = P.handR.position.clone();
-  place(pia, PX + 0.92, 0, PZ, -Math.PI / 2);
+  place(pl.g, PX, 0, 0.18, 0);                            // 扉のほうを向いて
+  const handHome = { L: P.handL.position.clone(), R: P.handR.position.clone() };
 
   const bench = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.075, 0.32), oakMat);
-  bench.position.set(PX + 0.92, seatY - 0.04, PZ); bench.rotation.y = -Math.PI / 2; scene.add(bench);
+  bench.position.set(PX, 0.58, 0.02); scene.add(bench);
   [-0.25, 0.25].forEach((d) => {
-    const l = new THREE.Mesh(new THREE.BoxGeometry(0.06, seatY - 0.08, 0.06), oakMat);
-    l.position.set(PX + 0.92, (seatY - 0.08) / 2, PZ + d); scene.add(l);
+    const l = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.55, 0.06), oakMat);
+    l.position.set(PX + d, 0.275, 0.02); scene.add(l);
   });
-  boxes.push({ x: PX + 0.92, z: PZ, w: 0.8, d: 0.95 });
+  boxes.push({ x: PX, z: 0.16, w: 0.9, d: 0.9 });
   const pglow = new THREE.PointLight(0xffb877, 2.4, 4.2, 1.6);
-  pglow.position.set(PX + 0.5, 1.85, PZ); scene.add(pglow);
+  pglow.position.set(PX, 1.9, 0.6); scene.add(pglow);
 
-  /* 見回しと歩き ------------------------------------------------ */
+  /* 見回しと歩き */
   let yaw = 0, pitch = -0.02;
   const keys: Record<string, boolean> = {};
   let locked = false, paused = false;
@@ -799,15 +887,28 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
 
   const fire = () => { if (look.kind) { au.clink(); o.onUse(look.kind, look.id); } };
 
-  /* 店員を呼ぶ */
-  let walkTo: { x: number; z: number } | null = null;
+  /* 店員の道すじ。帳場の裏からは、脇を回って出てきます */
+  let path: Array<{ x: number; z: number }> = [];
   let clerkStep = 0, clerkPhase = 0, called = false, backAt = 0;
+  const behind = (z: number) => z < CZ + 0.36;
+  const route = (tx: number, tz: number) => {
+    const out: Array<{ x: number; z: number }> = [];
+    const inside = behind(clerk.position.z), goInside = behind(tz);
+    if (inside !== goInside) {
+      const sx = (inside ? (tx >= 0 ? 1 : -1) : (clerk.position.x >= 0 ? 1 : -1)) * (CW / 2 + 0.55);
+      out.push({ x: sx, z: CZ - 0.62 });
+      out.push({ x: sx, z: CZ + 0.62 });
+      if (inside) out.reverse();
+    }
+    out.push({ x: tx, z: tz });
+    return out;
+  };
   const callClerk = () => {
     au.start();
     const d = Math.hypot(camera.position.x - clerk.position.x, camera.position.z - clerk.position.z);
     if (d < 1.9) { o.onArrive(); return; }
     const a = Math.atan2(clerk.position.x - camera.position.x, clerk.position.z - camera.position.z);
-    walkTo = { x: camera.position.x + Math.sin(a) * 1.15, z: camera.position.z + Math.cos(a) * 1.15 };
+    path = route(camera.position.x + Math.sin(a) * 1.15, camera.position.z + Math.cos(a) * 1.15);
     called = true;
   };
 
@@ -844,6 +945,40 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   };
   el.addEventListener('click', clickCanvas);
 
+  /* 携帯：左半分をなぞって歩き、右半分をなぞって見回します */
+  const touch: Record<number, { x: number; y: number; move: boolean }> = {};
+  const ts = (e: TouchEvent) => {
+    au.start();
+    for (const t of Array.from(e.changedTouches)) {
+      touch[t.identifier] = { x: t.clientX, y: t.clientY, move: t.clientX < innerWidth / 2 };
+    }
+  };
+  const tm = (e: TouchEvent) => {
+    if (paused) return;
+    for (const t of Array.from(e.changedTouches)) {
+      const s = touch[t.identifier]; if (!s) continue;
+      const dx = t.clientX - s.x, dy = t.clientY - s.y;
+      if (s.move) { padX = Math.max(-1, Math.min(1, dx / 60)); padY = Math.max(-1, Math.min(1, dy / 60)); }
+      else {
+        yaw -= dx * 0.006;
+        pitch = Math.max(-1.15, Math.min(1.05, pitch - dy * 0.006));
+        s.x = t.clientX; s.y = t.clientY;
+      }
+    }
+    e.preventDefault();
+  };
+  const te = (e: TouchEvent) => {
+    for (const t of Array.from(e.changedTouches)) {
+      const s = touch[t.identifier];
+      if (s?.move) { padX = 0; padY = 0; }
+      delete touch[t.identifier];
+    }
+  };
+  el.addEventListener('touchstart', ts, { passive: true });
+  el.addEventListener('touchmove', tm, { passive: false });
+  el.addEventListener('touchend', te);
+  el.addEventListener('touchcancel', te);
+
   function slide(nx: number, nz: number, x: number, z: number, r = 0.34) {
     const hit = (px: number, pz: number) =>
       boxes.some((b) => Math.abs(px - b.x) < b.w / 2 + r && Math.abs(pz - b.z) < b.d / 2 + r);
@@ -861,7 +996,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
 
   let doorOpen = 0, doorFired = false, alive = true;
   let armed = false, walked = 0, bob = 0;
-  let drink = 0, drinkAt = 14;
+  let drink = 0, drinkAt = 16;
   const clock = new THREE.Clock();
 
   function resize() {
@@ -872,7 +1007,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   resize();
   addEventListener('resize', resize);
 
-  let first = true, T = 0;
+  let first = true, T = 0, stuck = 0;
   function frame() {
     if (!alive) return;
     requestAnimationFrame(frame);
@@ -880,50 +1015,44 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     T += dt;
     const now = performance.now();
 
-    /* 蝋燭のゆらぎ。ゆっくりした息と、ときどきの跳ね */
     flames.forEach((f) => {
       const s = f.seed;
       const slow = Math.sin(T * 1.7 + s) * 0.10 + Math.sin(T * 4.3 + s * 1.7) * 0.06;
       f.v += ((1 + slow + (Math.random() - 0.5) * 0.10) - f.v) * Math.min(1, dt * 9);
       if (Math.random() < dt * 0.5) f.v *= 0.72;
       if (f.p) f.p.intensity = f.base * f.v;
-      if (f.fl) {
-        f.fl.scale.set(0.9 + f.v * 0.18, f.v * 1.06, 0.9 + f.v * 0.18);
-        f.fl.position.x += ((Math.random() - 0.5) * 0.004 - f.fl.position.x * 0) * 0;
-        f.fl.rotation.z = Math.sin(T * 6 + s) * 0.06;
-      }
+      if (f.fl) { f.fl.scale.set(0.9 + f.v * 0.18, f.v * 1.06, 0.9 + f.v * 0.18); f.fl.rotation.z = Math.sin(T * 6 + s) * 0.06; }
     });
 
-    /* 弾き手：拍に合わせた手と、ときどきの一口 */
+    /* 弾き手。歌いながら、ときどき一口 */
     const ph = au.phase();
     drinkAt -= dt;
     if (drinkAt <= 0 && drink === 0) drink = 0.0001;
-    if (drink > 0) {
-      drink += dt / 5.4;
-      if (drink >= 1) { drink = 0; drinkAt = 22 + Math.random() * 20; }
-    }
-    const k = drink > 0 ? Math.sin(Math.min(1, drink) * Math.PI) : 0;   // 0→1→0
+    if (drink > 0) { drink += dt / 5.4; if (drink >= 1) { drink = 0; drinkAt = 24 + Math.random() * 24; } }
+    const k = drink > 0 ? Math.sin(Math.min(1, drink) * Math.PI) : 0;
     if (drink > 0) {
       P.handR.position.set(
-        handHomeR.x + (0.05 - handHomeR.x) * k,
-        handHomeR.y + (0.72 - handHomeR.y) * k,
-        handHomeR.z + (0.16 - handHomeR.z) * k);
-      P.armR.rotation.x = -0.62 + k * 0.5;
-      P.head.rotation.x = -k * 0.22;
+        handHome.R.x + (0.10 - handHome.R.x) * k,
+        handHome.R.y + (1.30 + P.U - handHome.R.y) * k,
+        handHome.R.z + (0.20 - handHome.R.z) * k);
+      P.armR.rotation.x = -0.62 + k * 0.55;
+      P.head.rotation.x = -k * 0.2;
       const wp = P.handR.getWorldPosition(new THREE.Vector3());
-      pianoGlass.position.set(wp.x, wp.y - 0.02, wp.z);
+      pianoGlass.position.set(wp.x, wp.y - 0.02, wp.z + 0.05);
       pianoGlass.rotation.z = k * 0.5;
     } else {
-      P.handR.position.copy(handHomeR);
+      P.handR.position.copy(handHome.R);
       P.armR.rotation.x = -0.62;
       P.head.rotation.x = 0;
       pianoGlass.position.copy(glassHome);
       pianoGlass.rotation.z = 0;
-      P.handR.position.y = handHomeR.y + Math.abs(Math.cos(ph * Math.PI * 1.5)) * 0.03;
+      P.handR.position.y = handHome.R.y + Math.abs(Math.cos(ph * Math.PI * 1.5)) * 0.03;
     }
-    P.handL.position.y = seatY + 0.30 + Math.abs(Math.sin(ph * Math.PI)) * 0.026;
+    P.handL.position.y = handHome.L.y + Math.abs(Math.sin(ph * Math.PI)) * 0.026;
     P.head.rotation.z = Math.sin(ph * Math.PI * 0.5) * 0.09;
     P.torso.rotation.z = Math.sin(ph * Math.PI * 0.5 + 0.4) * 0.04;
+    const vx = au.vox();
+    P.mouth.scale.y = 1 + vx * (2.6 + Math.sin(now * 0.019) * 1.1);
 
     if (!paused) {
       yaw -= lookX * dt * 2.6;
@@ -990,24 +1119,28 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
 
     /* 店員の歩み */
     let moving = false;
-    if (walkTo) {
-      const dx = walkTo.x - clerk.position.x, dz = walkTo.z - clerk.position.z;
+    if (path.length) {
+      const g0 = path[0];
+      const dx = g0.x - clerk.position.x, dz = g0.z - clerk.position.z;
       const d = Math.hypot(dx, dz);
-      if (d < 0.24) {
-        walkTo = null;
-        if (called) { called = false; o.onArrive(); backAt = T + 26; }
+      if (d < 0.26) {
+        path.shift();
+        if (!path.length && called) { called = false; o.onArrive(); backAt = T + 30; }
       } else {
-        const v = Math.min(1.28 * dt, d);
-        const [nx, nz] = slide(clerk.position.x + dx / d * v, clerk.position.z + dz / d * v,
-          clerk.position.x, clerk.position.z, 0.30);
+        const v = Math.min(1.30 * dt, d);
+        const px = clerk.position.x, pz = clerk.position.z;
+        const [nx, nz] = slide(px + dx / d * v, pz + dz / d * v, px, pz, 0.28);
         clerk.position.x = nx; clerk.position.z = nz;
+        const gone = Math.hypot(nx - px, nz - pz);
+        stuck = gone < v * 0.25 ? stuck + dt : 0;
+        if (stuck > 0.8) { stuck = 0; path.shift(); }        // つかえたら、次の目印へ
         clerk.rotation.y = Math.atan2(dx, dz);
         moving = true;
-        clerkStep += v; clerkPhase += v * 7.4;
+        clerkStep += gone; clerkPhase += gone * 7.4;
         if (clerkStep > 0.58) { clerkStep = 0; au.step(false, true); }
       }
     } else if (backAt && T > backAt && Math.hypot(clerk.position.x - HOME.x, clerk.position.z - HOME.z) > 0.3) {
-      backAt = 0; walkTo = { ...HOME };
+      backAt = 0; path = route(HOME.x, HOME.z);
     }
     const sw = moving ? Math.sin(clerkPhase) * 0.42 : 0;
     cl.p.legL.rotation.x = sw; cl.p.legR.rotation.x = -sw;
@@ -1037,6 +1170,8 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
       removeEventListener('mousemove', onMove); removeEventListener('resize', resize);
       document.removeEventListener('pointerlockchange', onLockChange);
       el.removeEventListener('click', clickCanvas);
+      el.removeEventListener('touchstart', ts); el.removeEventListener('touchmove', tm);
+      el.removeEventListener('touchend', te); el.removeEventListener('touchcancel', te);
       try { document.exitPointerLock?.(); } catch { /* しずかに */ }
       renderer.dispose();
       el.remove();
