@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type PointerEvent as PE } from 'react';
 import Link from 'next/link';
 import { useSite } from '@/components/Providers';
 import { createShop, type ShopHandle, type Bottle } from '@/lib/shop3d';
@@ -25,6 +25,8 @@ const W: Record<Lang, Record<string, string>> = {
     err: 'うまく伝わりませんでした。お手数ですが、もう一度お願いいたします。',
     need: 'ご用件をご記入ください。', needMail: 'メールアドレスをご記入ください。',
     sndOn: '音を出す', sndOff: '音を消す',
+    kWalk: 'W A S D 歩く', kLook: 'マウス 見回す', kTake: 'クリック 手に取る',
+    callC: '店員を呼ぶ', talkC: '店員に話しかける', oBtn: '手に取る', xBtn: '閉じる',
   },
   en: {
     loading: 'Preparing the shop…', enter: 'Push the door and step inside',
@@ -40,6 +42,8 @@ const W: Record<Lang, Record<string, string>> = {
     err: 'Something went wrong. Please try once more.',
     need: 'Please write your request.', needMail: 'Please enter your email address.',
     sndOn: 'Sound on', sndOff: 'Sound off',
+    kWalk: 'W A S D  walk', kLook: 'Mouse  look', kTake: 'Click  pick up',
+    callC: 'Call the clerk', talkC: 'Speak to the clerk', oBtn: 'Pick up', xBtn: 'Close',
   },
   fr: {
     loading: 'Préparation de la boutique…', enter: 'Poussez la porte et entrez',
@@ -55,6 +59,8 @@ const W: Record<Lang, Record<string, string>> = {
     err: 'Une erreur est survenue. Merci de réessayer.',
     need: 'Merci d’écrire votre demande.', needMail: 'Merci d’indiquer votre e-mail.',
     sndOn: 'Son activé', sndOff: 'Son coupé',
+    kWalk: 'W A S D  marcher', kLook: 'Souris  regarder', kTake: 'Clic  prendre',
+    callC: 'Appeler le sommelier', talkC: 'Parler au sommelier', oBtn: 'Prendre', xBtn: 'Fermer',
   },
   zh: {
     loading: '正在准备店内…', enter: '推门进入店内',
@@ -70,6 +76,8 @@ const W: Record<Lang, Record<string, string>> = {
     err: '发送失败，请再试一次。',
     need: '请填写您的需求。', needMail: '请填写电子邮箱。',
     sndOn: '开启声音', sndOff: '关闭声音',
+    kWalk: 'W A S D 行走', kLook: '鼠标 环视', kTake: '点击 取用',
+    callC: '呼叫店员', talkC: '与店员交谈', oBtn: '取用', xBtn: '关闭',
   },
   ko: {
     loading: '매장을 준비하고 있습니다…', enter: '문을 열고 들어가기',
@@ -85,6 +93,8 @@ const W: Record<Lang, Record<string, string>> = {
     err: '전달되지 않았습니다. 다시 한 번 부탁드립니다.',
     need: '용건을 적어 주세요.', needMail: '이메일 주소를 적어 주세요.',
     sndOn: '소리 켜기', sndOff: '소리 끄기',
+    kWalk: 'W A S D 걷기', kLook: '마우스 둘러보기', kTake: '클릭 집기',
+    callC: '점원 부르기', talkC: '점원에게 말 걸기', oBtn: '집기', xBtn: '닫기',
   },
 };
 
@@ -97,6 +107,7 @@ export function VirtualPage() {
   const [ready, setReady] = useState(false);
   const [started, setStarted] = useState(false);
   const [snd, setSnd] = useState(true);
+  const [near, setNear] = useState(false);
   const [hint, setHint] = useState<'clerk' | 'bottle' | null>(null);
   const [panel, setPanel] = useState<'none' | 'talk' | 'bottle' | 'bye'>('none');
   const [bottle, setBottle] = useState<Bottle | null>(null);
@@ -149,6 +160,7 @@ export function VirtualPage() {
         if (k === 'clerk') { setReply(''); setPicks([]); open('talk'); }
         else { const b = items.find((x) => x.id === id) || null; setBottle(b); open('bottle'); }
       },
+      onNear: (v) => setNear(v),
       onDoor: () => open('bye'),
     }).then((h) => {
       if (dead) { h.dispose(); return; }
@@ -228,7 +240,14 @@ export function VirtualPage() {
         <>
           <div className="vs-cross" />
           {hint ? <div className="vs-hint">{hint === 'clerk' ? t.talk : t.see}</div> : null}
-          <div className="vs-guide">{isTouch ? t.hintSp : t.hintPc}</div>
+
+          <button className="vs-call" onClick={() => { setReply(''); setPicks([]); open('talk'); }}>
+            <span className="vs-cap">C</span>{near ? t.talkC : t.callC}
+          </button>
+
+          {!isTouch ? (
+            <div className="vs-guide">{isTake}</span>
+              <span><span ch ? t.hintSp : t.hintPc}</div>
           <button className="vs-snd" onClick={() => setSnd((v) => !v)}
                   aria-label={snd ? t.sndOff : t.sndOn}>{snd ? '♪ ' + t.sndOff : '♪ ' + t.sndOn}</button>
         </>
@@ -297,5 +316,63 @@ export function VirtualPage() {
         </div>
       ) : null}
     </div>
+  );
+}
+
+
+/* ── 携帯の操作盤：左に十字と丸バツ、右に見回しの棒 ────────── */
+function Pads(p: {
+  onMove: (x: number, y: number) => void;
+  onLook: (x: number, y: number) => void;
+  onO: () => void; onX: () => void; oLabel: string; xLabel: string;
+}) {
+  const held = useRef<Record<string, boolean>>({});
+  const knob = useRef<HTMLDivElement | null>(null);
+  const send = () => {
+    const h = held.current;
+    p.onMove((h.r ? 1 : 0) - (h.l ? 1 : 0), (h.d ? 1 : 0) - (h.u ? 1 : 0));
+  };
+  const dir = (k: string) => ({
+    onPointerDown: (e: PE) => { e.preventDefault(); held.current[k] = true; send(); },
+    onPointerUp: () => { held.current[k] = false; send(); },
+    onPointerLeave: () => { held.current[k] = false; send(); },
+    onPointerCancel: () => { held.current[k] = false; send(); },
+  });
+
+  const grab = useRef<{ id: number; x: number; y: number } | null>(null);
+  const stick = {
+    onPointerDown: (e: PE) => {
+      e.preventDefault();
+      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+      grab.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
+    },
+    onPointerMove: (e: PE) => {
+      const g = grab.current; if (!g || g.id !== e.pointerId) return;
+      const dx = Math.max(-1, Math.min(1, (e.clientX - g.x) / 46));
+      const dy = Math.max(-1, Math.min(1, (e.clientY - g.y) / 46));
+      if (knob.current) knob.current.style.transform = `translate(${dx * 26}px, ${dy * 26}px)`;
+      p.onLook(dx, dy);
+    },
+    onPointerUp: () => { grab.current = null; p.onLook(0, 0); if (knob.current) knob.current.style.transform = ''; },
+    onPointerCancel: () => { grab.current = null; p.onLook(0, 0); if (knob.current) knob.current.style.transform = ''; },
+  };
+
+  return (
+    <>
+      <div className="vs-dpad">
+        <button className="d-u" {...dir('u')} aria-label="up" />
+        <button className="d-l" {...dir('l')} aria-label="left" />
+        <button className="d-r" {...dir('r')} aria-label="right" />
+        <button className="d-d" {...dir('d')} aria-label="down" />
+        <span className="d-c" />
+      </div>
+      <div className="vs-ox">
+        <button className="vs-o" onPointerDown={(e) => { e.preventDefault(); p.onO(); }}>◯<i>{p.oLabel}</i></button>
+        <button className="vs-x" onPointerDown={(e) => { e.preventDefault(); p.onX(); }}>✕<i>{p.xLabel}</i></button>
+      </div>
+      <div className="vs-stick" {...stick}>
+        <div className="vs-knob" ref={knob} />
+      </div>
+    </>
   );
 }
