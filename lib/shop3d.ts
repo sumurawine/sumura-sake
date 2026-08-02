@@ -856,27 +856,34 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   });
   const pedal = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.03, 0.12), lam({ color: 0xa8925f }));
   pedal.position.set(0, 0.10, 0.08); piano.add(pedal);
-  place(piano, PX, 0, PZ, Math.PI);                      // 鍵盤が扉のほうを向きます
-  boxes.push({ x: PX, z: PZ + 0.14, w: 1.6, d: 0.92 });
+  const PA = -0.62;                                       // 扉のほうへ、すこし斜めに構えます
+  const rz = (x: number, z: number) =>
+    [PX + x * Math.cos(PA) + z * Math.sin(PA), PZ - x * Math.sin(PA) + z * Math.cos(PA)];
+  place(piano, PX, 0, PZ, Math.PI + PA);
+  boxes.push({ x: PX, z: PZ, w: 1.7, d: 1.5 });
 
-  const pianoGlass = place(wineGlass(1.15), PX + 0.42, 1.36, PZ + 0.10);
+  const gp = rz(0.42, 0.10);
+  const pianoGlass = place(wineGlass(1.15), gp[0], 1.36, gp[1]);
   const glassHome = pianoGlass.position.clone();
 
   const cream = lam({ color: 0xe9e3d4 });
   const pl = gentleman(cream, false, true);
   const P = pl.p;
-  place(pl.g, PX, 0, 0.18, 0);                            // 扉のほうを向いて
+  const pp = rz(0, -0.87);
+  place(pl.g, pp[0], 0, pp[1], PA);
   const handHome = { L: P.handL.position.clone(), R: P.handR.position.clone() };
 
+  const bp = rz(0, -1.03);
   const bench = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.075, 0.32), oakMat);
-  bench.position.set(PX, 0.58, 0.02); scene.add(bench);
+  bench.position.set(bp[0], 0.58, bp[1]); bench.rotation.y = PA; scene.add(bench);
   [-0.25, 0.25].forEach((d) => {
+    const q = rz(d, -1.03);
     const l = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.55, 0.06), oakMat);
-    l.position.set(PX + d, 0.275, 0.02); scene.add(l);
+    l.position.set(q[0], 0.275, q[1]); scene.add(l);
   });
-  boxes.push({ x: PX, z: 0.16, w: 0.9, d: 0.9 });
+  boxes.push({ x: bp[0], z: bp[1], w: 0.9, d: 0.9 });
   const pglow = new THREE.PointLight(0xffb877, 2.4, 4.2, 1.6);
-  pglow.position.set(PX, 1.9, 0.6); scene.add(pglow);
+  pglow.position.set(PX + 0.3, 1.9, PZ - 0.6); scene.add(pglow);
 
   /* 見回しと歩き */
   let yaw = 0, pitch = -0.02;
