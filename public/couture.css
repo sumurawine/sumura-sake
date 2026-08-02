@@ -322,3 +322,110 @@ html[data-era="now"] #timewarp.tw-closed .tw-toggle{ color:rgba(243,240,234,.72)
     line-height:38px !important; border:0 !important; background:transparent !important;
   }
 }
+
+/* ── 三度目の仕上げ ───────────────────────────────────── */
+
+/* すべて明朝に。欧文は Cormorant、和文は しっぽり明朝 */
+html[data-era="now"]{
+  --mx-sans:'Cormorant Garamond','Shippori Mincho',"Hiragino Mincho ProN","Yu Mincho",serif;
+}
+html[data-era="now"] body,
+html[data-era="now"] button,
+html[data-era="now"] input,
+html[data-era="now"] select,
+html[data-era="now"] textarea,
+html[data-era="now"] .mx-kicker,
+html[data-era="now"] .mx-cap,
+html[data-era="now"] .mx-note,
+html[data-era="now"] .mx-label,
+html[data-era="now"] .mx-btn,
+html[data-era="now"] .mx-nav a,
+html[data-era="now"] .mx-facts dt,
+html[data-era="now"] .mx-foot h4,
+html[data-era="now"] .mx-foot-end,
+html[data-era="now"] .mx-scroll span,
+html[data-era="now"] .mx-brand small,
+html[data-era="now"] .mx-table th,
+html[data-mx="1"] #timewarp,
+html[data-mx="1"] #timewarp *,
+html[data-era="now"] #timewarp,
+html[data-era="now"] #timewarp *,
+html[data-era="now"] #lang-bar button,
+html[data-era="now"] #modern-entrance .me-en,
+html[data-era="now"] #modern-entrance .me-btn,
+html[data-era="now"] #age-note{
+  font-family:'Cormorant Garamond','Shippori Mincho',"Hiragino Mincho ProN","Yu Mincho",serif !important;
+}
+/* 明朝は線が細いので、小さな札は少しだけ太らせます */
+html[data-era="now"] .mx-kicker,
+html[data-era="now"] .mx-facts dt,
+html[data-era="now"] .mx-foot h4,
+html[data-era="now"] .mx-label,
+html[data-era="now"] .mx-table th{ font-weight:600; }
+html[data-era="now"] .mx-nav a{ font-size:13px; letter-spacing:.16em; }
+html[data-era="now"] .mx-btn{ font-size:13px; letter-spacing:.2em; }
+html[data-era="now"] #lang-bar.lb-quiet button{ font-size:11.5px !important; letter-spacing:.16em !important; }
+
+/* ── 文字が、めくれるように現れます ───────────────────── */
+html[data-era="now"] .mx-fade{
+  opacity:0; transform:translate3d(0,16px,0); filter:blur(4px);
+  transition:opacity .95s cubic-bezier(.16,.84,.24,1), transform .95s cubic-bezier(.16,.84,.24,1), filter .95s ease;
+  will-change:opacity, transform;
+}
+html[data-era="now"] .mx-fade.is-in{ opacity:1; transform:none; filter:none; }
+/* 並んだものは、ほんの少しずつ遅らせます */
+html[data-era="now"] li.mx-fade:nth-child(2){ transition-delay:.05s }
+html[data-era="now"] li.mx-fade:nth-child(3){ transition-delay:.10s }
+html[data-era="now"] li.mx-fade:nth-child(4){ transition-delay:.15s }
+html[data-era="now"] li.mx-fade:nth-child(5){ transition-delay:.20s }
+html[data-era="now"] li.mx-fade:nth-child(n+6){ transition-delay:.25s }
+@media (prefers-reduced-motion:reduce){
+  html[data-era="now"] .mx-fade{ opacity:1 !important; transform:none !important; filter:none !important; transition:none !important; }
+}
+
+/* ── 品書きの下に開く、細かなお品書き ─────────────────── */
+html[data-era="now"] .mx-navitem{ position:relative; display:inline-flex; align-items:center; }
+html[data-era="now"] .mx-navitem > a{ display:inline-block; }
+html[data-era="now"] .mx-navitem.has-sub > a::before{
+  content:""; position:absolute; left:50%; bottom:-2px; width:3px; height:3px; margin-left:-1.5px;
+  background:var(--mx-gold); border-radius:50%; opacity:0; transition:opacity .4s ease;
+}
+html[data-era="now"] .mx-navitem.has-sub:hover > a::before{ opacity:.9; }
+
+html[data-era="now"] .mx-sub{
+  position:absolute; top:100%; left:50%; z-index:50;
+  transform:translateX(-50%) translateY(10px); opacity:0; pointer-events:none;
+  transition:opacity .42s ease, transform .42s cubic-bezier(.16,.84,.24,1);
+  padding-top:16px;
+}
+html[data-era="now"] .mx-navitem:hover .mx-sub,
+html[data-era="now"] .mx-navitem:focus-within .mx-sub{
+  opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0);
+}
+html[data-era="now"] .mx-sub-in{
+  display:block; min-width:230px; padding:14px 0;
+  background:rgba(9,7,10,.90); backdrop-filter:blur(18px) saturate(1.15);
+  border:1px solid var(--mx-hair); border-radius:2px;
+  box-shadow:0 40px 90px -40px rgba(0,0,0,.95);
+}
+html[data-era="now"] .mx-sub-in::before{
+  content:""; display:block; width:34px; height:1px; margin:0 auto 12px;
+  background:linear-gradient(90deg, rgba(201,173,130,0), var(--mx-gold), rgba(201,173,130,0));
+}
+html[data-era="now"] .mx-sub-in a{
+  display:block; padding:9px 24px; white-space:nowrap;
+  font-size:13.5px; letter-spacing:.09em; line-height:1.6;
+  color:rgba(243,240,234,.72) !important; transition:color .35s ease, background .35s ease;
+}
+html[data-era="now"] .mx-sub-in a:hover{ color:var(--mx-paper) !important; background:rgba(201,173,130,.10); }
+html[data-era="now"] .mx-sub-in a:last-child{
+  margin-top:8px; padding-top:14px; border-top:1px solid rgba(243,240,234,.10);
+  color:rgba(201,173,130,.86) !important; font-size:12.5px; letter-spacing:.14em;
+}
+
+/* 小さな画面では、扉の品書きに畳みます */
+@media (max-width:860px){
+  html[data-era="now"] .mx-sub{ display:none !important; }
+  html[data-era="now"] .mx-navitem{ display:block; width:min(320px,74vw); }
+  html[data-era="now"] .mx-navitem > a{ display:block; }
+}
