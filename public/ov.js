@@ -5,7 +5,8 @@
   var SKIP = { SCRIPT:1, STYLE:1, NOSCRIPT:1, SVG:1, PATH:1, CANVAS:1, IFRAME:1,
                INPUT:1, TEXTAREA:1, SELECT:1, OPTION:1, HEAD:1, TITLE:1, META:1, LINK:1 };
   var LANGS = ['jp','en','fr','zh','ko'];
-  var rows = {};      /* キー → 一行分 */
+  var rows = {};        /* 見分け名 → 一行分 */
+  var loose = {};       /* 昔の見分け名（位置から作ったもの）の受け皿 */
   var lang = 'jp';
   var base = new WeakMap();
   var working = false;
@@ -40,8 +41,45 @@
     var n = last.replace(/\.html$/, '');
     return (n && n !== 'preview') ? n : 'home';
   }
+  function eraName() { return document.documentElement.getAttribute('data-era') || 'now'; }
 
-  function autoKey(el) {
+  function tidy(s) { return String(s || '').replace(/\s+/g, ' ').trim(); }
+
+  /* 文章そのものから作る短い符号。飾りの箱が増えても変わりません */
+  function code(s) {
+    var h = 5381, i = s.length;
+    while (i) { h = (h * 33 ^ s.charCodeAt(--i)) >>> 0; }
+    return h.toString(36);
+  }
+
+  function headKey(el) {
+    return 't:' + pageName() + '|' + eraName() + '|' + code(tidy(base.has(el) ? base.get(el) : el.textContent));
+  }
+
+  /* 同じ文章が並ぶときのために、何番目かを添えます */
+  function nth(el, hk) {
+    var all = document.body ? document.body.querySelectorAll('*') : [];
+    var n = 0;
+    for (var i = 0; i < all.length; i++) {
+      var e = all[i];
+      if (!isTarget(e)) continue;
+      if (headKey(e) !== hk) continue;
+      if (e === el) return n;
+      n++;
+    }
+    return 0;
+  }
+
+  function keyOf(el) {
+    var ov = el.getAttribute('data-ov'); if (ov) return ov;
+    var k = el.getAttribute('data-i18n'); if (k) return k;
+    var hk = headKey(el);
+    var n = nth(el, hk);
+    return n ? hk + '|' + n : hk;
+  }
+
+  /* 昔の見分け名（位置から作ったもの）。以前保存した分を拾うために残します */
+  function pathKey(el) {
     var parts = [], cur = el, guard = 0;
     while (cur && cur !== document.body && guard++ < 40) {
       var p = cur.parentElement;
@@ -51,46 +89,57 @@
       parts.unshift(cur.tagName.toLowerCase() + (same.length > 1 ? String(same.indexOf(cur)) : ''));
       cur = p;
     }
-    var era = document.documentElement.getAttribute('data-era') || 'now';
-    return 'p:' + pageName() + '|' + era + '|' + parts.join('>');
+    return parts.join('>');
   }
 
-  function keyOf(el) {
-    var ov = el.getAttribute('data-ov'); if (ov) return ov;
-    var k = el.getAttribute('data-i18n'); if (k) return k;
-    return autoKey(el);
+  function rowFor(el, k) {
+    if (rows[k]) return rows[k];
+    var pk = pathKey(el);
+    var full = 'p:' + pageName() + '|' + eraName() + '|' + pk;
+    if (rows[full]) return rows[full];
+    var tail = pk.indexOf('>') >= 0 ? pk.slice(pk.indexOf('>') + 1) : pk;
+    return loose[pageName() + '|' + eraName() + '|' + tail] || null;
   }
 
   function esc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  function textOf(k) {
-    var r = rows[k]; if (!r) return null;
+  function textOf(r) {
+    if (!r) return null;
     var v = (lang === 'jp' ? r['日本語'] : r[lang.toUpperCase()]) || '';
     var t = String(v).trim() || String(r['日本語'] || '').trim();
     return t || null;
   }
-  function linkOf(k) {
-    var r = rows[k]; if (!r) return null;
+  function linkOf(r) {
+    if (!r) return null;
     var href = String(r['リンク先'] || '').trim();
     if (!href) return null;
     var t = String((lang === 'jp' ? r['リンク文字(日本語)'] : r['リンク文字' + lang.toUpperCase()]) || r['リンク文字(日本語)'] || '').trim();
     return { text: t || href, href: href };
   }
 
-  function apply(root) {
+  function apply() {
     if (working || !document.body) return;
     working = true;
     try {
-      var all = (root || document.body).querySelectorAll('*');
+      var all = document.body.querySelectorAll('*');
+      var seen = {};
       for (var i = 0; i < all.length; i++) {
         var el = all[i];
         if (!isTarget(el)) continue;
-        var k = keyOf(el);
         if (!base.has(el)) base.set(el, el.textContent || '');
         var orig = base.get(el);
-        var t = textOf(k), link = linkOf(k);
+
+        var k = el.getAttribute('data-ov') || el.getAttribute('data-i18n');
+        if (!k) {
+          var hk = headKey(el);
+          var n = (seen[hk] = (seen[hk] || 0) + 1) - 1;
+          k = n ? hk + '|' + n : hk;
+        }
+
+        var r = rowFor(el, k);
+        var t = textOf(r), link = linkOf(r);
         if (t == null && !link) {
           if (el.getAttribute('data-ov-on') === '1') {
             el.textContent = orig;
@@ -124,50 +173,47 @@
 
   function mirror() { return /\/preview(\/|$)/.test(location.pathname); }
 
-  /** 控えてある内容を読み出します（本番では「公開」のものだけ） */
-  function loadCache() {
-    try {
-      var raw = localStorage.getItem('sumura-ov');
-      if (!raw) return;
-      var arr = JSON.parse(raw);
-      setRows(arr);
-    } catch (e) {}
-  }
-
   function setRows(arr) {
-    var map = {}, m = mirror();
+    var map = {}, lo = {}, m = mirror();
     (arr || []).forEach(function (r) {
       if (!r || !r['キー']) return;
       if (!m && String(r['公開'] || '').trim() !== '公開') return;
-      map[String(r['キー']).trim()] = r;
+      var key = String(r['キー']).trim();
+      map[key] = r;
+      if (key.indexOf('p:') === 0) {
+        var body = key.slice(2);                      // ページ|時代|位置
+        var i = body.lastIndexOf('|');
+        var head = body.slice(0, i), path = body.slice(i + 1);
+        var tail = path.indexOf('>') >= 0 ? path.slice(path.indexOf('>') + 1) : path;
+        lo[head + '|' + tail] = r;
+      }
     });
-    rows = map;
+    rows = map; loose = lo;
     try { localStorage.setItem('sumura-ov', JSON.stringify(arr || [])); } catch (e) {}
   }
 
-  var timer = 0;
-  function soon() {
-    clearTimeout(timer);
-    timer = setTimeout(function () { apply(); }, 40);
+  function loadCache() {
+    try {
+      var raw = localStorage.getItem('sumura-ov');
+      if (raw) setRows(JSON.parse(raw));
+    } catch (e) {}
   }
+
+  var timer = 0;
+  function soon() { clearTimeout(timer); timer = setTimeout(apply, 60); }
 
   lang = readLang();
   loadCache();
 
-  /* 中身が置かれるそばから当てます。画面に出る前に済ませます */
-  /* はじめの数秒は即座に当てます（描かれる前に直すため）。
-     その後は少し待ってからにして、画面を重くしません */
   var t0 = Date.now();
   var mo = new MutationObserver(function () {
     if (working) return;
     if (Date.now() - t0 < 4000) apply(); else soon();
   });
-  /* 読み込みの最中から見張ります。文字が置かれたその場で直すので、
-     元の文章が画面に出ることがありません */
   mo.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
-  document.addEventListener('DOMContentLoaded', function () { apply(); });
-  document.addEventListener('readystatechange', function () { apply(); });
-  window.addEventListener('load', function () { apply(); });
+  document.addEventListener('DOMContentLoaded', apply);
+  document.addEventListener('readystatechange', apply);
+  window.addEventListener('load', apply);
 
   window.SumuraOv = {
     keyOf: keyOf, isTarget: isTarget, editable: editable, apply: apply, soon: soon,
