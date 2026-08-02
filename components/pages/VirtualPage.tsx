@@ -246,8 +246,22 @@ export function VirtualPage() {
           </button>
 
           {!isTouch ? (
-            <div className="vs-guide">{isTake}</span>
-              <span><span ch ? t.hintSp : t.hintPc}</div>
+            <div className="vs-keys">
+              <span><span className="vs-cap">W</span><span className="vs-cap">A</span><span className="vs-cap">S</span><span className="vs-cap">D</span>{t.kWalk}</span>
+              <span><span className="vs-cap">✥</span>{t.kLook}</span>
+              <span><span className="vs-cap">◉</span>{t.kTake}</span>
+              <span><span className="vs-cap">C</span>{near ? t.talkC : t.callC}</span>
+            </div>
+          ) : (
+            <Pads
+              onMove={(x, y) => shop.current?.moveVec(x, y)}
+              onLook={(x, y) => shop.current?.lookVel(x, y)}
+              onO={() => shop.current?.use()}
+              onX={() => { setReply(''); setPicks([]); open('talk'); }}
+              oLabel={t.oBtn} xLabel={near ? t.talkC : t.callC}
+            />
+          )}
+
           <button className="vs-snd" onClick={() => setSnd((v) => !v)}
                   aria-label={snd ? t.sndOff : t.sndOn}>{snd ? '♪ ' + t.sndOff : '♪ ' + t.sndOn}</button>
         </>
