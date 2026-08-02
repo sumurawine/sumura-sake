@@ -838,7 +838,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   scene.add(halo);
 
   /* 竪型ピアノと弾き手。部屋の左半分で、扉のほうを向いて */
-  const PX = -3.5, PZ = 1.05;
+  const PX = -3.5, PZ = -0.35;
   const piano = new THREE.Group();
   const pm = lam({ map: tex(wood('#2c1c12', '#100804'), 1.4, 1) });
   const body = new THREE.Mesh(new THREE.BoxGeometry(1.48, 1.18, 0.58), pm);
@@ -856,7 +856,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   });
   const pedal = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.03, 0.12), lam({ color: 0xa8925f }));
   pedal.position.set(0, 0.10, 0.08); piano.add(pedal);
-  const PA = -0.62;                                       // 扉のほうへ、すこし斜めに構えます
+  const PA = 0.62;                                        // 店の中ほどへ、すこし斜めに構えます
   const rz = (x: number, z: number) =>
     [PX + x * Math.cos(PA) + z * Math.sin(PA), PZ - x * Math.sin(PA) + z * Math.cos(PA)];
   place(piano, PX, 0, PZ, Math.PI + PA);
@@ -883,7 +883,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   });
   boxes.push({ x: bp[0], z: bp[1], w: 0.9, d: 0.9 });
   const pglow = new THREE.PointLight(0xffb877, 2.4, 4.2, 1.6);
-  pglow.position.set(PX + 0.3, 1.9, PZ - 0.6); scene.add(pglow);
+  pglow.position.set(PX + 0.4, 1.9, PZ + 0.5); scene.add(pglow);
 
   /* 見回しと歩き */
   let yaw = 0, pitch = -0.02;
