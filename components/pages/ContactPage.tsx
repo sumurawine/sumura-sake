@@ -30,6 +30,7 @@ export function ContactPage() {
   const [item, setItem] = useState(item0);
   const [msg, setMsg] = useState('');
   const [hp, setHp] = useState('');
+  const [alsoNl, setAlsoNl] = useState(false);
   const [st, setSt] = useState<{ text: string; color: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const auto = useRef('');
@@ -59,6 +60,9 @@ export function ContactPage() {
   const nsay = (k: string, c?: string) =>
     setNlSt({ text: t(k), color: c === 'ok' ? '#9dff9d' : c === 'ng' ? '#ff8a8a' : '#b3a894' });
 
+  /* お問い合わせと一緒に、メルマガのご登録も承ります */
+  const NL_LABEL: Record<string, string> = {"jp": "メールマガジンにも登録する（任意）", "en": "Also subscribe to the newsletter (optional)", "fr": "M’inscrire aussi à la lettre d’information (facultatif)", "zh": "同时订阅电子报（选填）", "ko": "뉴스레터도 함께 신청합니다 (선택)"};
+
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!okMail(email.trim())) { say('mail', 'ng'); return; }
@@ -67,7 +71,8 @@ export function ContactPage() {
     setBusy(true); say('sending');
     try {
       const r = await apiPost({ action: 'contact', name, email: email.trim(), tel, item, message: msg.trim(), lang, hp });
-      if (r && r.ok) { setName(''); setEmail(''); setTel(''); setItem(''); setMsg(''); say('ok', 'ok'); }
+      if (alsoNl) { try { await apiPost({ action: 'subscribe', email: email.trim(), lang, hp: '' }); } catch {} }
+      if (r && r.ok) { setName(''); setEmail(''); setTel(''); setItem(''); setMsg(''); setAlsoNl(false); say('ok', 'ok'); }
       else say('ng', 'ng');
     } catch { say('ng', 'ng'); }
     setBusy(false);
@@ -118,6 +123,10 @@ export function ContactPage() {
           <input className="field" id="ct-item" type="text" maxLength={200} value={item} onChange={(e) => setItem(e.target.value)} />
           <T k="ct-f-msg" as="label" />
           <textarea className="field" id="ct-msg" rows={7} required style={{ resize: 'vertical' }} value={msg} onChange={(e) => setMsg(e.target.value)} />
+          <label className="ct-nl">
+            <input type="checkbox" checked={alsoNl} onChange={(e) => setAlsoNl(e.target.checked)} />
+            <span>{NL_LABEL[lang] || NL_LABEL.jp}</span>
+          </label>
           <div style={{ textAlign: 'center', marginTop: 14 }}>
             <button className="btn" type="submit" id="ct-send" disabled={busy}><T k="ct-f-send" as="span" kind="btn" /></button>
           </div>
