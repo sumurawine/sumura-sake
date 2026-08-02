@@ -21,6 +21,7 @@ const VIRTUAL: Record<string, string> = {
 
 const NAV: Array<[string, string]> = [
   ['/store', 'nav:store'],
+  ['/virtual', 'nav:virtual'],
   ['/producers', 'nav:producers'],
   ['/about', 'nav:about'],
   ['/blog', 'nav:blog'],
@@ -28,7 +29,6 @@ const NAV: Array<[string, string]> = [
   ['/access', 'nav:access'],
   ['/contact', 'nav:contact'],
   ['/secret', 'nav:secret'],
-  ['/virtual', 'nav:virtual'],
 ];
 
 const FOOT_A: Array<[string, string]> = [
