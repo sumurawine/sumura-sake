@@ -212,3 +212,8 @@ body:has(.mk-wrap) #lang-bar button.active{opacity:1;border-color:#a8977c;backgr
 .pr-latin2{ font-size:11px; opacity:.6 }
 .pr-n{ font-size:11px; opacity:.55; white-space:nowrap }
 @media (max-width:520px){ .pr-list{ grid-template-columns:1fr } }
+/* 年齢のご確認：昔の画面でも読めるように */
+body:has(.door-page) .age-gate{ color:#e9e0cf; }
+body:has(.door-page) .ag-f input{ color:#ffe14d; border-bottom-color:#8a7f6c; }
+body:has(.door-page) .ag-btn{ color:#ffe14d; border-color:#8a7f6c; }
+body:has(.door-page) .ag-btn:hover{ background:#ffe14d; color:#000; }
