@@ -162,12 +162,12 @@
     if (working) return;
     if (Date.now() - t0 < 4000) apply(); else soon();
   });
-  function start() {
-    if (!document.body) { requestAnimationFrame(start); return; }
-    apply();
-    mo.observe(document.body, { childList: true, subtree: true, characterData: true });
-  }
-  start();
+  /* 読み込みの最中から見張ります。文字が置かれたその場で直すので、
+     元の文章が画面に出ることがありません */
+  mo.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  document.addEventListener('DOMContentLoaded', function () { apply(); });
+  document.addEventListener('readystatechange', function () { apply(); });
+  window.addEventListener('load', function () { apply(); });
 
   window.SumuraOv = {
     keyOf: keyOf, isTarget: isTarget, editable: editable, apply: apply, soon: soon,
