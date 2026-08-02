@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const SITE = {
-  url: 'https://sumurawine.github.io/sumura-sake',
+  url: 'https://sumura-sake.jp',
   name: 'すむら酒店',
   nameEn: 'Liquor Shop Sumura',
   tel: '0836-21-4721',
