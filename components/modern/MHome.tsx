@@ -47,7 +47,10 @@ function Quote({ lang }: { lang: Lang }) {
       <div ref={bg} className="mx-bleed-bg" style={{ backgroundImage: `url(${asset('/images/modern/veil-wine.jpg')})` }} />
       <div className="mx-bleed-shade" />
       <div className="mx-in-n" style={{ textAlign: 'center' }}>
-        <Reveal as="p" className="mx-h2" style={{ marginBottom: 30 }}>{c.quote}</Reveal>
+        <Reveal as="p" className="mx-h2" style={{ marginBottom: 22 }}>{c.quote}</Reveal>
+        <Reveal delay={1} style={{ marginBottom: 28 }}>
+          <Link href="/virtual" className="mx-btn"><span>{c.quoteVs}</span></Link>
+        </Reveal>
         <Reveal as="p" delay={2} className="mx-kicker" style={{ margin: 0 }}>— {c.quoteBy}</Reveal>
       </div>
     </section>
