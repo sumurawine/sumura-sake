@@ -429,3 +429,33 @@ html[data-era="now"] .mx-sub-in a:last-child{
   html[data-era="now"] .mx-navitem{ display:block; width:min(320px,74vw); }
   html[data-era="now"] .mx-navitem > a{ display:block; }
 }
+
+/* ── 四度目：数字と品書きの詰め ───────────────────────── */
+
+/* 明朝の欧文は旧式数字になるので、住所・電話・値段は揃った高さの数字に */
+html[data-era="now"] body,
+html[data-era="now"] .mx-note,
+html[data-era="now"] .mx-p,
+html[data-era="now"] .mx-lead,
+html[data-era="now"] .mx-facts dd,
+html[data-era="now"] .mx-table td,
+html[data-era="now"] .mx-num,
+html[data-era="now"] .mx-foot,
+html[data-era="now"] .mx-legacy{
+  font-variant-numeric:lining-nums proportional-nums;
+  font-feature-settings:"palt" 1, "lnum" 1;
+}
+
+/* 品書きは一行に収めます */
+html[data-era="now"] .mx-nav{ gap:clamp(9px,1.4vw,22px); flex-wrap:nowrap; }
+html[data-era="now"] .mx-nav a{ font-size:12.5px; letter-spacing:.10em; }
+@media (min-width:1100px){
+  html[data-era="now"] .mx-head{ padding-left:200px; padding-right:196px; }
+  html[data-era="now"] .mx-head.is-stuck{ padding-left:200px; padding-right:196px; }
+}
+@media (min-width:1400px){
+  html[data-era="now"] .mx-nav a{ font-size:13px; letter-spacing:.13em; }
+}
+@media (max-width:1099px){
+  html[data-era="now"] .mx-nav{ flex-wrap:wrap; }
+}
