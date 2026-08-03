@@ -46,7 +46,7 @@ export function wineMeta(it: Item, i18n: I18nData | null, lang: Lang, slug: stri
   };
 }
 
-export function makerMeta(name: string, shown: string, lang: Lang, slug: string, n: number): Metadata {
+export function makerMeta(name: string, shown: string, lang: Lang, slug: string, n: number, about?: string): Metadata {
   const H: Record<Lang, string> = {
     jp: `${shown}のワイン｜取り扱い${n}点`,
     en: `${shown} — wines we carry (${n})`,
@@ -62,7 +62,19 @@ export function makerMeta(name: string, shown: string, lang: Lang, slug: string,
     ko: `${shown}의 와인을 ${n}점 취급하고 있습니다. 일본 야마구치현 우베시의 와인 전문점 스무라 주점이 정규 경로로 전해 드립니다.`,
   };
   const title = `${H[lang]}${SUF[lang]}`;
-  const desc = D[lang];
+  const TAIL: Record<Lang, string> = {
+    jp: `｜${shown}のワイン${n}点・すむら酒店（山口県宇部市）`,
+    en: ` | ${n} wines from ${shown} — Liquor Shop Sumura, Ube, Japan.`,
+    fr: ` | ${n} vins de ${shown} — Liquor Shop Sumura, Ube, Japon.`,
+    zh: `｜${shown} 葡萄酒 ${n} 款・すむら酒店（日本山口县宇部市）`,
+    ko: `｜${shown} 와인 ${n}점・스무라 주점(일본 야마구치현 우베시)`,
+  };
+  const wide = lang === 'jp' || lang === 'zh' || lang === 'ko';
+  const lead = String(about || '').split(String.fromCharCode(10)).join(' ').trim();
+  const cut = wide ? 88 : 148;
+  const desc = lead.length > 40
+    ? lead.slice(0, cut) + (lead.length > cut ? '…' : '') + TAIL[lang]
+    : D[lang];
   const canonical = SITE.url + makerPath(slug, lang);
   const languages: Record<string, string> = { ja: SITE.url + makerPath(slug, 'jp'), 'x-default': SITE.url + makerPath(slug, 'jp') };
   OTHER_LANGS.forEach((l) => { languages[TAG[l]] = SITE.url + makerPath(slug, l); });
