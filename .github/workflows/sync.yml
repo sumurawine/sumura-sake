@@ -1,0 +1,49 @@
+name: 品書きの取り込み
+
+on:
+  schedule:
+    - cron: '0 18 * * *'      # 毎朝三時（日本時間）
+  workflow_dispatch:
+    inputs:
+      dry:
+        description: '下読みだけ（書き換えない）'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-catalog
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: オンラインストアを読む
+        env:
+          DRY: ${{ inputs.dry && '1' || '0' }}
+        run: node scripts/sync-catalog.mjs
+
+      - name: 変わっていれば納める
+        if: ${{ !inputs.dry }}
+        run: |
+          git config user.name  'sumura-sake bot'
+          git config user.email 'bot@users.noreply.github.com'
+          if [ -z "$(git status --porcelain public/products.json public/producers.json)" ]; then
+            echo '変わりはございませんでした。'
+            exit 0
+          fi
+          git add public/products.json public/producers.json
+          git commit -m '品書きをオンラインストアに合わせました'
+          git push origin main
