@@ -11,7 +11,7 @@ import { isModern } from '@/lib/era';
 import { stripDeco } from '@/lib/decor';
 import { NewProduct } from '@/components/editor/NewProduct';
 import {
-  ORDER, CATS, u, catOf, apOf, prodOf, nameOf, descOf, notesOf, isOut,
+  ORDER, CATS, u, catOf, apOf, prodOf, nameOf, descOf, notesOf, isOut, yenOf,
   type Item, type ProductData, type I18nData,
 } from '@/lib/store';
 import { loadContent, type Row } from '@/lib/content';
@@ -253,7 +253,7 @@ export function StorePage() {
                         {it.prod ? <><br /><span className="hint">{prodOf(it.prod, lang, I18N)}</span></> : null}
                       </div>
                       <div style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-                        <span className="price">{it.price}</span>
+                        <span className="price">{yenOf(it.price, lang)}</span>
                         {out ? <><br /><span className="hint">{u('soldout', lang)}</span></> : null}
                         <br />
                         <button className="btn" style={{ marginTop: 5 }} onClick={() => setModal(it)}>{dec(u('detail', lang))}</button>
@@ -292,7 +292,7 @@ export function StorePage() {
                   <hr className="rainbow" style={{ margin: '8px 0' }} />
                   {d ? <div className="modal-body">{d}</div> : null}
                   {ns.length ? <div className="hint" style={{ marginTop: 8 }}>{ns.map((n, i) => <span key={i}>{n}<br /></span>)}</div> : null}
-                  <div className="modal-price">{modal.price}{isOut(modal) ? '　' + u('soldout', lang) : ''}</div>
+                  <div className="modal-price">{yenOf(modal.price, lang)}{isOut(modal) ? '　' + u('soldout', lang) : ''}</div>
                   <div style={{ textAlign: 'center', marginTop: 14 }}>
                     <a href="#" onClick={(e) => { e.preventDefault(); openContact(modal); }}>
                       <span className="btn" style={{ fontSize: 15, padding: '8px 20px' }}>{dec(u('cta', lang))}</span>
