@@ -1,5 +1,6 @@
 import type { Lang } from './i18n';
 import type { Item, I18nData } from './store';
+import { yenOf } from './store';
 import { slugMap, prodSlug } from './slug';
 import { localized, type Near } from './wineText';
 
@@ -18,7 +19,7 @@ export function makerList(
   const shown = mine.length ? localized(mine[0], i18n, lang).producer || jpName : jpName;
   const list: Near[] = mine.map((x) => {
     const L = localized(x, i18n, lang);
-    return { id: x.id, slug: map[x.id], name: L.name, price: x.price, img: x.img };
+    return { id: x.id, slug: map[x.id], name: L.name, price: yenOf(x.price, lang), img: x.img };
   });
   return { shown, list };
 }
