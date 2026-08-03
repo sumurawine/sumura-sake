@@ -6,6 +6,7 @@ import { useSite } from '@/components/Providers';
 import { createShop, type ShopHandle, type Bottle } from '@/lib/shop3d';
 import { SUMURA_API, apiReady } from '@/lib/api';
 import { asset } from '@/lib/paths';
+import { dkey } from '@/lib/store';
 import type { Lang } from '@/lib/i18n';
 
 type Pick = { id: string; name: string; price: string; prod: string; why: string };
@@ -128,6 +129,8 @@ export function VirtualPage() {
   const [panel, setPanel] = useState<'none' | 'talk' | 'bottle' | 'bye'>('none');
   const [bottle, setBottle] = useState<Bottle | null>(null);
   const [items, setItems] = useState<Bottle[]>([]);
+  const [names, setNames] = useState<Record<string, string>>({});
+  const [descs, setDescs] = useState<Record<string, string>>({});
 
   const [ask, setAsk] = useState('');
   const [busy, setBusy] = useState(false);
@@ -145,16 +148,28 @@ export function VirtualPage() {
   /* 在庫を読み込みます */
   useEffect(() => {
     let off = false;
-    fetch(asset('/products.json'))
-      .then((r) => r.json())
-      .then((j) => {
+    Promise.all([
+      fetch(asset('/products.json')).then((r) => r.json()).catch(() => null),
+      fetch(asset('/products.i18n.json')).then((r) => r.json()).catch(() => null),
+    ])
+      .then(([j, I]: any[]) => {
         if (off) return;
+        const say = (m: any, jp: string) => (lang === 'jp' ? jp : (m && m[lang]) || jp);
+        const nm: Record<string, string> = {};
+        const ds: Record<string, string> = {};
+        const im: Record<string, string> = {};
+        (j?.items || []).forEach((it: any) => {
+          nm[String(it.id)] = say(I?.items?.[it.id]?.name, it.name);
+          if (it.desc) ds[String(it.id)] = say(I?.descs?.[dkey(it.desc)], it.desc);
+          if (it.img) im[String(it.id)] = String(it.img);
+        });
+        setNames(nm); setDescs(ds); setImgs(im);
         const rows: Bottle[] = (j?.items || [])
           .filter((it: any) => String(it.stock || '0') !== '0')
-          .map((it: any) => ({ id: it.id, name: it.name, price: it.price, prod: it.prod || '', cat: it.cat || '' }));
-        const im: Record<string, string> = {};
-        (j?.items || []).forEach((it: any) => { if (it.img) im[String(it.id)] = String(it.img); });
-        setImgs(im);
+          .map((it: any) => ({
+            id: it.id, name: nm[String(it.id)] || it.name, price: it.price,
+            prod: say(I?.producers?.[it.prod], it.prod || ''), cat: it.cat || '',
+          }));
         setItems(rows.length ? rows : (j?.items || []).slice(0, 60));
       })
       .catch(() => setItems([]));
