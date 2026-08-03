@@ -64,7 +64,7 @@ for (const era of ERAS) for (const lang of LANGS) {
 }
 
 /* ── sitemap ─────────────────────────────────── */
-const PAGES = ['/home', '/store', '/producers', '/about', '/access', '/news', '/blog', '/contact', '/legal', '/virtual'];
+const PAGES = ['/home', '/store', '/producers', '/about', '/access', '/news', '/blog', '/contact', '/legal'];
 const today = new Date().toISOString().slice(0, 10);
 const rows = [];
 const put = (paths, prio, freq) => {
@@ -90,14 +90,29 @@ ${alts}
     }
   }
 };
-/* 主要ページは、いまのところ日本語だけです */
+/* 主要ページ（日本語と、言語ごとの住所） */
 for (const p of PAGES) {
+  const alts = LANGS.map((l) => `    <xhtml:link rel="alternate" hreflang="${TAG[l]}" href="${l === 'jp' ? SITE + p + '.html' : SITE + pre(l) + p}"/>`).join('\n');
+  const xd = `    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}${p}.html"/>`;
+  const prio = p === '/home' ? '1.0' : '0.8';
   rows.push(`  <url>
     <loc>${SITE}${p}.html</loc>
     <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>${p === '/home' ? '1.0' : '0.8'}</priority>
+    <priority>${prio}</priority>
+${alts}
+${xd}
   </url>`);
+  for (const l of LANGS.filter((x) => x !== 'jp')) {
+    rows.push(`  <url>
+    <loc>${SITE}${pre(l)}${p}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>${prio}</priority>
+${alts}
+${xd}
+  </url>`);
+  }
 }
 put(['/wines'], '0.9', 'weekly');
 put(wineSlugs.map((s) => `/wine/${s}`), '0.9', 'weekly');
