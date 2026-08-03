@@ -56,4 +56,8 @@ export const OTHER_LANGS: Lang[] = ['en', 'fr', 'zh', 'ko'];
 /** ページの住所。日本語は根の下、ほかは言語の名を挟みます */
 export const pre = (lang: Lang) => (lang === 'jp' ? '' : '/' + lang);
 export const winePath = (slug: string, lang: Lang = 'jp') => `${pre(lang)}/wine/${slug}`;
+/** 楽天うれるのカート側（買える場所）の住所 */
+export const buyUrl = (id: string) =>
+  /^[0-9]+$/.test(String(id)) ? `https://sumura-sake.com/item-detail/${id}` : '';
+
 export const makerPath = (slug: string, lang: Lang = 'jp') => `${pre(lang)}/maker/${slug}`;
