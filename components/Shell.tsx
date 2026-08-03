@@ -16,6 +16,7 @@ import { DecoRow, Gif, Rainbow, Ticker } from './Deco';
 import { LeaveOverlay, leaveLabel } from './LeaveOverlay';
 import { GAME_NAV } from '@/lib/gameNav';
 import { PROD_NAV } from '@/lib/producersNav';
+import { pre } from '@/lib/slug';
 import { MShell } from './modern/MShell';
 
 const NAV: Array<[string, string]> = [
@@ -37,6 +38,9 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
   const path = usePathname() || '';
   const [leaving, setLeaving] = useState(false);
   const modern = isModern(eraView as any);
+  /** いまの言語の下へ導きます */
+  const P = pre(lang);
+  const to = (h: string) => (h.charAt(0) === '/' ? P + h : h);
 
   const marquee = tr(lang, 'tk-marquee');
 
@@ -62,7 +66,7 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
         <DecoRow top />
 
         <div style={{ textAlign: 'center', paddingTop: 8 }}>
-          <Link href="/home">
+          <Link href={to('/home')}>
             {modern ? (
               <span className="tw-logo" style={{ display: 'block', fontSize: 30, fontWeight: 'bold', color: '#222', padding: '16px 0 0' }}>すむら酒店</span>
             ) : (
@@ -86,7 +90,7 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
                 ? MODERN[lang].priv
                 : decorate(tr(lang, key), eraView, lang, 'btn');
             return (
-              <Link key={href} href={href} className={on ? 'on' : ''} dangerouslySetInnerHTML={{ __html: label }} />
+              <Link key={href} href={to(href)} className={on ? 'on' : ''} dangerouslySetInnerHTML={{ __html: label }} />
             );
           })}
           <a href="#" id="tw-leave" onClick={(e) => { e.preventDefault(); setLeaving(true); }}>
@@ -103,7 +107,7 @@ export function Shell({ children, footerRule = true }: { children: React.ReactNo
 
         <div style={{ textAlign: 'center', fontSize: 14, margin: '14px 0' }} className="x-muted">
           <div>
-            [ <A href="/home">{foot('home', 'HOME')}</A> ｜ <A href="/store">{foot('store', 'STORE')}</A> ｜ <A href="/blog">{foot('blog', 'BLOG')}</A> ｜ <A href="/contact">{foot('contact', 'CONTACT')}</A> ]
+            [ <A href={to('/home')}>{foot('home', 'HOME')}</A> ｜ <A href={to('/store')}>{foot('store', 'STORE')}</A> ｜ <A href={to('/blog')}>{foot('blog', 'BLOG')}</A> ｜ <A href={to('/contact')}>{foot('contact', 'CONTACT')}</A> ]
           </div>
           <div style={{ margin: '10px 0' }}>
             <a href="https://www.instagram.com/sumurasake" target="_blank" rel="noopener" style={{ textDecoration: 'none' }}>
