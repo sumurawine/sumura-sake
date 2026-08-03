@@ -55,6 +55,7 @@ jobs:
           fi
           git add public/products.json public/producers.json public/products.i18n.json
           git commit -m '品書きと訳を新しくしました'
+          git pull --rebase origin main
           git push origin main
           echo 'pushed=1' >> $GITHUB_ENV
 
