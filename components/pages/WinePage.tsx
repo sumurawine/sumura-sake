@@ -75,7 +75,7 @@ export function WinePage({ v, lang }: { v: WineView; lang: Lang }) {
             {v.region ? (<><dt>{t('region')}</dt><dd>{v.region}</dd></>) : null}
             {v.ap ? (<><dt>{t('ap')}</dt><dd>{v.ap}</dd></>) : null}
             {v.vintage ? (<><dt>{t('vintage')}</dt><dd>{v.vintage}</dd></>) : null}
-            {v.item.price ? (<><dt>{t('price')}</dt><dd className="w-price">{v.item.price}</dd></>) : null}
+            {v.item.price ? (<><dt>{t('price')}</dt><dd className="w-price">{yenOf(v.item.price, lang)}</dd></>) : null}
             <dt>{t('stock')}</dt>
             <dd className={out ? 'w-out' : 'w-in'}>{out ? t('out') : t('inStock')}</dd>
           </dl>
