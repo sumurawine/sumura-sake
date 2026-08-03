@@ -25,6 +25,10 @@ const shopLd = {
     'Sumura', 'Sumura Sake', 'Sumura Saketen', 'Liquor Shop SUMURA',
   ],
   url: SITE.url + '/home.html',
+  sameAs: [
+    'https://sumura-sake.com/',
+    'https://www.instagram.com/sumurasake',
+  ],
   telephone: '+81-836-21-4721',
   image: SITE.url + SITE.ogImage,
   priceRange: '¥¥¥',
@@ -57,6 +61,10 @@ const siteLd = {
   '@type': 'WebSite',
   '@id': SITE.url + '/#site',
   url: SITE.url + '/home.html',
+  sameAs: [
+    'https://sumura-sake.com/',
+    'https://www.instagram.com/sumurasake',
+  ],
   name: SITE.name + ' ｜ ' + SITE.nameEn,
   inLanguage: ['ja', 'en', 'fr', 'zh', 'ko'],
   publisher: { '@id': SITE.url + '/#shop' },
