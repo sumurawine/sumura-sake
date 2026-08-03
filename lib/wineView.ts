@@ -1,5 +1,6 @@
 import type { Lang } from './i18n';
 import type { Item, I18nData } from './store';
+import { yenOf } from './store';
 import { SITE } from './siteMeta';
 import { slugMap, prodSlug, winePath, makerPath, buyUrl } from './slug';
 import { catName, localized, vintageOf, type WineView, type Near } from './wineText';
@@ -14,7 +15,7 @@ export function buildView(it: Item, items: Item[], i18n: I18nData | null, lang: 
   const near = (list: Item[]): Near[] =>
     list.slice(0, 4).map((x) => {
       const L = localized(x, i18n, lang);
-      return { id: x.id, slug: map[x.id], name: L.name, price: x.price, img: x.img };
+      return { id: x.id, slug: map[x.id], name: L.name, price: yenOf(x.price, lang), img: x.img };
     });
   const L = localized(it, i18n, lang);
   const same = items.filter((x) => x.id !== it.id && it.prod && x.prod === it.prod);
