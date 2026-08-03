@@ -59,6 +59,14 @@ export function dkey(s: string): string {
   return 'd' + h.toString(36) + '_' + s.length;
 }
 
+/** 値の見せ方。日本語は「3,300円」、ほかの言語では「¥3,300」 */
+export function yenOf(p: string | undefined, lang: Lang): string {
+  const s = String(p || '').trim();
+  if (!s || lang === 'jp') return s;
+  const n = s.replace(/[^0-9,]/g, '');
+  return n ? '¥' + n : s;
+}
+
 export const isOut = (it: Item) => String(it.stock).trim() === '0';
 
 export function nameOf(it: Item, lang: Lang, I: I18nData | null) {
