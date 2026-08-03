@@ -11,6 +11,7 @@ export function AboutPage() {
         <table className="retro">
           <tbody>
             <tr><T k="about-name-label" as="th" style={{ width: '32%' }} /><T k="ab-name-val" as="td" /></tr>
+            <tr><T k="about-alias-label" as="th" /><T k="about-alias-val" as="td" /></tr>
             <tr><T k="about-location-label" as="th" /><td>〒755-0072　山口県宇部市中村3-6-20</td></tr>
             <tr><T k="about-phone-label" as="th" /><td>0836-21-4721</td></tr>
             <tr><T k="about-rep-label" as="th" /><td>洲村 博志</td></tr>
