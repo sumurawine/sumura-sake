@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { tr } from '@/lib/i18n';
 import { PROD_NAV } from '@/lib/producersNav';
+import { pre } from '@/lib/slug';
 import { MODERN } from '@/lib/decor';
 import { LEGAL_TITLE } from '@/lib/modernCopy';
 import { useSite } from '@/components/Providers';
@@ -59,6 +60,9 @@ export function MShell({ children }: { children: React.ReactNode }) {
     k === 'nav:virtual' ? (VIRTUAL[lang] || VIRTUAL.jp) :
     k === 'nav:secret' ? MODERN[lang].priv : k === 'nav:legal' ? LEGAL_TITLE[lang]
     : k === 'nav:producers' ? PROD_NAV[lang] : tr(lang, k);
+  /** いまの言語の下へ導きます */
+  const P = pre(lang);
+  const to = (h: string) => (h.charAt(0) === '/' ? P + h : h);
   const on = (href: string) => path === href || path === href + '/';
 
   return (
@@ -69,7 +73,7 @@ export function MShell({ children }: { children: React.ReactNode }) {
       <AutoReveal />
 
       <header className={`mx-head${stuck ? ' is-stuck' : ''}`}>
-        <Link href="/home" className="mx-brand">
+        <Link href={to('/home')} className="mx-brand">
           すむら酒店<small>LIQUOR SHOP SUMURA</small>
         </Link>
         <button type="button" className={`mx-burger${menu ? ' is-open' : ''}`} aria-label="メニュー"
@@ -79,11 +83,11 @@ export function MShell({ children }: { children: React.ReactNode }) {
             const sub = subOf(href, lang);
             return (
               <span key={href} className={sub ? 'mx-navitem has-sub' : 'mx-navitem'}>
-                <Link href={href} className={on(href) ? 'on' : ''}>{label(k)}</Link>
+                <Link href={to(href)} className={on(to(href)) ? 'on' : ''}>{label(k)}</Link>
                 {sub ? (
                   <span className="mx-sub">
                     <span className="mx-sub-in">
-                      {sub.map(([h, t]) => <Link key={h + t} href={h}>{t}</Link>)}
+                      {sub.map(([h, t]) => <Link key={h + t} href={to(h)}>{t}</Link>)}
                     </span>
                   </span>
                 ) : null}
@@ -113,11 +117,11 @@ export function MShell({ children }: { children: React.ReactNode }) {
             </div>
             <div>
               <h4>SHOP</h4>
-              <ul>{FOOT_A.map(([h, k]) => <li key={h}><Link href={h}>{label(k)}</Link></li>)}</ul>
+              <ul>{FOOT_A.map(([h, k]) => <li key={h}><Link href={to(h)}>{label(k)}</Link></li>)}</ul>
             </div>
             <div>
               <h4>INFORMATION</h4>
-              <ul>{FOOT_B.map(([h, k]) => <li key={h}><Link href={h}>{label(k)}</Link></li>)}</ul>
+              <ul>{FOOT_B.map(([h, k]) => <li key={h}><Link href={to(h)}>{label(k)}</Link></li>)}</ul>
             </div>
           </div>
           <div className="mx-foot-end">
