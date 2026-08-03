@@ -24,6 +24,17 @@ function dkey(s) {
   return 'd' + h.toString(36) + '_' + s.length;
 }
 
+if (process.env.LIST === '1') {
+  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models?key=' + KEY);
+  const j = await r.json();
+  console.log(r.status);
+  for (const m of (j.models || [])) {
+    if ((m.supportedGenerationMethods || []).indexOf('generateContent') >= 0) console.log('  ' + m.name);
+  }
+  if (!j.models) console.log(JSON.stringify(j).slice(0, 300));
+  process.exit(0);
+}
+
 const pr = rd('products.json');
 let pj = { makers: [] };
 try { pj = rd('producers.json'); } catch { /* まだ無いこともあります */ }
