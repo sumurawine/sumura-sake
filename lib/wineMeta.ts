@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { SITE } from './siteMeta';
 import type { Lang } from './i18n';
 import type { Item, I18nData } from './store';
+import { yenOf } from './store';
 import { OTHER_LANGS, winePath, makerPath } from './slug';
 import { catName, localized, vintageOf } from './wineText';
 
@@ -30,7 +31,7 @@ export function wineMeta(it: Item, i18n: I18nData | null, lang: Lang, slug: stri
   const vin = vintageOf(it.name);
   const st = String(it.stock || '0') !== '0';
   const title = `${L.name}${SUF[lang]}`;
-  const desc = LEAD[lang](L.name, L.producer, region, it.price, st).slice(0, 300);
+  const desc = LEAD[lang](L.name, L.producer, region, yenOf(it.price, lang), st).slice(0, 300);
   const canonical = SITE.url + winePath(slug, lang);
   const languages: Record<string, string> = { ja: SITE.url + winePath(slug, 'jp'), 'x-default': SITE.url + winePath(slug, 'jp') };
   OTHER_LANGS.forEach((l) => { languages[TAG[l]] = SITE.url + winePath(slug, l); });
