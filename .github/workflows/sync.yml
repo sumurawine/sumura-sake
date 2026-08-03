@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: sync-catalog
@@ -47,3 +48,11 @@ jobs:
           git add public/products.json public/producers.json
           git commit -m '品書きをオンラインストアに合わせました'
           git push origin main
+          echo 'pushed=1' >> $GITHUB_ENV
+
+      - name: 公開をうながす
+        if: ${{ !inputs.dry && env.pushed == '1' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run deploy.yml --ref main --repo ${{ github.repository }}
