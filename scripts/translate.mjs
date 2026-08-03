@@ -13,8 +13,9 @@ const rd = (f) => JSON.parse(fs.readFileSync(path.join(PUB, f), 'utf8'));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const LANGS = [['en', '英語'], ['fr', 'フランス語'], ['zh', '中国語（簡体字）'], ['ko', '韓国語']];
-const MODEL = 'gemini-2.0-flash';
-const CHARS = 5200;                      // ひと呼びに載せる日本語の目安
+const MODEL = process.env.MODEL || 'gemini-2.5-flash';
+const CHARS = +(process.env.CHARS || 6500);   // ひと呼びに載せる日本語の目安
+const PACE = +(process.env.PACE || 6800);     // 一分あたりの上限に合わせた間合い
 const MAXCALL = +(process.env.MAXCALL || 200);
 
 function dkey(s) {
@@ -80,7 +81,7 @@ async function ask(fields, langName, gloss) {
           generationConfig: { temperature: 0.3, responseMimeType: 'application/json' },
         }),
       });
-      if (r.status === 429 || r.status >= 500) { console.error('  ' + r.status + ' ' + (await r.text()).slice(0, 200)); await sleep(4000 * (t + 1)); continue; }
+      if (r.status === 429 || r.status >= 500) { console.error('  ' + r.status + ' ' + (await r.text()).slice(0, 160)); await sleep(12000 * (t + 1)); continue; }
       if (!r.ok) { console.error('  ' + r.status + ' ' + (await r.text()).slice(0, 120)); await sleep(2500); continue; }
       const j = await r.json();
       const txt = j.candidates[0].content.parts[0].text;
@@ -121,7 +122,7 @@ for (const [lang, langName] of LANGS) {
       done++;
     });
     if (calls % 5 === 0) console.log(`  …${calls}回・${done}件`);
-    await sleep(900);
+    await sleep(PACE);
   }
 }
 
