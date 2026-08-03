@@ -6,7 +6,7 @@ import { useSite } from '@/components/Providers';
 import { createShop, type ShopHandle, type Bottle } from '@/lib/shop3d';
 import { SUMURA_API, apiReady } from '@/lib/api';
 import { asset } from '@/lib/paths';
-import { dkey } from '@/lib/store';
+import { dkey, yenOf } from '@/lib/store';
 import type { Lang } from '@/lib/i18n';
 
 type Pick = { id: string; name: string; price: string; prod: string; why: string };
@@ -167,7 +167,7 @@ export function VirtualPage() {
         const rows: Bottle[] = (j?.items || [])
           .filter((it: any) => String(it.stock || '0') !== '0')
           .map((it: any) => ({
-            id: it.id, name: nm[String(it.id)] || it.name, price: it.price,
+            id: it.id, name: nm[String(it.id)] || it.name, price: yenOf(it.price, lang),
             prod: say(I?.producers?.[it.prod], it.prod || ''), cat: it.cat || '',
           }));
         setItems(rows.length ? rows : (j?.items || []).slice(0, 60));
@@ -336,7 +336,7 @@ export function VirtualPage() {
                 <img className="vs-shot" src={imgs[String(p.id)]} alt="" loading="lazy" />
               ) : null}
               <div className="vs-card-n">{names[String(p.id)] || p.name}</div>
-              <div className="vs-card-p">{p.price}</div>
+              <div className="vs-card-p">{yenOf(p.price, lang)}</div>
               {p.why ? <div className="vs-card-w">{p.why}</div> : null}
               {descs[String(p.id)] ? <div className="vs-card-d">{descs[String(p.id)]}</div> : null}
               <button className="vs-btn vs-sm" onClick={() => { setBuying(p); setDone(false); setMsg(''); setNote(p.name); }}>{t.buy}</button>
