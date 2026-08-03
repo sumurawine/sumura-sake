@@ -613,6 +613,7 @@ html[data-era="now"] .ag-msg{ color:#e0a08a; }
 .vs-card-n{ font-size:14.5px; line-height:1.75; letter-spacing:.04em; }
 .vs-card-p{ margin-top:6px; font-size:13px; color:#c9ad82; font-variant-numeric:lining-nums; }
 .vs-card-w{ margin-top:8px; font-size:13px; line-height:1.9; color:rgba(243,240,234,.66); }
+.vs-card-d{ margin-top:10px; font-size:12.5px; line-height:2.0; color:rgba(243,240,234,.58); max-height:11.5em; overflow:auto; }
 .vs-ask{ background:transparent; border-style:dashed; }
 .vs-form{ margin-top:18px; padding-top:16px; border-top:1px solid rgba(243,240,234,.12); }
 .vs-form .vs-btn{ margin-top:16px; }
@@ -772,6 +773,9 @@ a.vs-back:hover, .vs-back:hover{ color:#f3f0ea !important; }
 .w-price{ font-size:17px; color:#c9ad82; font-variant-numeric:lining-nums; }
 .w-in{ color:#bcd3b0; } .w-out{ color:rgba(243,240,234,.66); }
 .w-desc{ font-size:14.5px; line-height:2.05; color:rgba(243,240,234,.86); margin:0 0 26px; }
+.w-about{ margin:0 0 30px; max-width:74ch; }
+.w-about p{ font-size:14.5px; line-height:2.15; color:rgba(243,240,234,.84); margin:0 0 1.1em; }
+.w-about p:last-child{ margin-bottom:0; }
 .w-cta{ display:flex; flex-wrap:wrap; gap:12px; margin:0 0 26px; }
 .w-note{ font-size:12.5px; line-height:1.95; color:rgba(243,240,234,.6); margin:0 0 18px; }
 .w-back a{ font-size:12.5px; letter-spacing:.12em; color:rgba(243,240,234,.72); text-decoration:none; }
