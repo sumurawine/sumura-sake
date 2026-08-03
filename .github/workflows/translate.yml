@@ -6,6 +6,12 @@ on:
       maxcall:
         description: '呼び出しの上限'
         default: '220'
+      list:
+        description: '型を並べるだけなら 1'
+        default: '0'
+      model:
+        description: '使う型'
+        default: ''
 
 permissions:
   contents: write
@@ -28,6 +34,8 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           MAXCALL: ${{ inputs.maxcall }}
+          LIST: ${{ inputs.list }}
+          MODEL: ${{ inputs.model }}
         run: node scripts/translate.mjs
       - name: 納める
         run: |
