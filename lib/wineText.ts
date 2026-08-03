@@ -1,5 +1,5 @@
 import type { Lang } from './i18n';
-import { CATS, type Item, type I18nData } from './store';
+import { CATS, dkey, type Item, type I18nData } from './store';
 
 export type Near = { id: string; slug: string; name: string; price: string; img: string };
 
@@ -35,7 +35,7 @@ export function vintageOf(name: string): string {
 
 export function localized(it: Item, i18n: I18nData | null, lang: Lang) {
   const name = pickLang(i18n?.items?.[it.id]?.name, lang, it.name);
-  const desc = pickLang(i18n?.descs?.[it.id], lang, it.desc || '');
+  const desc = it.desc ? pickLang(i18n?.descs?.[dkey(it.desc)], lang, it.desc) : '';
   const producer = it.prod ? pickLang(i18n?.producers?.[it.prod], lang, it.prod) : '';
   const ap = it.ap ? pickLang(i18n?.aps?.[it.ap], lang, it.ap) : '';
   return { name, desc, producer, ap };
