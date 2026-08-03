@@ -861,3 +861,21 @@ html[data-era="now"] .door-page:hover .door{ filter:brightness(1.06) drop-shadow
   html[data-era="now"] *,.pg-t{ animation-duration:.001s !important; transition-duration:.001s !important; }
 }
 
+
+/* ── 入店の間（幕開けの所作） ─────────────────────────── */
+html[data-era="now"] #modern-entrance .me-jp{
+  animation:meTrack 1.6s cubic-bezier(.16,.84,.24,1) both;
+}
+@keyframes meTrack{
+  from{ opacity:0; letter-spacing:.34em; filter:blur(6px); }
+  to{ opacity:1; letter-spacing:.14em; filter:blur(0); }
+}
+html[data-era="now"] #modern-entrance .me-en{ animation:meFade 1.4s .5s ease both; }
+html[data-era="now"] #modern-entrance .me-rule{ animation:meRule 1.2s .7s cubic-bezier(.16,.84,.24,1) both; }
+@keyframes meRule{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+html[data-era="now"] #modern-entrance .me-sub{ animation:meFade 1.4s .9s ease both; }
+html[data-era="now"] #modern-entrance .me-btn{ animation:meFade 1.4s 1.2s ease both; }
+html[data-era="now"] #age-note{ animation:meFade 1.6s 1.5s ease both; }
+@keyframes meFade{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+
+
