@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { PAGE_I18N } from './pageMeta';
 
 export const SITE = {
   url: 'https://sumura-sake.jp',
@@ -100,11 +101,22 @@ export function metaPrivate(title: string): Metadata {
 }
 
 /** 各ページの page.tsx から呼びます */
-export function metaFor(path: string): Metadata {
+export function metaFor(path: string, lang: 'jp' | 'en' | 'fr' | 'zh' | 'ko' = 'jp'): Metadata {
   const p = PAGES.find((x) => x.path === path);
-  const title = p ? `${p.title}${SUFFIX}` : `${SITE.name} ｜ ${SITE.nameEn}`;
-  const desc = p ? p.desc : `${SITE.name}は山口県宇部市のワイン専門店でございます。`;
-  const canonical = SITE.url + path + '.html';
+  const alt = lang !== 'jp' ? PAGE_I18N[path]?.[lang] : undefined;
+  const SUF: Record<string, string> = {
+    jp: SUFFIX,
+    en: ' | Liquor Shop Sumura, Ube, Japan',
+    fr: ' | Liquor Shop Sumura, Ube, Japon',
+    zh: ' | 日本宇部 すむら酒店',
+    ko: ' | 일본 우베 스무라 주점',
+  };
+  const title = alt ? `${alt.t}${SUF[lang]}`
+    : p ? `${p.title}${SUFFIX}` : `${SITE.name} ｜ ${SITE.nameEn}`;
+  const desc = alt ? alt.d
+    : p ? p.desc : `${SITE.name}は山口県宇部市のワイン専門店でございます。`;
+  const jpUrl = SITE.url + path + '.html';
+  const canonical = lang === 'jp' ? jpUrl : `${SITE.url}/${lang}${path}`;
   const langs = ['en', 'fr', 'zh', 'ko'] as const;
   return {
     title,
@@ -112,9 +124,9 @@ export function metaFor(path: string): Metadata {
     alternates: {
       canonical,
       languages: {
-        ja: canonical,
-        ...Object.fromEntries(langs.map((l) => [l, `${canonical}?lang=${l}`])),
-        'x-default': canonical,
+        ja: jpUrl,
+        ...Object.fromEntries(langs.map((l) => [l, `${SITE.url}/${l}${path}`])),
+        'x-default': jpUrl,
       },
     },
     openGraph: {
@@ -123,7 +135,7 @@ export function metaFor(path: string): Metadata {
       title,
       description: desc,
       url: canonical,
-      locale: 'ja_JP',
+      locale: lang === 'jp' ? 'ja_JP' : lang === 'en' ? 'en_US' : lang === 'fr' ? 'fr_FR' : lang === 'zh' ? 'zh_CN' : 'ko_KR',
       alternateLocale: ['en_US', 'fr_FR', 'zh_CN', 'ko_KR'],
       images: [{ url: SITE.url + SITE.ogImage }],
     },
