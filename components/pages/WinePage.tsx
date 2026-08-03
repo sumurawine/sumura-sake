@@ -6,6 +6,7 @@ import { asset } from '@/lib/paths';
 import type { Lang } from '@/lib/i18n';
 import type { WineView, Near } from '@/lib/wineText';
 import { winePath, makerPath, pre, buyUrl } from '@/lib/slug';
+import { yenOf } from '@/lib/store';
 
 const W: Record<string, Record<Lang, string>> = {
   producer: { jp: '生産者', en: 'Producer', fr: 'Producteur', zh: '生产者', ko: '생산자' },
