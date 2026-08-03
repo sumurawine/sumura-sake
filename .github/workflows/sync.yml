@@ -36,17 +36,25 @@ jobs:
           DRY: ${{ inputs.dry && '1' || '0' }}
         run: node scripts/sync-catalog.mjs
 
+      - name: 未訳を訳す
+        if: ${{ !inputs.dry }}
+        continue-on-error: true
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          MAXCALL: '220'
+        run: node scripts/translate.mjs
+
       - name: 変わっていれば納める
         if: ${{ !inputs.dry }}
         run: |
           git config user.name  'sumura-sake bot'
           git config user.email 'bot@users.noreply.github.com'
-          if [ -z "$(git status --porcelain public/products.json public/producers.json)" ]; then
+          if [ -z "$(git status --porcelain public/products.json public/producers.json public/products.i18n.json)" ]; then
             echo '変わりはございませんでした。'
             exit 0
           fi
-          git add public/products.json public/producers.json
-          git commit -m '品書きをオンラインストアに合わせました'
+          git add public/products.json public/producers.json public/products.i18n.json
+          git commit -m '品書きと訳を新しくしました'
           git push origin main
           echo 'pushed=1' >> $GITHUB_ENV
 
