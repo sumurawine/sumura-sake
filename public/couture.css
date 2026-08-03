@@ -807,10 +807,16 @@ a.vs-back:hover, .vs-back:hover{ color:#f3f0ea !important; }
    最後の磨き ── 世界一級の手ざわりへ
    ════════════════════════════════════════════════════════════ */
 
-/* 塗りボタンの文字は、常に読める色で（触れる前から） */
+/* 塗りボタンの文字は、常に読める色で（触れる前から・どの包みの中でも） */
 html[data-era="now"] .mx-btn.mx-btn-solid,
+html[data-era="now"][data-mx="1"] a.mx-btn.mx-btn-solid,
+html[data-era="now"][data-mx="1"] .mx-legacy a.mx-btn.mx-btn-solid,
+html[data-era="now"][data-mx="1"] .mx-legacy .mx-btn.mx-btn-solid span,
 .mx-btn.mx-btn-solid{ color:#141010 !important; }
 html[data-era="now"] .mx-btn.mx-btn-solid:hover,
+html[data-era="now"][data-mx="1"] a.mx-btn.mx-btn-solid:hover,
+html[data-era="now"][data-mx="1"] .mx-legacy a.mx-btn.mx-btn-solid:hover,
+html[data-era="now"][data-mx="1"] .mx-legacy .mx-btn.mx-btn-solid:hover span,
 .mx-btn.mx-btn-solid:hover{ color:#fff !important; }
 
 /* 文字を選んだときも金で */
