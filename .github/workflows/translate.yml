@@ -1,0 +1,47 @@
+name: 訳をつける
+
+on:
+  workflow_dispatch:
+    inputs:
+      maxcall:
+        description: '呼び出しの上限'
+        default: '220'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: translate
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: 訳す
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          MAXCALL: ${{ inputs.maxcall }}
+        run: node scripts/translate.mjs
+      - name: 納める
+        run: |
+          git config user.name  'sumura-sake bot'
+          git config user.email 'bot@users.noreply.github.com'
+          if [ -z "$(git status --porcelain public/products.i18n.json)" ]; then
+            echo '変わりはございませんでした。'
+            exit 0
+          fi
+          git add public/products.i18n.json
+          git commit -m '訳を足しました'
+          git pull --rebase origin main
+          git push origin main
+      - name: 公開をうながす
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref main --repo ${{ github.repository }}
