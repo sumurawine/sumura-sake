@@ -70,6 +70,12 @@ export function Providers(
       router.push((l === 'jp' ? '' : '/' + l) + bare);
       return;
     }
+    // 日本語の住所にいても、その頁に言語版があるなら住所ごと移ります
+    const p0 = (path || '/').replace(/\/$/, '') || '/';
+    const HAS_LANG = /^\/(wine|maker)\//.test(p0)
+      || ['/wines', '/home', '/store', '/producers', '/about', '/access',
+          '/news', '/blog', '/legal', '/contact', '/virtual', '/secret'].indexOf(p0) >= 0;
+    if (l !== 'jp' && HAS_LANG) { router.push('/' + l + p0); return; }
     setLangState(l);
   }, [initialLang, path, router]);
 
