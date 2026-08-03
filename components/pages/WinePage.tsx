@@ -5,7 +5,7 @@ import { Shell } from '@/components/Shell';
 import { asset } from '@/lib/paths';
 import type { Lang } from '@/lib/i18n';
 import type { WineView, Near } from '@/lib/wineText';
-import { winePath, makerPath, pre } from '@/lib/slug';
+import { winePath, makerPath, pre, buyUrl } from '@/lib/slug';
 
 const W: Record<string, Record<Lang, string>> = {
   producer: { jp: '生産者', en: 'Producer', fr: 'Producteur', zh: '生产者', ko: '생산자' },
@@ -17,6 +17,7 @@ const W: Record<string, Record<Lang, string>> = {
   inStock: { jp: '店頭在庫がございます', en: 'In stock', fr: 'En stock', zh: '有现货', ko: '재고 있음' },
   out: { jp: '在庫切れ（お取り寄せのご相談を承ります）', en: 'Sold out — we may be able to source it', fr: 'Épuisé — nous pouvons tenter de le trouver', zh: '售罄（可代为寻找）', ko: '품절 — 구해 드릴 수 있습니다' },
   ask: { jp: 'この一本について問い合わせる', en: 'Enquire about this bottle', fr: 'Nous écrire à propos de ce vin', zh: '咨询这瓶酒', ko: '이 한 병에 대해 문의하기' },
+  buy: { jp: 'この一本を購入する（オンラインストア）', en: 'Buy this bottle (online shop)', fr: 'Acheter ce flacon (boutique en ligne)', zh: '购买这瓶酒（在线商店）', ko: '이 한 병을 구입하기 (온라인 스토어)' },
   virtual: { jp: 'バーチャル店舗で相談する', en: 'Ask in the virtual shop', fr: 'Demander à la boutique virtuelle', zh: '在虚拟店铺咨询', ko: '버추얼 매장에서 상담하기' },
   same: { jp: '同じ造り手から', en: 'From the same producer', fr: 'Du même producteur', zh: '同一生产者', ko: '같은 생산자' },
   near: { jp: '同じ産地から', en: 'From the same region', fr: 'De la même région', zh: '同一产区', ko: '같은 산지' },
@@ -81,7 +82,10 @@ export function WinePage({ v, lang }: { v: WineView; lang: Lang }) {
           {v.desc ? <p className="w-desc">{v.desc}</p> : null}
 
           <div className="w-cta">
-            <Link href={`${p}/contact`} className="mx-btn mx-btn-solid"><span>{t('ask')}</span></Link>
+            {!out && buyUrl(v.item.id) ? (
+              <a href={buyUrl(v.item.id)} className="mx-btn mx-btn-solid" rel="noopener"><span>{t('buy')}</span></a>
+            ) : null}
+            <Link href={`${p}/contact`} className={!out && buyUrl(v.item.id) ? 'mx-btn' : 'mx-btn mx-btn-solid'}><span>{t('ask')}</span></Link>
             <Link href={`${p}/virtual`} className="mx-btn"><span>{t('virtual')}</span></Link>
           </div>
 
