@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { asset } from '@/lib/paths';
 import { Shell } from '@/components/Shell';
 import { A } from '@/components/A';
+import { prodSlug, makerPath } from '@/lib/slug';
 import { useSite } from '@/components/Providers';
 import { isModern } from '@/lib/era';
 import { stripDeco } from '@/lib/decor';
@@ -74,7 +75,7 @@ export function ProducersPage() {
             <ul className="pr-list">
               {g.rows.map((r) => (
                 <li key={r.jp}>
-                  <A href={r.n ? `/store?prod=${encodeURIComponent(r.jp)}` : `/contact?item=${encodeURIComponent(r.jp)}`}>
+                  <A href={r.n ? makerPath(prodSlug(r.jp, I18N), lang) : `/contact?item=${encodeURIComponent(r.jp)}`}>
                     <span className="pr-jp">{r.jp}</span>
                     {r.latin && r.latin !== r.jp ? <span className="pr-latin2">{r.latin}</span> : null}
                   </A>
