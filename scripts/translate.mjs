@@ -80,12 +80,13 @@ async function ask(fields, langName, gloss) {
           generationConfig: { temperature: 0.3, responseMimeType: 'application/json' },
         }),
       });
-      if (r.status === 429 || r.status >= 500) { await sleep(4000 * (t + 1)); continue; }
+      if (r.status === 429 || r.status >= 500) { console.error('  ' + r.status + ' ' + (await r.text()).slice(0, 200)); await sleep(4000 * (t + 1)); continue; }
       if (!r.ok) { console.error('  ' + r.status + ' ' + (await r.text()).slice(0, 120)); await sleep(2500); continue; }
       const j = await r.json();
       const txt = j.candidates[0].content.parts[0].text;
       return JSON.parse(txt);
     } catch (e) {
+      console.error('  例外 ' + String(e && e.message || e).slice(0, 200));
       await sleep(3000 * (t + 1));
     }
   }
