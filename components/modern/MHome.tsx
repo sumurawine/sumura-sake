@@ -6,6 +6,7 @@ import { asset } from '@/lib/paths';
 import { tr, type Lang } from '@/lib/i18n';
 import { useSite } from '@/components/Providers';
 import { MC } from '@/lib/modernCopy';
+import { pre } from '@/lib/slug';
 import { CATS, isOut, nameOf, type I18nData, type Item, type ProductData } from '@/lib/store';
 import { MShell } from './MShell';
 import { Chars, Reveal, useParallax } from './Motion';
@@ -49,7 +50,7 @@ function Quote({ lang }: { lang: Lang }) {
       <div className="mx-in-n" style={{ textAlign: 'center' }}>
         <Reveal as="p" className="mx-h2" style={{ marginBottom: 22 }}>{c.quote}</Reveal>
         <Reveal delay={1} style={{ marginBottom: 28 }}>
-          <Link href="/virtual" className="mx-btn"><span>{c.quoteVs}</span></Link>
+          <Link href={`${pre(lang)}/virtual`} className="mx-btn"><span>{c.quoteVs}</span></Link>
         </Reveal>
         <Reveal as="p" delay={2} className="mx-kicker" style={{ margin: 0 }}>— {c.quoteBy}</Reveal>
       </div>
@@ -69,7 +70,7 @@ function About({ lang }: { lang: Lang }) {
             <Reveal as="p" delay={2} className="mx-lead">{tr(lang, 'home-p1')}</Reveal>
             <Reveal as="p" delay={3} className="mx-p">{tr(lang, 'home-p2')}</Reveal>
             <Reveal delay={4}>
-              <Link href="/about" className="mx-btn"><span>{tr(lang, 'nav:about')}</span></Link>
+              <Link href={`${pre(lang)}/about`} className="mx-btn"><span>{tr(lang, 'nav:about')}</span></Link>
             </Reveal>
           </div>
           <Reveal delay={2} className="mx-photo" threshold={0.25}>
@@ -154,7 +155,7 @@ function Selection({ lang }: { lang: Lang }) {
       <div className="mx-rail">
         {pick.map((it, i) => (
           <Reveal key={it.id} delay={(Math.min(i, 5) + 1) as any}>
-            <Link href={`/store`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+            <Link href={`${pre(lang)}/store`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
               <div className="mx-vitrine mx-vit-tall">
                 <img src={it.img} alt="" loading="lazy" />
               </div>
@@ -168,7 +169,7 @@ function Selection({ lang }: { lang: Lang }) {
       </div>
       <div className="mx-in">
         <Reveal as="p" className="mx-note" style={{ marginBottom: 26 }}>{c.ch2Note}</Reveal>
-        <Reveal delay={1}><Link href="/store" className="mx-btn"><span>{c.ch2More}</span></Link></Reveal>
+        <Reveal delay={1}><Link href={`${pre(lang)}/store`} className="mx-btn"><span>{c.ch2More}</span></Link></Reveal>
       </div>
     </section>
   );
@@ -205,7 +206,7 @@ function Cellar({ lang }: { lang: Lang }) {
           <Reveal as="p" className="mx-kicker">{c.ch3}</Reveal>
           <Reveal as="h2" delay={1} className="mx-h2">{c.ch3Head}</Reveal>
           <Reveal as="p" delay={2} className="mx-p">{c.ch3Body}</Reveal>
-          <Reveal delay={3}><Link href="/secret" className="mx-btn"><span>{c.ch3Btn}</span></Link></Reveal>
+          <Reveal delay={3}><Link href={`${pre(lang)}/secret`} className="mx-btn"><span>{c.ch3Btn}</span></Link></Reveal>
         </div>
       </div>
     </section>
@@ -251,7 +252,7 @@ function News({ lang }: { lang: Lang }) {
           ))}
         </div>
         <Reveal delay={2} style={{ marginTop: 34 }}>
-          <Link href="/news" className="mx-link">{c.newsMore}</Link>
+          <Link href={`${pre(lang)}/news`} className="mx-link">{c.newsMore}</Link>
         </Reveal>
       </div>
     </section>
@@ -269,7 +270,7 @@ function Cta({ lang }: { lang: Lang }) {
         <Reveal as="h2" className="mx-h2">{c.ctaHead}</Reveal>
         <Reveal as="p" delay={1} className="mx-p">{c.ctaBody}</Reveal>
         <Reveal delay={2} style={{ marginTop: 12 }}>
-          <Link href="/contact" className="mx-btn mx-btn-solid"><span>{c.ctaBtn}</span></Link>
+          <Link href={`${pre(lang)}/contact`} className="mx-btn mx-btn-solid"><span>{c.ctaBtn}</span></Link>
         </Reveal>
         <Reveal as="p" delay={3} className="mx-cap" style={{ marginTop: 26 }}>{c.ctaTel} — 0836-21-4721</Reveal>
       </div>
