@@ -36,17 +36,24 @@ export function Providers(
   useEffect(() => {
     // 言語ごとの住所にいるときは、その言語のまま動かしません
     if (initialLang) { setEraState(readEra()); setMounted(true); return; }
+    let chosen: string = 'jp';
     try {
       // ?lang=en のように指定があればそちらを優先します（検索エンジン向けの言語別URL）
       const q = new URLSearchParams(window.location.search).get('lang');
       if (q && (LANGS as string[]).includes(q)) {
-        setLangState(q as Lang);
+        chosen = q; setLangState(q as Lang);
         try { localStorage.setItem('lang', q); } catch {}
       } else {
         const l = localStorage.getItem('lang');
-        if (l && (LANGS as string[]).includes(l)) setLangState(l as Lang);
+        if (l && (LANGS as string[]).includes(l)) { chosen = l; setLangState(l as Lang); }
       }
     } catch {}
+    // 言語版のある頁なら、選ばれている言語の住所へそっと移ります
+    const p0 = (path || '/').replace(/\/$/, '') || '/';
+    const HAS_LANG = /^\/(wine|maker)\//.test(p0)
+      || ['/wines', '/home', '/store', '/producers', '/about', '/access',
+          '/news', '/blog', '/legal', '/contact', '/virtual', '/secret'].indexOf(p0) >= 0;
+    if (chosen !== 'jp' && HAS_LANG) { router.replace('/' + chosen + p0); }
     setEraState(readEra());
     setMounted(true);
   }, []);
