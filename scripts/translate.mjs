@@ -13,8 +13,8 @@ const rd = (f) => JSON.parse(fs.readFileSync(path.join(PUB, f), 'utf8'));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const LANGS = [['en', '英語'], ['fr', 'フランス語'], ['zh', '中国語（簡体字）'], ['ko', '韓国語']];
-const MODEL = process.env.MODEL || 'gemini-2.5-flash';
-const CHARS = +(process.env.CHARS || 6500);   // ひと呼びに載せる日本語の目安
+const MODEL = process.env.MODEL || 'gemini-3.5-flash';
+const CHARS = +(process.env.CHARS || 3600);   // ひと呼びに載せる日本語の目安
 const PACE = +(process.env.PACE || 6800);     // 一分あたりの上限に合わせた間合い
 const MAXCALL = +(process.env.MAXCALL || 200);
 
@@ -89,7 +89,7 @@ async function ask(fields, langName, gloss) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.3, responseMimeType: 'application/json' },
+          generationConfig: { temperature: 0.3, responseMimeType: 'application/json', maxOutputTokens: 32768 },
         }),
       });
       if (r.status === 429 || r.status >= 500) { console.error('  ' + r.status + ' ' + (await r.text()).slice(0, 160)); await sleep(12000 * (t + 1)); continue; }
@@ -117,7 +117,7 @@ for (const [lang, langName] of LANGS) {
   while (i < todo.length && calls < MAXCALL) {
     const bag = [];
     let n = 0;
-    while (i < todo.length && (bag.length === 0 || n + todo[i].jp.length < CHARS) && bag.length < 12) {
+    while (i < todo.length && (bag.length === 0 || n + todo[i].jp.length < CHARS) && bag.length < 8) {
       n += todo[i].jp.length; bag.push(todo[i]); i++;
     }
     const fields = {};
