@@ -32,7 +32,7 @@ const NAV: Array<[string, string]> = [
 ];
 
 const FOOT_A: Array<[string, string]> = [
-  ['/store', 'nav:store'], ['/producers', 'nav:producers'], ['/about', 'nav:about'], ['/blog', 'nav:blog'],
+  ['/store', 'nav:store'], ['/wines', 'nav:wines'], ['/producers', 'nav:producers'], ['/about', 'nav:about'], ['/blog', 'nav:blog'],
 ];
 const FOOT_B: Array<[string, string]> = [
   ['/access', 'nav:access'], ['/contact', 'nav:contact'], ['/legal', 'nav:legal'], ['/secret', 'nav:secret'],
@@ -51,7 +51,11 @@ export function MShell({ children }: { children: React.ReactNode }) {
     return () => { document.documentElement.removeAttribute('data-mx'); };
   }, []);
 
+  const WINES: Record<string, string> = {
+    jp: '取り扱い銘柄の一覧', en: 'All wines', fr: 'Tous les vins', zh: '全酒款一览', ko: '전 품목 목록',
+  };
   const label = (k: string) =>
+    k === 'nav:wines' ? (WINES[lang] || WINES.jp) :
     k === 'nav:virtual' ? (VIRTUAL[lang] || VIRTUAL.jp) :
     k === 'nav:secret' ? MODERN[lang].priv : k === 'nav:legal' ? LEGAL_TITLE[lang]
     : k === 'nav:producers' ? PROD_NAV[lang] : tr(lang, k);
