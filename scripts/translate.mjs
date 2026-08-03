@@ -82,7 +82,7 @@ async function ask(fields, langName, gloss) {
     '\n【訳す文】\n' + JSON.stringify(fields, null, 1);
 
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':generateContent?key=' + KEY;
-  for (let t = 0; t < 4; t++) {
+  for (let t = 0; t < 2; t++) {
     try {
       const r = await fetch(url, {
         method: 'POST',
@@ -92,7 +92,8 @@ async function ask(fields, langName, gloss) {
           generationConfig: { temperature: 0.3, responseMimeType: 'application/json', maxOutputTokens: 32768 },
         }),
       });
-      if (r.status === 429 || r.status >= 500) { console.error('  ' + r.status + ' ' + (await r.text()).slice(0, 160)); await sleep(12000 * (t + 1)); continue; }
+      if (r.status === 429) { over++; console.error('  429 上限'); await sleep(8000); continue; }
+      if (r.status >= 500) { console.error('  ' + r.status); await sleep(6000); continue; }
       if (!r.ok) { console.error('  ' + r.status + ' ' + (await r.text()).slice(0, 120)); await sleep(2500); continue; }
       const j = await r.json();
       const txt = j.candidates[0].content.parts[0].text;
@@ -105,8 +106,10 @@ async function ask(fields, langName, gloss) {
   return null;
 }
 
-let calls = 0, done = 0, failed = 0;
+let calls = 0, done = 0, failed = 0, over = 0;
+const save = () => fs.writeFileSync(path.join(PUB, 'products.i18n.json'), JSON.stringify(i18));
 for (const [lang, langName] of LANGS) {
+  if (over >= 8) break;
   const gloss = glossFor(lang);
   const todo = jobs.filter((j) => {
     const cur = i18[j.store][j.key];
@@ -132,7 +135,9 @@ for (const [lang, langName] of LANGS) {
       i18[b.store][b.key][lang] = v;
       done++;
     });
+    save();
     if (calls % 5 === 0) console.log(`  …${calls}回・${done}件`);
+    if (over >= 8) { console.log('上限に当たり続けますので、ここまでといたします。'); break; }
     await sleep(PACE);
   }
 }
@@ -142,5 +147,5 @@ const left = LANGS.reduce((a, [l]) => a + jobs.filter((j) => !(i18[j.store][j.ke
 console.log(`のこり ${left}件`);
 
 if (done === 0) { console.log('書き換えるものがございませんでした。'); process.exit(0); }
-fs.writeFileSync(path.join(PUB, 'products.i18n.json'), JSON.stringify(i18));
+save();
 console.log('書き込みました。');
