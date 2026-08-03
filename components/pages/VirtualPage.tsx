@@ -335,9 +335,10 @@ export function VirtualPage() {
               {imgs[String(p.id)] ? (
                 <img className="vs-shot" src={imgs[String(p.id)]} alt="" loading="lazy" />
               ) : null}
-              <div className="vs-card-n">{p.name}</div>
+              <div className="vs-card-n">{names[String(p.id)] || p.name}</div>
               <div className="vs-card-p">{p.price}</div>
               {p.why ? <div className="vs-card-w">{p.why}</div> : null}
+              {descs[String(p.id)] ? <div className="vs-card-d">{descs[String(p.id)]}</div> : null}
               <button className="vs-btn vs-sm" onClick={() => { setBuying(p); setDone(false); setMsg(''); setNote(p.name); }}>{t.buy}</button>
             </div>
           ))}
@@ -379,8 +380,9 @@ export function VirtualPage() {
 
       {panel === 'bottle' && bottle ? (
         <div className="vs-panel vs-small">
-          <div className="vs-card-n">{bottle.name}</div>
+          <div className="vs-card-n">{names[String(bottle.id)] || bottle.name}</div>
           <div className="vs-card-p">{bottle.price}</div>
+          {descs[String(bottle.id)] ? <div className="vs-card-d">{descs[String(bottle.id)]}</div> : null}
           <div className="vs-row">
             <button className="vs-btn vs-primary" onClick={() => { setBuying(bottle as any); setPanel('talk'); }}>{t.buy}</button>
             <button className="vs-btn" onClick={close}>{t.close}</button>
