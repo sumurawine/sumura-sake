@@ -10,6 +10,7 @@ const BASE = 'https://sumura-sake.com';
 const PUB = path.join(process.cwd(), 'public');
 const UA = 'Mozilla/5.0 (compatible; sumura-sake.jp catalogue sync)';
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const NL = String.fromCharCode(10);
 
 async function grab(url, tries = 3) {
   for (let i = 0; i < tries; i++) {
@@ -96,9 +97,13 @@ function readCat(html) {
     const head = meta.slice(0, 22);
     const i = body.indexOf(head);
     if (i >= 0) {
-      const seg = body.slice(i, i + 8000)
-        .split(/表示件数|並び替[ええ]|カートに入れる|該当商品|SHOPPING GUIDE|特定商取引|会員登録/)[0]
-        .trim();
+      let seg = body.slice(i, i + 9000)
+        .split(/表示件数|表示順|並び替|カートに入れる|該当商品|SHOPPING GUIDE|特定商取引|会員登録/)[0];
+      const ln = seg.split(NL);
+      const cut = ln.findIndex((x) => /円[（(]税込|^表示順|^並び替|^価格の|^更新日順|^おすすめ順/.test(x.trim()));
+      if (cut > 0) seg = ln.slice(0, cut).join(NL);
+      seg = seg.trim();
+      if (seg.length > 2600) seg = seg.slice(0, 2600);
       if (seg.length > desc.length) desc = seg;
     }
   }
