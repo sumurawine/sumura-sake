@@ -53,7 +53,11 @@ export function Providers(
     const HAS_LANG = /^\/(wine|maker)\//.test(p0)
       || ['/wines', '/home', '/store', '/producers', '/about', '/access',
           '/news', '/blog', '/legal', '/contact', '/virtual', '/secret'].indexOf(p0) >= 0;
-    if (chosen !== 'jp' && HAS_LANG) { router.replace('/' + chosen + p0); }
+    if (chosen !== 'jp' && HAS_LANG) {
+      const sp = new URLSearchParams(window.location.search); sp.delete('lang');
+      const qs = sp.toString();
+      router.replace('/' + chosen + p0 + (qs ? '?' + qs : ''));
+    }
     setEraState(readEra());
     setMounted(true);
   }, []);
@@ -74,7 +78,8 @@ export function Providers(
     if (initialLang) {
       // 言語ごとの住所があるページでは、住所ごと移ります
       const bare = (path.replace(/^\/(en|fr|zh|ko)(?=\/|$)/, '') || '/');
-      router.push((l === 'jp' ? '' : '/' + l) + bare);
+      const qs2 = typeof window !== 'undefined' ? window.location.search : '';
+      router.push((l === 'jp' ? '' : '/' + l) + bare + qs2);
       return;
     }
     // 日本語の住所にいても、その頁に言語版があるなら住所ごと移ります
@@ -82,7 +87,10 @@ export function Providers(
     const HAS_LANG = /^\/(wine|maker)\//.test(p0)
       || ['/wines', '/home', '/store', '/producers', '/about', '/access',
           '/news', '/blog', '/legal', '/contact', '/virtual', '/secret'].indexOf(p0) >= 0;
-    if (l !== 'jp' && HAS_LANG) { router.push('/' + l + p0); return; }
+    if (l !== 'jp' && HAS_LANG) {
+      const qs = typeof window !== 'undefined' ? window.location.search : '';
+      router.push('/' + l + p0 + qs); return;
+    }
     setLangState(l);
   }, [initialLang, path, router]);
 
