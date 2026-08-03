@@ -23,7 +23,7 @@ const M: Record<string, Record<Lang, string>> = {
 };
 
 export function MakerPage(
-  { shown, list, lang }: { shown: string; list: Near[]; lang: Lang },
+  { shown, list, lang, about }: { shown: string; list: Near[]; lang: Lang; about?: string[] },
 ) {
   const t = (k: string) => M[k][lang] || M[k].jp;
   const p = pre(lang);
@@ -40,6 +40,11 @@ export function MakerPage(
       <div className="w-maker">
         <h1 className="w-name">{shown}{t('head')}</h1>
         <p className="w-count">{list.length}{t('count')}</p>
+        {about && about.length ? (
+          <div className="w-about">
+            {about.map((s, i) => (<p key={i}>{s}</p>))}
+          </div>
+        ) : null}
         <p className="w-note">{t('note')}</p>
         <div className="w-cta">
           <Link href={`${p}/contact`} className="mx-btn mx-btn-solid"><span>{t('ask')}</span></Link>
