@@ -41,7 +41,7 @@ jobs:
         continue-on-error: true
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          MAXCALL: '220'
+          MAXCALL: '400'
         run: node scripts/translate.mjs
 
       - name: 変わっていれば納める
