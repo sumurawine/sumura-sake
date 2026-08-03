@@ -20,13 +20,16 @@ const shopLd = {
   '@type': ['Store', 'LocalBusiness'],
   '@id': SITE.url + '/#shop',
   name: SITE.name,
-  alternateName: [SITE.nameEn, 'すむら酒店', 'スムラ酒店'],
+  alternateName: [
+    SITE.nameEn, 'すむら酒店', '洲村酒店', 'スムラ酒店', 'すむら', '洲村',
+    'Sumura', 'Sumura Sake', 'Sumura Saketen', 'Liquor Shop SUMURA',
+  ],
   url: SITE.url + '/home.html',
   telephone: '+81-836-21-4721',
   image: SITE.url + SITE.ogImage,
   priceRange: '¥¥¥',
   description:
-    'すむら酒店は山口県宇部市のワイン専門店でございます。ブルゴーニュを中心に、ボルドー、コート デュ ローヌ、ジュラ、ロワール、アルザスの銘醸ワインを正規のルートでお届けしております。ドメーヌ・ド・ラ・ロマネ・コンティ（DRC）、ドメーヌ・ルロワ、ドメーヌ・ドーヴネの正規お取り扱いもございます。',
+    'すむら酒店（洲村酒店／Liquor Shop Sumura）は山口県宇部市のワイン専門店でございます。ブルゴーニュを中心に、ボルドー、コート デュ ローヌ、ジュラ、ロワール、アルザスの銘醸ワインを正規のルートでお届けしております。ドメーヌ・ド・ラ・ロマネ・コンティ（DRC）、ドメーヌ・ルロワ、ドメーヌ・ドーヴネの正規お取り扱いもございます。',
   address: {
     '@type': 'PostalAddress',
     postalCode: SITE.zip,
