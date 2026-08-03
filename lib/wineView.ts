@@ -1,7 +1,7 @@
 import type { Lang } from './i18n';
 import type { Item, I18nData } from './store';
 import { SITE } from './siteMeta';
-import { slugMap, prodSlug, winePath, makerPath } from './slug';
+import { slugMap, prodSlug, winePath, makerPath, buyUrl } from './slug';
 import { catName, localized, vintageOf, type WineView, type Near } from './wineText';
 
 export const yen = (s: string) => {
@@ -59,7 +59,7 @@ export function wineLd(v: WineView, lang: Lang) {
   if (price) {
     product.offers = {
       '@type': 'Offer',
-      url,
+      url: (!out && buyUrl(v.item.id)) || url,
       priceCurrency: 'JPY',
       price,
       availability: out ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
