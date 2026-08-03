@@ -13,7 +13,7 @@ const rd = (f) => JSON.parse(fs.readFileSync(path.join(PUB, f), 'utf8'));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const LANGS = [['en', '英語'], ['fr', 'フランス語'], ['zh', '中国語（簡体字）'], ['ko', '韓国語']];
-const MODEL = process.env.MODEL || 'gemini-3.5-flash';
+const MODEL = process.env.MODEL || 'gemini-3.5-flash-lite';
 const CHARS = +(process.env.CHARS || 3600);   // ひと呼びに載せる日本語の目安
 const PACE = +(process.env.PACE || 6800);     // 一分あたりの上限に合わせた間合い
 const MAXCALL = +(process.env.MAXCALL || 200);
