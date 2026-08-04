@@ -908,7 +908,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   pglow.position.set(PX + 0.4, 1.9, PZ + 0.5); scene.add(pglow);
 
   /* 見回しと歩き */
-  let yaw = -0.34, pitch = -0.02;   /* 入店の一目は、ピアノのほうへ */
+  let yaw = 0.42, pitch = -0.02;   /* 入店の一目は、ピアノのほうへ */
   const keys: Record<string, boolean> = {};
   let locked = false, paused = false;
   let padX = 0, padY = 0, lookX = 0, lookY = 0;
