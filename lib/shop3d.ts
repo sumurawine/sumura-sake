@@ -634,6 +634,17 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
       new THREE.Vector2(0.0135, 0.21), new THREE.Vector2(0.0135, 0.30),
     ], 9
   );
+  /* 実物の衣装（ラベルと色）。写真から拾った索引を着せます */
+  let SKINS: Record<string, { c: string; g: string }> = {};
+  try {
+    const sr = await fetch('/labels/index.json');
+    if (sr.ok) SKINS = await sr.json();
+  } catch { /* 無いときは仕立ての瓶のままで */ }
+  const texLoader = new THREE.TextureLoader();
+  const skinGlassM: Record<string, any> = {};
+  const skinCapM: Record<string, any> = {};
+  const skinLabT: Record<string, any> = {};
+
   /* 瓶はガラスの艶で。映り込みが命です */
   const glassA = new THREE.MeshStandardMaterial({ color: 0x1d3319, roughness: 0.14, metalness: 0.0, envMapIntensity: 1.25 });
   const glassB = new THREE.MeshStandardMaterial({ color: 0x431619, roughness: 0.14, metalness: 0.0, envMapIntensity: 1.25 });
@@ -643,13 +654,35 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
 
   function putBottle(parent: any, x: number, y: number, z: number, b?: Bottle) {
     const g = new THREE.Group();
-    g.add(new THREE.Mesh(bottleGeo, Math.random() > 0.45 ? glassA : glassB));
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.035, 8), capMat);
+    const sk = b ? SKINS[b.id] : undefined;
+    let gm: any = Math.random() > 0.45 ? glassA : glassB;
+    let cm: any = capMat;
+    if (b && sk) {
+      if (!skinGlassM[b.id]) skinGlassM[b.id] = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(sk.g).multiplyScalar(0.85), roughness: 0.14, envMapIntensity: 1.25,
+      });
+      if (!skinCapM[b.id]) skinCapM[b.id] = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(sk.c), roughness: 0.38, metalness: 0.5,
+      });
+      gm = skinGlassM[b.id]; cm = skinCapM[b.id];
+    }
+    g.add(new THREE.Mesh(bottleGeo, gm));
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.035, 8), cm);
     cap.position.y = 0.295; g.add(cap);
     if (b) {
-      const t = new THREE.CanvasTexture(labelTex(b.name, b.prod));
-      t.anisotropy = Math.min(8, maxAniso);
-      const lab = new THREE.Mesh(labelGeo, new THREE.MeshBasicMaterial({ map: t }));
+      let map: any;
+      if (sk) {
+        if (!skinLabT[b.id]) {
+          skinLabT[b.id] = texLoader.load('/labels/' + b.id + '.webp');
+          skinLabT[b.id].colorSpace = THREE.SRGBColorSpace;
+          skinLabT[b.id].anisotropy = Math.min(8, maxAniso);
+        }
+        map = skinLabT[b.id];
+      } else {
+        map = new THREE.CanvasTexture(labelTex(b.name, b.prod));
+        map.anisotropy = Math.min(8, maxAniso);
+      }
+      const lab = new THREE.Mesh(labelGeo, new THREE.MeshBasicMaterial({ map }));
       lab.position.set(0, 0.088, 0.0395); g.add(lab);
       g.userData.bottle = b; pick.push(g);
     }
