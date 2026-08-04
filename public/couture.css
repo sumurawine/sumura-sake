@@ -1058,25 +1058,51 @@ html[data-era="now"] .mx-foot::before{
   opacity:.9;
 }
 
-/* ── 入店の間：メゾンの扉として ─────────────────────── */
+/* ── 入店の間：扉の前の静けさ（板もガラスも無し） ── */
 html[data-era="now"] #modern-entrance{
-  padding:60px 48px 54px !important;
-  border:1px solid rgba(201,173,130,.30) !important;
-  outline:1px solid rgba(201,173,130,.12) !important; outline-offset:7px;
-  background:rgba(12,8,6,.42) !important;
-  -webkit-backdrop-filter:blur(12px) saturate(1.05); backdrop-filter:blur(12px) saturate(1.05);
-  box-shadow:0 70px 160px -60px rgba(0,0,0,.92) !important;
+  padding:0 !important; border:none !important; outline:none !important;
+  background:transparent !important; box-shadow:none !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
 }
 html[data-era="now"] #modern-entrance::before{
-  content:""; display:block; width:72px; height:72px; margin:0 auto 26px;
+  content:""; display:block; width:62px; height:62px; margin:0 auto 30px;
   background:var(--mx-crest) center/contain no-repeat;
-  animation:meFade 1.3s .15s ease both;
+  animation:meFade 2.2s .1s ease both;
 }
-html[data-era="now"] #modern-entrance .me-en{ letter-spacing:.5em !important; }
-html[data-era="now"] #modern-entrance .me-btn{ border-radius:0 !important; letter-spacing:.34em !important; }
+html[data-era="now"] #modern-entrance .me-jp{
+  animation:meFade 2s .5s ease both !important;
+  letter-spacing:.18em !important; font-weight:300 !important;
+  text-shadow:0 2px 70px rgba(0,0,0,.8) !important;
+}
+html[data-era="now"] #modern-entrance .me-en{
+  letter-spacing:.58em !important; font-size:10.5px !important;
+  color:rgba(208,183,138,.8) !important;
+  animation:meFade 1.8s 1.0s ease both !important;
+}
+html[data-era="now"] #modern-entrance .me-rule{ animation:meFade 1.8s 1.25s ease both !important; width:72px !important; }
+html[data-era="now"] #modern-entrance .me-sub{ animation:meFade 1.8s 1.45s ease both !important; }
+html[data-era="now"] #modern-entrance .me-btn{
+  border:none !important; border-bottom:1px solid rgba(201,173,130,.6) !important; border-radius:0 !important;
+  padding:8px 10px 14px !important; background:transparent !important;
+  letter-spacing:.44em !important; text-indent:.44em; font-size:13px !important;
+  color:#f2ead9 !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+  animation:meFade 1.8s 1.7s ease both !important;
+  transition:color .5s ease, border-color .5s ease !important;
+}
+html[data-era="now"] #modern-entrance .me-btn:hover{
+  background:transparent !important; color:#e8cf9e !important; border-bottom-color:#e8cf9e !important;
+}
+html[data-era="now"] #age-note{ animation:meFade 2s 2.0s ease both !important; }
+/* 扉の写真は暈さず、素直な暗がりに沈める */
+html[data-era="now"] .mx-door-veil{
+  background:
+    radial-gradient(60% 46% at 50% 32%, rgba(201,173,130,.07), transparent 68%),
+    radial-gradient(78% 62% at 50% 48%, rgba(14,9,7,.46) 0%, rgba(14,9,7,.82) 64%, rgba(11,7,5,.96) 100%),
+    linear-gradient(to bottom, rgba(14,9,7,.6), rgba(14,9,7,.9)) !important;
+}
 @media (max-width:860px){
-  html[data-era="now"] #modern-entrance{ padding:44px 26px 40px !important; }
-  html[data-era="now"] #modern-entrance::before{ width:58px; height:58px; }
+  html[data-era="now"] #modern-entrance::before{ width:52px; height:52px; }
 }
 
 /* ── バーチャル店舗の門：同じ礼装で ──────────────────── */
@@ -1111,3 +1137,17 @@ html[data-mx="1"] #tw-leave-ov .tw-bye-a{ letter-spacing:.3em !important; }
 
 /* 門の説明文：句の切れ目で折り返す */
 .vs-gate p{ word-break:auto-phrase; text-wrap:pretty; max-width:24em; margin-left:auto; margin-right:auto; }
+
+
+/* ── 表紙の題字：一文字ずつ、右へひらいて現れる ── */
+html[data-era="now"] .mx-hero .mx-h1.mx-fade{ transition:opacity .01s linear !important; transform:none !important; filter:none !important; }
+html[data-era="now"] .mx-hero .mx-ch{
+  transform:translate3d(0,.3em,0);
+  transition:opacity 1.15s ease, transform 1.35s cubic-bezier(.16,.84,.24,1);
+}
+html[data-era="now"] .mx-hero .mx-ch:nth-child(1){ transition-delay:.20s }
+html[data-era="now"] .mx-hero .mx-ch:nth-child(2){ transition-delay:.40s }
+html[data-era="now"] .mx-hero .mx-ch:nth-child(3){ transition-delay:.60s }
+html[data-era="now"] .mx-hero .mx-ch:nth-child(4){ transition-delay:.80s }
+html[data-era="now"] .mx-hero .mx-ch:nth-child(5){ transition-delay:1.0s }
+html[data-era="now"] .mx-hero .mx-ch:nth-child(n+6){ transition-delay:1.2s }
