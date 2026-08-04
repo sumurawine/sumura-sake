@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { tr } from '@/lib/i18n';
 import { PROD_NAV } from '@/lib/producersNav';
 import { pre } from '@/lib/slug';
+import { Finesse } from './Finesse';
 import { MODERN } from '@/lib/decor';
 import { LEGAL_TITLE } from '@/lib/modernCopy';
 import { useSite } from '@/components/Providers';
@@ -70,6 +71,7 @@ export function MShell({ children }: { children: React.ReactNode }) {
       <div className="mx-veil" aria-hidden><i /></div>
       <div className="mx-bg" aria-hidden style={{ backgroundImage: `url(${asset(backOf(path))})` }} />
       <Atmosphere />
+      <Finesse />
       <AutoReveal />
 
       <header className={`mx-head${stuck ? ' is-stuck' : ''}`}>
