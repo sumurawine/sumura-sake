@@ -1107,3 +1107,7 @@ html[data-mx="1"] #tw-leave-ov .tw-bye::before{
   background:var(--mx-crest) center/contain no-repeat; opacity:.85;
 }
 html[data-mx="1"] #tw-leave-ov .tw-bye-a{ letter-spacing:.3em !important; }
+
+
+/* 門の説明文：句の切れ目で折り返す */
+.vs-gate p{ word-break:auto-phrase; text-wrap:pretty; max-width:24em; margin-left:auto; margin-right:auto; }
