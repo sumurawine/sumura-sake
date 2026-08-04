@@ -448,7 +448,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   const SKY = 0x0d0a08;
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(SKY);
-  scene.fog = new THREE.FogExp2(SKY, 0.050);
+  scene.fog = new THREE.FogExp2(SKY, 0.058);
 
   const camera = new THREE.PerspectiveCamera(66, 1, 0.05, 60);
   camera.position.set(0, 1.62, D / 2 - 2.9);
@@ -459,7 +459,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.35;
+  renderer.toneMappingExposure = 0.92;
   o.mount.appendChild(renderer.domElement);
   const maxAniso = renderer.capabilities.getMaxAnisotropy?.() || 1;
 
@@ -536,8 +536,8 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   scene.add(doorGroup);
 
   /* 灯り */
-  scene.add(new THREE.AmbientLight(0xffdcb4, 0.62));
-  scene.add(new THREE.HemisphereLight(0xffcc98, 0x241d18, 0.44));
+  scene.add(new THREE.AmbientLight(0xffdcb4, 0.34));
+  scene.add(new THREE.HemisphereLight(0xffcc98, 0x241d18, 0.22));
   const flames: any[] = [];
   const flameGeo = new THREE.ConeGeometry(0.026, 0.095, 6);
   const mkFlame = () => new THREE.Mesh(flameGeo, new THREE.MeshBasicMaterial({ color: 0xffd68a }));
