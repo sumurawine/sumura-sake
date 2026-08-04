@@ -139,33 +139,6 @@ export function useSmoothScroll(enabled = true) {
       vel = 0;
     };
 
-    /* 指にも同じ粘りを。二本指（拡大）は端末に任せます */
-    let ty = 0, tv = 0, tAt = 0, touching = false;
-    const onTS = (e: TouchEvent) => {
-      if (e.touches.length !== 1) { touching = false; return; }
-      const el = e.target as HTMLElement | null;
-      if (el && el.closest(HOT)) { touching = false; return; }
-      touching = true; vel = 0;
-      ty = e.touches[0].clientY; tv = 0; tAt = performance.now();
-    };
-    const onTM = (e: TouchEvent) => {
-      if (!touching || e.touches.length !== 1) return;
-      e.preventDefault();
-      const y = e.touches[0].clientY;
-      const dy = ty - y;
-      const now = performance.now();
-      const dt = Math.max(8, now - tAt);
-      tv = (dy / dt) * 16;
-      ty = y; tAt = now;
-      const step = dy > 0 ? dy * 0.5 : dy * 0.85;
-      target = Math.max(0, Math.min(target + step, maxY()));
-    };
-    const onTE = () => {
-      if (!touching) return;
-      touching = false;
-      vel = tv > 0 ? tv * 0.45 : tv * 0.8;
-    };
-
     /* 帯や検索ジャンプなど、よそから動かされたときは素直に従います */
     const sync = () => {
       if (Math.abs(window.scrollY - current) > 3) { target = window.scrollY; current = target; vel = 0; }
