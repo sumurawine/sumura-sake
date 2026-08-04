@@ -787,8 +787,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     [[-0.40, 0.252], [-0.20, 0.302], [0.20, 0.302], [0.40, 0.252]].forEach(([y, r]) => {
       const h = new THREE.Mesh(new THREE.TorusGeometry(r + 0.008, 0.019, 5, 16), hoopMat);
       h.rotation.x = Math.PI / 2; h.position.y = y; g.add(h);
-  ;
-    }
+    });
     if (lying) { g.rotation.z = Math.PI / 2; g.position.set(x, 0.33, z); g.rotation.y = ry; }
     else g.position.set(x, 0.44, z);
     scene.add(g);
