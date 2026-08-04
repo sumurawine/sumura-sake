@@ -459,7 +459,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.92;
+  renderer.toneMappingExposure = 0.84;
   o.mount.appendChild(renderer.domElement);
   const maxAniso = renderer.capabilities.getMaxAnisotropy?.() || 1;
 
@@ -570,7 +570,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     fl.position.set(Math.cos(a) * 0.44, 0.28, Math.sin(a) * 0.44); chand.add(fl);
     flames.push({ p: null, fl, base: 0, seed: Math.random() * 90, v: 1 });
   }
-  const cp = new THREE.PointLight(0xffbc78, 6.4, 10, 1.5); cp.position.y = 0.27;
+  const cp = new THREE.PointLight(0xffbc78, 3.4, 10, 1.5); cp.position.y = 0.27;
   cp.castShadow = true; cp.shadow.mapSize.set(1024, 1024); cp.shadow.bias = -0.005;
   cp.shadow.camera.near = 0.12; cp.shadow.camera.far = 11; chand.add(cp);
   flames.push({ p: cp, fl: null, base: 6.4, seed: 3.1, v: 1 });
