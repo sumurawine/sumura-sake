@@ -268,3 +268,59 @@ body:has(.mk-wrap)::after{
 }
 
 
+/* ══ 昔日 ── 美術館の一室として ══════════════════════════ */
+body:has(.mk-wrap){
+  background:#151110 !important;
+  background-image:
+    radial-gradient(90% 60% at 50% 0%, rgba(210,160,90,.08), transparent 60%),
+    radial-gradient(120% 80% at 50% 110%, rgba(0,0,0,.5), transparent 55%) !important;
+  color:#cfc2a8 !important;
+}
+body:has(.mk-wrap) .mk-title{
+  color:#c9ad82 !important; font-size:40px !important;
+  text-shadow:0 0 34px rgba(201,173,130,.25);
+}
+body:has(.mk-wrap) .mk-en{ color:#8d7c60 !important; }
+body:has(.mk-wrap) .mk-rule{
+  background:linear-gradient(90deg, transparent, rgba(201,173,130,.65), transparent) !important;
+  height:1px !important; border:none !important;
+}
+body:has(.mk-wrap) p{ color:#cfc2a8; }
+body:has(.mk-wrap) .mk-story{ color:#c4b394 !important; }
+body:has(.mk-wrap) .mk-sig{ color:#c9ad82 !important; letter-spacing:.3em; }
+
+/* 額装と、上からのひとすじの灯り */
+body:has(.mk-wrap) .mk-card{
+  position:relative;
+  background:#f4eddd; padding:22px 22px 16px;
+  border:12px solid #221812;
+  outline:1px solid rgba(201,173,130,.55); outline-offset:-16px;
+  box-shadow:0 30px 80px rgba(0,0,0,.55), 0 6px 18px rgba(0,0,0,.4);
+  transform:rotate(0deg);
+}
+body:has(.mk-wrap) .mk-card.mk-r{ transform:rotate(0deg); }
+body:has(.mk-wrap) .mk-card::before{
+  content:""; position:absolute; left:50%; top:-120px; transform:translateX(-50%);
+  width:150%; height:150px; pointer-events:none;
+  background:radial-gradient(50% 100% at 50% 100%, rgba(255,214,150,.13), transparent 75%);
+}
+body:has(.mk-wrap) .mk-card img{ filter:sepia(.16) contrast(1.04) brightness(.98); }
+
+/* 真鍮の銘板 */
+body:has(.mk-wrap) .mk-cap{
+  display:inline-block; margin-top:16px !important; padding:7px 22px;
+  background:linear-gradient(180deg, #3b2f1e, #241b11);
+  border:1px solid rgba(201,173,130,.5); border-radius:1px;
+  color:#d8bd8e !important; font-size:12px !important; letter-spacing:.26em !important;
+}
+body:has(.mk-wrap) .mk-era{ color:#8d7a5c !important; }
+body:has(.mk-wrap) .mk-back{
+  display:inline-block; margin-top:34px; padding:14px 34px;
+  border:1px solid rgba(201,173,130,.45); color:#c9ad82 !important;
+  letter-spacing:.22em; text-decoration:none !important; transition:background .4s ease,color .4s ease;
+}
+body:has(.mk-wrap) .mk-back:hover{ background:#c9ad82; color:#171310 !important; }
+body:has(.mk-wrap)::after{ opacity:.08; mix-blend-mode:overlay; }
+
+
+
