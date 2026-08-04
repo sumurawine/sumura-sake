@@ -489,15 +489,33 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     return t;
   };
   const lam = (p: any) => new THREE.MeshLambertMaterial(p);
+  const pbrTex = (p: string, rx: number, ry: number, srgb: boolean) => {
+    const t = new THREE.TextureLoader().load(p);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(rx, ry);
+    t.anisotropy = Math.min(8, maxAniso);
+    if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  };
+  /* 実写の質感（拡散＋法線・CC0）。蝋燭のあかりで陰影が立ちます */
+  const pbr = (base: string, rx: number, ry: number, o2: any = {}) => new THREE.MeshStandardMaterial({
+    map: pbrTex('/textures/' + base + '_diff.jpg', rx, ry, true),
+    normalMap: pbrTex('/textures/' + base + '_nor.jpg', rx, ry, false),
+    roughness: o2.rough !== undefined ? o2.rough : 0.93,
+    metalness: 0,
+    color: o2.tint !== undefined ? o2.tint : 0xffffff,
+    side: o2.side,
+    envMapIntensity: 0.35,
+  });
   const boxes: Array<{ x: number; z: number; w: number; d: number }> = [];
   const place = (g: any, x: number, y: number, z: number, ry = 0) => { g.position.set(x, y, z); g.rotation.y = ry; scene.add(g); return g; };
 
   /* 岩の床・腰壁・穹窿 */
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), lam({ map: tex(rock('#6d6559', '#231e19', 4, 4), 7, 5) }));
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), pbr('floor', 7, 5, { tint: 0xbdb2a2 }));
   floor.rotation.x = -Math.PI / 2; scene.add(floor);
 
-  const wallMat = lam({ map: tex(rock('#7a6f60', '#201b16', 5, 5), 5, 1.2), side: THREE.DoubleSide });
-  const endMat = lam({ map: tex(rock('#746a5c', '#1e1915', 6, 4), 3, 2), side: THREE.DoubleSide });
+  const wallMat = pbr('wall', 5, 1.2, { side: THREE.DoubleSide });
+  const endMat = pbr('wall', 3, 2, { side: THREE.DoubleSide, tint: 0xcfc5b6 });
   const wall = (w: number, h: number, x: number, y: number, z: number, ry: number, m: any) => {
     const q = new THREE.Mesh(new THREE.PlaneGeometry(w, h), m);
     q.position.set(x, y, z); q.rotation.y = ry; scene.add(q); return q;
@@ -509,13 +527,13 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
 
   const vault = new THREE.Mesh(
     new THREE.CylinderGeometry(D / 2 + 0.03, D / 2 + 0.03, W + 0.08, 26, 1, true, 0, Math.PI),
-    lam({ map: tex(rock('#6f6557', '#1c1813', 6, 8), 8, 3), side: THREE.BackSide }));
+    pbr('wall', 8, 3, { side: THREE.BackSide, tint: 0xd8cec0 }));
   vault.rotation.z = Math.PI / 2;
   vault.scale.set(RISE / (D / 2), 1, 1);
   vault.position.y = WH;
   scene.add(vault);
 
-  const ribMat = lam({ map: tex(rock('#5f564a', '#171310', 3, 3), 5, 1), side: THREE.DoubleSide });
+  const ribMat = pbr('wall', 5, 1, { side: THREE.DoubleSide, tint: 0x8f8578 });
   [-4.3, 0, 4.3].forEach((x) => {
     const rib = new THREE.Mesh(
       new THREE.CylinderGeometry(D / 2 + 0.20, D / 2 + 0.20, 0.36, 26, 1, true, 0, Math.PI), ribMat);
@@ -529,15 +547,15 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     });
   });
 
-  const nicheMat = lam({ map: tex(rock('#4c453b', '#12100d', 4, 4), 2, 1), side: THREE.DoubleSide });
+  const nicheMat = pbr('wall', 2, 1, { side: THREE.DoubleSide, tint: 0x7d7469 });
   [-4.3, 0, 4.3].forEach((x) => {
     const n = new THREE.Mesh(new THREE.BoxGeometry(2.7, 1.6, 0.34), nicheMat);
     n.position.set(x, 1.16, -D / 2 + 0.19); scene.add(n);
   });
 
   /* 扉（入口） */
-  const oakMat = lam({ map: tex(wood('#4a3320', '#1d1108'), 2, 1) });
-  const darkWood = lam({ map: tex(wood('#33241a', '#140c05'), 2, 1) });
+  const oakMat = pbr('wood', 2, 1, { rough: 0.8 });
+  const darkWood = pbr('wood', 2, 1, { rough: 0.75, tint: 0x9a8b7c });
   const doorGroup = new THREE.Group();
   const DH = 1.98;
   const door = new THREE.Mesh(new THREE.BoxGeometry(1.12, DH, 0.07), darkWood);
@@ -595,7 +613,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   place(chand, 1.6, 2.5, -0.6);
 
   /* 棚 */
-  const shelfMat = lam({ map: tex(wood('#3d2c1e', '#180f07'), 3, 1) });
+  const shelfMat = pbr('plank', 3, 1, { rough: 0.85 });
   const shelves: any[] = [];
   function rack(x: number, z: number, w: number, rotY: number) {
     const g = new THREE.Group();
