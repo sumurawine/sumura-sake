@@ -645,6 +645,24 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   const skinCapM: Record<string, any> = {};
   const skinLabT: Record<string, any> = {};
 
+  /* Blender で鋳造した器。読めたときだけ差し替えます */
+  let GB: any = null;
+  let GPIANO: any = null;
+  try {
+    const { GLTFLoader } = await (new Function('u', 'return import(u)'))(
+      'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js/+esm');
+    const gl = new GLTFLoader();
+    const ld = (p: string) => new Promise<any>((res, rej) => gl.load(p, res, undefined, rej));
+    const [bt, pn] = await Promise.all([ld('/models/bottle.glb'), ld('/models/piano.glb')]);
+    const gg = bt.scene.getObjectByName('glass');
+    const gc = bt.scene.getObjectByName('cap');
+    const gl2 = bt.scene.getObjectByName('label');
+    if (gg && gc && gl2) GB = {
+      glass: gg.geometry, cap: gc.geometry, capPos: gc.position.clone(), label: gl2.geometry,
+    };
+    GPIANO = pn.scene;
+  } catch { GB = null; GPIANO = null; }
+
   /* 瓶はガラスの艶で。映り込みが命です */
   const glassA = new THREE.MeshStandardMaterial({ color: 0x1d3319, roughness: 0.14, metalness: 0.0, envMapIntensity: 1.25 });
   const glassB = new THREE.MeshStandardMaterial({ color: 0x431619, roughness: 0.14, metalness: 0.0, envMapIntensity: 1.25 });
@@ -666,9 +684,10 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
       });
       gm = skinGlassM[b.id]; cm = skinCapM[b.id];
     }
-    g.add(new THREE.Mesh(bottleGeo, gm));
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.035, 8), cm);
-    cap.position.y = 0.295; g.add(cap);
+    g.add(new THREE.Mesh(GB ? GB.glass : bottleGeo, gm));
+    const cap = new THREE.Mesh(GB ? GB.cap : new THREE.CylinderGeometry(0.018, 0.018, 0.035, 8), cm);
+    if (GB) cap.position.copy(GB.capPos); else cap.position.y = 0.295;
+    g.add(cap);
     if (b) {
       let map: any;
       if (sk) {
@@ -682,8 +701,9 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
         map = new THREE.CanvasTexture(labelTex(b.name, b.prod));
         map.anisotropy = Math.min(8, maxAniso);
       }
-      const lab = new THREE.Mesh(labelGeo, new THREE.MeshBasicMaterial({ map }));
-      lab.position.set(0, 0.088, 0.0395); g.add(lab);
+      const lab = new THREE.Mesh(GB ? GB.label : labelGeo, new THREE.MeshBasicMaterial({ map }));
+      if (!GB) lab.position.set(0, 0.088, 0.0395);
+      g.add(lab);
       g.userData.bottle = b; pick.push(g);
     }
     g.position.set(x, y, z);
@@ -914,6 +934,21 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   const PA = 0.85;                                        // 鍵盤と弾き手が、扉から見えるように
   const rz = (x: number, z: number) =>
     [PX + x * Math.cos(PA) + z * Math.sin(PA), PZ - x * Math.sin(PA) + z * Math.cos(PA)];
+  if (GPIANO) {
+    /* 鋳造したピアノに、黒漆・象牙・黒檀・真鍮を着せます */
+    piano.clear();
+    const ivory = new THREE.MeshStandardMaterial({ color: 0xf2ead8, roughness: 0.5 });
+    const ebony = new THREE.MeshStandardMaterial({ color: 0x14110e, roughness: 0.35 });
+    const brassM = new THREE.MeshStandardMaterial({ color: 0xb08d4a, roughness: 0.3, metalness: 0.9 });
+    GPIANO.traverse((oo: any) => {
+      if (oo.isMesh) {
+        const nm2 = (oo.material && oo.material.name) || '';
+        oo.material = nm2 === 'key_w' ? ivory : nm2 === 'key_b' ? ebony : nm2 === 'brass' ? brassM : pm;
+      }
+    });
+    GPIANO.rotation.y = Math.PI;
+    piano.add(GPIANO);
+  }
   place(piano, PX, 0, PZ, Math.PI + PA);
   boxes.push({ x: PX, z: PZ, w: 1.7, d: 1.5 });
 
