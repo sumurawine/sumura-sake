@@ -853,9 +853,7 @@ html[data-era="now"] ::-webkit-scrollbar-thumb:hover{ background:rgba(201,173,13
 /* 見出しの行割りは、破綻しないように */
 html[data-era="now"] h1,html[data-era="now"] h2{ text-wrap:balance; font-feature-settings:"palt" 1; }
 
-/* 頁のあらわれ方（そっと浮かぶ） */
-.pg-t{ animation:pgIn .55s cubic-bezier(.22,.8,.26,1) both; }
-@keyframes pgIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+/* 頁のあらわれ方は base.css に一本化しました */
 
 /* 扉（入店）の趣を深める */
 html[data-era="now"] .door-page #knocktxt{ font-family:var(--mx-serif,serif); letter-spacing:.3em; }
