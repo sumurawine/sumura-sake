@@ -62,6 +62,22 @@ export function Providers(
     setMounted(true);
   }, []);
 
+  /** 言語版の住所を先に読み込んでおき、切り替えを一瞬にします */
+  useEffect(() => {
+    if (!mounted) return;
+    const bare = (path.replace(/^\/(en|fr|zh|ko)(?=\/|$)/, '') || '/').replace(/\/$/, '') || '/';
+    const HAS = /^\/(wine|maker)\//.test(bare)
+      || ['/wines', '/home', '/store', '/producers', '/about', '/access',
+          '/news', '/blog', '/legal', '/contact', '/virtual', '/secret'].indexOf(bare) >= 0;
+    if (!HAS) return;
+    try {
+      (['jp', 'en', 'fr', 'zh', 'ko'] as Lang[]).forEach((l) => {
+        if (l === lang) return;
+        router.prefetch((l === 'jp' ? '' : '/' + l) + bare);
+      });
+    } catch { /* 先読みは、できるときだけで構いません */ }
+  }, [path, lang, mounted, router]);
+
   /** 表示中の言語を <html lang> に反映します */
   useEffect(() => {
     if (!mounted) return;
