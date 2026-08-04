@@ -154,7 +154,9 @@ export function useSmoothScroll(enabled = true, ease = 0.11) {
       const now = performance.now();
       if (now - lastAt > 420) gestureAt = now;   // 間があいたら、また新しい一挙動
       lastAt = now;
-      target = Math.max(0, Math.min(target + e.deltaY, maxY()));
+      /* 下りはゆっくり半歩ずつ。上りは軽やかにそのまま */
+      const step = e.deltaY > 0 ? e.deltaY * 0.5 : e.deltaY;
+      target = Math.max(0, Math.min(target + step, maxY()));
       run();
       queueSettle();
     };
