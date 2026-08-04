@@ -6,6 +6,7 @@ import { tr } from '@/lib/i18n';
 import { PROD_NAV } from '@/lib/producersNav';
 import { pre } from '@/lib/slug';
 import { Finesse } from './Finesse';
+import { BgFlow } from './BgFlow';
 import { MODERN } from '@/lib/decor';
 import { LEGAL_TITLE } from '@/lib/modernCopy';
 import { useSite } from '@/components/Providers';
@@ -69,7 +70,8 @@ export function MShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="mx-veil" aria-hidden><i /></div>
-      <div className="mx-bg" aria-hidden style={{ backgroundImage: `url(${asset(backOf(path))})` }} />
+      {/\/home$/.test(path) || path === '/' ? <BgFlow />
+        : <div className="mx-bg" aria-hidden style={{ backgroundImage: `url(${asset(backOf(path))})` }} />}
       <Atmosphere />
       <Finesse />
       <AutoReveal />
