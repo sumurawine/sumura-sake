@@ -1173,3 +1173,18 @@ html[data-era="now"] .mx-door-veil{
     radial-gradient(78% 62% at 50% 48%, rgba(14,9,7,.46) 0%, rgba(14,9,7,.82) 64%, rgba(11,7,5,.96) 100%),
     linear-gradient(to bottom, rgba(14,9,7,.6), rgba(14,9,7,.9)) !important;
 }
+
+
+/* ── 題字の直り：一字ずつの動きは、納まったら元の位置へ ── */
+html[data-era="now"] .mx-hero .is-in .mx-ch{ transform:none; }
+
+/* ── 読み進みの金線：帳場（メニューバー）との境目に ── */
+html[data-era="now"] .mx-head .fx-progress{
+  position:absolute; left:0; right:0; width:auto;
+  top:auto; bottom:-1px; height:1.5px; z-index:5;
+}
+
+/* ── 携帯の品書き：行を仕切る線は引かない ── */
+@media (max-width:860px){
+  html[data-era="now"] .mx-nav a{ border-bottom:0 !important; }
+}
