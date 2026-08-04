@@ -43,9 +43,30 @@ async function work() {
       if (W < 60 || H < 120) { fail++; continue; }
       const px = (f, max) => Math.max(0, Math.min(max - 2, Math.round(f)));
 
-      /* ラベル：胴の中ほどを切り抜きます */
-      const lx = px(W * 0.30, W), lw = px(W * 0.40, W - lx) || 10;
-      const ly = px(H * 0.50, H), lh = px(H * 0.32, H - ly) || 10;
+      /* ラベル：明るい帯（紙の部分）を探して、そこを切り抜きます */
+      let ly = px(H * 0.50, H), lh = px(H * 0.32, H - px(H * 0.50, H)) || 10;
+      let lx = px(W * 0.30, W), lw = px(W * 0.40, W - px(W * 0.30, W)) || 10;
+      try {
+        const SR = 96, SC = 48;
+        const gray = await im.clone().resize(SC, SR, { fit: 'fill' }).grayscale().raw().toBuffer();
+        const rowB = (y) => { let s = 0; for (let x = 14; x < 34; x++) s += gray[y * SC + x]; return s / 20; };
+        let best = [0, 0], cur = [0, 0];
+        for (let y = Math.floor(SR * 0.34); y < Math.floor(SR * 0.94); y++) {
+          if (rowB(y) > 112) { if (!cur[1]) cur = [y, 0]; cur[1]++; if (cur[1] > best[1]) best = cur.slice(); }
+          else cur = [0, 0];
+        }
+        if (best[1] >= 9) {
+          const y0 = best[0], y1 = best[0] + best[1];
+          const colB = (x) => { let s = 0; for (let y = y0; y < y1; y++) s += gray[y * SC + x]; return s / (y1 - y0); };
+          let x0 = 24, x1 = 24;
+          while (x0 > 2 && colB(x0 - 1) > 105) x0--;
+          while (x1 < SC - 2 && colB(x1 + 1) > 105) x1++;
+          if (x1 - x0 >= 8) {
+            ly = px((y0 - 0.5) / SR * H, H); lh = px((best[1] + 1.5) / SR * H, H - ly) || lh;
+            lx = px((x0 - 0.5) / SC * W, W); lw = px((x1 - x0 + 1.5) / SC * W, W - lx) || lw;
+          }
+        }
+      } catch { /* 探せなければ、中ほどのまま */ }
       await im.clone().extract({ left: lx, top: ly, width: lw, height: lh })
         .resize(96, 128, { fit: 'fill' })
         .webp({ quality: 72 })
