@@ -67,9 +67,31 @@ async function work() {
           }
         }
       } catch { /* 探せなければ、中ほどのまま */ }
-      await im.clone().extract({ left: lx, top: ly, width: lw, height: lh })
-        .resize(96, 128, { fit: 'fill' })
-        .webp({ quality: 72 })
+      /* 瓶の丸みを数値的に展開して、正面から見たラベルに起こします */
+      const rawL = await im.clone().extract({ left: lx, top: ly, width: lw, height: lh })
+        .removeAlpha().raw().toBuffer();
+      const Wo = 192;
+      const outB = Buffer.alloc(Wo * lh * 3);
+      const Rr = W * 0.485;
+      const cxx = lx + lw / 2;
+      const thMax = Math.asin(Math.min(0.999, (lw / 2) / Rr));
+      for (let xo = 0; xo < Wo; xo++) {
+        const tt = (xo / (Wo - 1)) * 2 - 1;
+        const xin = cxx + Rr * Math.sin(thMax * tt) - lx;
+        const x0 = Math.max(0, Math.min(lw - 1, Math.floor(xin)));
+        const x1 = Math.min(lw - 1, x0 + 1);
+        const fx = Math.min(1, Math.max(0, xin - x0));
+        for (let yy = 0; yy < lh; yy++) {
+          for (let cch = 0; cch < 3; cch++) {
+            const va = rawL[(yy * lw + x0) * 3 + cch];
+            const vb = rawL[(yy * lw + x1) * 3 + cch];
+            outB[(yy * Wo + xo) * 3 + cch] = va + (vb - va) * fx;
+          }
+        }
+      }
+      await sharp(outB, { raw: { width: Wo, height: lh, channels: 3 } })
+        .resize(192, 256, { fit: 'fill' })
+        .webp({ quality: 76 })
         .toFile(dst);
 
       /* キャップの色（首の上のほう）と、瓶の色（肩のあたり） */
