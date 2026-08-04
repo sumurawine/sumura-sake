@@ -9,7 +9,7 @@ import { MC } from '@/lib/modernCopy';
 import { pre } from '@/lib/slug';
 import { CATS, isOut, nameOf, type I18nData, type Item, type ProductData } from '@/lib/store';
 import { MShell } from './MShell';
-import { Chars, Reveal, useParallax } from './Motion';
+import { Chars, Reveal, useParallax, useSmoothScroll } from './Motion';
 
 const HERO_SHOTS = ['/images/photos/shelf-row.jpg', '/images/photos/cheval-blanc-1929.jpg', '/images/photos/meo-camuzet.jpg', '/images/photos/gillet.jpg', '/images/photos/rouget.jpg'];
 
@@ -280,6 +280,7 @@ function Cta({ lang }: { lang: Lang }) {
 
 export function MHome() {
   const { lang } = useSite();
+  useSmoothScroll(true);   /* ホームは、粘りのあるゆっくりした下りに */
   const [data, setData] = useState<ProductData | null>(null);
   useEffect(() => {
     fetch(asset('/products.json')).then((r) => r.json()).then(setData).catch(() => {});
