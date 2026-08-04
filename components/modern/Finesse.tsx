@@ -20,7 +20,8 @@ export function Finesse() {
     /* ── 読み進みの金の線 ── */
     const bar = document.createElement('div');
     bar.className = 'fx-progress';
-    document.body.appendChild(bar);
+    const barHost = document.querySelector('.mx-head') as HTMLElement | null;
+    (barHost || document.body).appendChild(bar);
     let pCur = 0, pRaf = 0;
     const pTick = () => {
       const h = document.documentElement;
