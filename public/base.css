@@ -245,10 +245,12 @@ body:has(.mk-wrap) .mk-ready .mk-fx.is-in{ opacity:1; transform:none; }
   body:has(.mk-wrap) .mk-ready .mk-fx{ opacity:1; transform:none; transition:none; }
 }
 
-/* 頁のあらわれ方は、どの時代でもそっと */
-.pg-t{ animation:pgIn2 .5s cubic-bezier(.22,.8,.26,1) both; }
+/* 頁のあらわれ方は、どの時代でもそっと。
+   包み自体は箱にならず、高さの連鎖を断ちません */
+.pg-t{ display:contents; }
+.pg-t > *{ animation:pgIn2 .5s cubic-bezier(.22,.8,.26,1) both; }
 @keyframes pgIn2{ from{ opacity:0; } to{ opacity:1; } }
-@media (prefers-reduced-motion: reduce){ .pg-t{ animation:none; } }
+@media (prefers-reduced-motion: reduce){ .pg-t > *{ animation:none; } }
 
 
 /* 縦書きの時代標と、紙の質感 */
