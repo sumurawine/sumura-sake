@@ -105,6 +105,7 @@ export function Providers(
       || ['/wines', '/home', '/store', '/producers', '/about', '/access',
           '/news', '/blog', '/legal', '/contact', '/virtual', '/secret'].indexOf(p0) >= 0;
     if (HAS_LANG && (l !== 'jp' || had)) {
+      setLangState(l);   /* 画面の言葉も、その場で切り替えます */
       const qs = typeof window !== 'undefined' ? window.location.search : '';
       router.push((l === 'jp' ? '' : '/' + l) + p0 + qs); return;
     }
