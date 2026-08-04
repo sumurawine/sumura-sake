@@ -6,7 +6,7 @@
  * three.js は網の上から借りてきて使いますので、荷物は増えません。
  */
 
-const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.160.0/+esm';
 
 export type Bottle = { id: string; name: string; price: string; prod: string; cat: string };
 
@@ -648,12 +648,18 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   /* Blender で鋳造した器。読めたときだけ差し替えます */
   let GB: any = null;
   let GPIANO: any = null;
+  let GBARREL: any = null;
+  let GCLERK: any = null;
+  let GPIANIST: any = null;
   try {
     const { GLTFLoader } = await (new Function('u', 'return import(u)'))(
       'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js/+esm');
     const gl = new GLTFLoader();
     const ld = (p: string) => new Promise<any>((res, rej) => gl.load(p, res, undefined, rej));
-    const [bt, pn] = await Promise.all([ld('/models/bottle.glb'), ld('/models/piano.glb')]);
+    const [bt, pn, bl, ck, ps] = await Promise.all([
+      ld('/models/bottle.glb'), ld('/models/piano.glb'), ld('/models/barrel.glb'),
+      ld('/models/clerk.glb'), ld('/models/pianist.glb'),
+    ]);
     const gg = bt.scene.getObjectByName('glass');
     const gc = bt.scene.getObjectByName('cap');
     const gl2 = bt.scene.getObjectByName('label');
@@ -661,7 +667,24 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
       glass: gg.geometry, cap: gc.geometry, capPos: gc.position.clone(), label: gl2.geometry,
     };
     GPIANO = pn.scene;
-  } catch { GB = null; GPIANO = null; }
+    GBARREL = bl.scene; GCLERK = ck.scene; GPIANIST = ps.scene;
+  } catch { GB = null; GPIANO = null; GBARREL = null; GCLERK = null; GPIANIST = null; }
+
+  /* 蝋燭のあかりに、にじむ輝きを（後処理） */
+  let composer: any = null;
+  try {
+    const im2 = (u2: string) => (new Function('u', 'return import(u)'))(u2);
+    const [ec, rp, ub, op] = await Promise.all([
+      im2('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js/+esm'),
+      im2('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/postprocessing/RenderPass.js/+esm'),
+      im2('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js/+esm'),
+      im2('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/postprocessing/OutputPass.js/+esm'),
+    ]);
+    composer = new ec.EffectComposer(renderer);
+    composer.addPass(new rp.RenderPass(scene, camera));
+    composer.addPass(new ub.UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.3, 0.5, 0.82));
+    composer.addPass(new op.OutputPass());
+  } catch { composer = null; }
 
   /* 瓶はガラスの艶で。映り込みが命です */
   const glassA = new THREE.MeshStandardMaterial({ color: 0x1d3319, roughness: 0.14, metalness: 0.0, envMapIntensity: 1.25 });
