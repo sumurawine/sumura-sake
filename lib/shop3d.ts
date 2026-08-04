@@ -569,6 +569,16 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   doorGroup.position.set(-0.56, 0, D / 2 - 0.06);
   scene.add(doorGroup);
 
+  /* 扉の向こうの光。開くほどに、眩しく差し込みます */
+  const dayGlowM = new THREE.MeshBasicMaterial({ color: 0xfff3da, transparent: true, opacity: 0, side: THREE.DoubleSide });
+  (dayGlowM as any).toneMapped = false;
+  const dayGlow = new THREE.Mesh(new THREE.PlaneGeometry(1.16, DH + 0.06), dayGlowM);
+  dayGlow.position.set(0, DH / 2, D / 2 - 0.02);
+  scene.add(dayGlow);
+  const dayLight = new THREE.PointLight(0xffe9c4, 0, 8, 1.5);
+  dayLight.position.set(0, 1.5, D / 2 - 0.5);
+  scene.add(dayLight);
+
   /* 灯り */
   scene.add(new THREE.AmbientLight(0xffdcb4, 0.34));
   scene.add(new THREE.HemisphereLight(0xffcc98, 0x241d18, 0.22));
@@ -1053,7 +1063,8 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     }
     if (v && !paused) {
       if (k === 'c') callClerk();
-      else if (k === 'e' || k === ' ') fire();
+      else if (k === 'e') forceLeave = true;   /* いつでも退店 */
+      else if (k === ' ') fire();
     }
   };
   const kd = (e: KeyboardEvent) => onKey(e, true);
@@ -1127,6 +1138,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   let lookT = 0, nearT = 0, wasNear = false;
 
   let doorOpen = 0, doorFired = false, alive = true;
+  let forceLeave = false;   /* E で退店の合図 */
   let armed = false, walked = 0, bob = 0;
   let drink = 0, drinkAt = 16;
   /* 燭台のあかりで、すべてのものが影を落とします（炎など透けるものは除きます） */
@@ -1228,12 +1240,15 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
       au.dist(Math.hypot(camera.position.x - PX, camera.position.z - PZ));
 
       if (camera.position.z < D / 2 - 2.25) armed = true;
-      const nearDoor = armed && camera.position.z > D / 2 - 1.55 && Math.abs(camera.position.x) < 1.15;
+      const nearDoor = forceLeave
+      || (armed && camera.position.z > D / 2 - 1.55 && Math.abs(camera.position.x) < 1.15);
       const was = doorOpen;
       doorOpen += ((nearDoor ? 1 : 0) - doorOpen) * Math.min(1, dt * 3.4);
       doorGroup.rotation.y = -doorOpen * 1.15;
+    dayGlowM.opacity = Math.pow(doorOpen, 1.4);
+    dayLight.intensity = doorOpen * 26;
       if (was < 0.06 && doorOpen >= 0.06) au.creak();
-      if (nearDoor && doorOpen > 0.75 && !doorFired) { doorFired = true; o.onDoor(); }
+      if (nearDoor && doorOpen > 0.75 && !doorFired) { doorFired = true; forceLeave = false; o.onDoor(); }
       if (!nearDoor) doorFired = false;
 
       nearT += dt;
