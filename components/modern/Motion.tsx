@@ -118,8 +118,8 @@ export function useSmoothScroll(enabled = true, ease = 0.11) {
     let idle = 0;
 
     const tick = () => {
-      // 動かしはじめは 0.18、0.4秒ほどで粘りが消えて 1 になります
-      const e = Math.min(1, 0.18 + (performance.now() - gestureAt) / 400);
+      // 重い引き戸のように。粘りは最後まで残します
+      const e = Math.min(0.5, 0.085 + (performance.now() - gestureAt) / 1100);
       current += (target - current) * e;
       if (Math.abs(target - current) < 0.5) {
         current = target;
@@ -154,8 +154,8 @@ export function useSmoothScroll(enabled = true, ease = 0.11) {
       const now = performance.now();
       if (now - lastAt > 420) gestureAt = now;   // 間があいたら、また新しい一挙動
       lastAt = now;
-      /* 下りはゆっくり半歩ずつ。上りは軽やかにそのまま */
-      const step = e.deltaY > 0 ? e.deltaY * 0.5 : e.deltaY;
+      /* 下りはゆっくり三分の一歩。上りは軽やかにそのまま */
+      const step = e.deltaY > 0 ? e.deltaY * 0.34 : e.deltaY;
       target = Math.max(0, Math.min(target + step, maxY()));
       run();
       queueSettle();
