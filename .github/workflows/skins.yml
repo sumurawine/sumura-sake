@@ -1,0 +1,49 @@
+name: 瓶の衣装づくり
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: '作り直すなら 1'
+        default: '0'
+  schedule:
+    - cron: '30 18 * * 0'   # 週にいちど、日曜の朝
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: bottle-skins
+
+jobs:
+  skins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: 道具を入れる
+        run: npm install sharp --no-audit --no-fund
+      - name: 写真から衣装を拾う
+        env:
+          FORCE: ${{ inputs.force }}
+        run: node scripts/bottle-skins.mjs
+      - name: 納める
+        run: |
+          git config user.name  'sumura-sake bot'
+          git config user.email 'bot@users.noreply.github.com'
+          if [ -z "$(git status --porcelain public/labels)" ]; then
+            echo '変わりなし'; exit 0
+          fi
+          git add public/labels
+          git commit -m '瓶の衣装（ラベルと色）を納めました'
+          git pull --rebase origin main
+          git push origin main
+      - name: 公開をうながす
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref main --repo ${{ github.repository }}
