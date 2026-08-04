@@ -939,4 +939,25 @@ html[data-era="now"] #tw-leave-ov h2{
 }
 
 
+/* ── 文字を立たせる：背景は一段沈めます ──────────────── */
+html[data-era="now"] .mx-bg{ opacity:.06 !important; filter:blur(2px) saturate(.6) brightness(.8) !important; }
+html[data-era="now"] .mx-vign{
+  background:radial-gradient(120% 90% at 50% 40%,
+    rgba(0,0,0,.16) 26%, rgba(0,0,0,.5) 70%, rgba(0,0,0,.8) 100%) !important;
+}
+html[data-era="now"] .mx-bleed-bg{ filter:brightness(.6) saturate(.85) !important; }
+html[data-era="now"] .mx-door-shot{ filter:brightness(.72) !important; }
+
+/* ── ホーム：背景が章ごとに移ろう ─────────────────────── */
+.mx-bgflow{ position:fixed; inset:0; z-index:0; pointer-events:none; }
+.mx-bgflow .bgf{
+  position:absolute; inset:0; background-size:cover; background-position:50% 45%;
+  opacity:0; transform:scale(1.06);
+  transition:opacity 1.6s ease, transform 7s ease;
+  filter:blur(2px) saturate(.65) brightness(.8);
+}
+.mx-bgflow .bgf.is-on{ opacity:.085; transform:scale(1.0); }
+
+
+
 
