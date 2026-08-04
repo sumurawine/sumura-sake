@@ -885,3 +885,61 @@ html[data-era="now"] #age-note{ animation:meFade 1.6s 1.5s ease both; }
 @keyframes meFade{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
 
 
+/* ════════════════════════════════════════════════════════════
+   手ざわりの仕掛け ── 金の輪・磁力・読み進み・金の粒
+   ════════════════════════════════════════════════════════════ */
+.fx-progress{
+  position:fixed; left:0; top:0; z-index:96; width:100%; height:2px;
+  transform-origin:left; transform:scaleX(0); pointer-events:none;
+  background:linear-gradient(90deg, rgba(201,173,130,.0), rgba(201,173,130,.85) 30%, #e8cf9e);
+  transition:transform .12s linear;
+}
+html:not([data-era="now"]) .fx-progress{ display:none; }
+.fx-ring{
+  position:fixed; left:0; top:0; z-index:97; width:30px; height:30px; border-radius:50%;
+  border:1px solid rgba(214,186,140,.85); pointer-events:none; opacity:0;
+  transition:opacity .3s ease, scale .3s ease; mix-blend-mode:screen;
+}
+html:not([data-era="now"]) .fx-ring{ display:none; }
+.fx-dust{
+  position:fixed; inset:0; z-index:2; width:100vw; height:100vh;
+  pointer-events:none; opacity:.8;
+}
+html:not([data-era="now"]) .fx-dust{ display:none; }
+/* 磁力（transform とは別系統の translate なので、浮きの動きと共存します） */
+html[data-era="now"] .mx-btn{ translate:var(--mag-x, 0) var(--mag-y, 0); }
+
+/* ── 入店の間：全画面の幕開け ──────────────────────────── */
+html[data-era="now"] .door-page .mx-door-shot{
+  animation:doorKen 12s ease-in-out infinite alternate;
+  transition:opacity 2.2s ease !important;
+}
+@keyframes doorKen{ from{ transform:scale(1.02); } to{ transform:scale(1.09); } }
+html[data-era="now"] .door-page .mx-door-veil{
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(10,7,6,.22) 0%, rgba(10,7,6,.66) 62%, rgba(6,4,3,.93) 100%) !important;
+}
+html[data-era="now"] #modern-entrance{
+  background:transparent !important; border:none !important; box-shadow:none !important;
+  max-width:none !important; width:min(680px,92vw) !important;
+}
+html[data-era="now"] #modern-entrance .me-jp{ text-shadow:0 8px 60px rgba(0,0,0,.65); }
+html[data-era="now"] #modern-entrance .me-btn{
+  padding:18px 56px !important; background:rgba(12,9,8,.35) !important;
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+}
+
+/* ── 退店：幕引き ──────────────────────────────────────── */
+html[data-era="now"] #tw-leave-ov{ background:#070504 !important; }
+html[data-era="now"] #tw-leave-ov .tw-bye-bg{
+  animation:doorKen 14s ease-in-out infinite alternate;
+  filter:brightness(.5) saturate(.85) !important;
+}
+html[data-era="now"] #tw-leave-ov .tw-bye,
+html[data-era="now"] #tw-leave-ov h2{
+  font-family:var(--mx-serif,serif) !important; letter-spacing:.2em !important;
+  animation:meFade 1.6s .4s ease both;
+}
+
+
+
