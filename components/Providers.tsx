@@ -98,14 +98,15 @@ export function Providers(
       router.push((l === 'jp' ? '' : '/' + l) + bare + qs2);
       return;
     }
-    // 日本語の住所にいても、その頁に言語版があるなら住所ごと移ります
-    const p0 = (path || '/').replace(/\/$/, '') || '/';
+    // どの住所にいても、その頁に言語版があるなら住所ごと移ります
+    const had = /^\/(en|fr|zh|ko)(\/|$)/.test(path || '/');
+    const p0 = ((path || '/').replace(/^\/(en|fr|zh|ko)(?=\/|$)/, '') || '/').replace(/\/$/, '') || '/';
     const HAS_LANG = /^\/(wine|maker)\//.test(p0)
       || ['/wines', '/home', '/store', '/producers', '/about', '/access',
           '/news', '/blog', '/legal', '/contact', '/virtual', '/secret'].indexOf(p0) >= 0;
-    if (l !== 'jp' && HAS_LANG) {
+    if (HAS_LANG && (l !== 'jp' || had)) {
       const qs = typeof window !== 'undefined' ? window.location.search : '';
-      router.push('/' + l + p0 + qs); return;
+      router.push((l === 'jp' ? '' : '/' + l) + p0 + qs); return;
     }
     setLangState(l);
   }, [initialLang, path, router]);
