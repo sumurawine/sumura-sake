@@ -772,11 +772,24 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   const barrelMat = lam({ map: tex(wood('#5a3d24', '#22140a'), 3, 1) });
   function barrel(x: number, z: number, lying: boolean, ry = 0) {
     const g = new THREE.Group();
-    g.add(new THREE.Mesh(staveGeo, barrelMat));
-    [[-0.40, 0.252], [-0.20, 0.302], [0.20, 0.302], [0.40, 0.252]].forEach(([y, r]) => {
-      const h = new THREE.Mesh(new THREE.TorusGeometry(r + 0.008, 0.019, 5, 16), hoopMat);
-      h.rotation.x = Math.PI / 2; h.position.y = y; g.add(h);
-    });
+    if (GBARREL) {
+      const b2 = GBARREL.clone(true);
+      b2.traverse((o2: any) => {
+        if (o2.isMesh) {
+          const n2 = (o2.material && o2.material.name) || '';
+          o2.material = /oak/.test(n2) ? barrelMat : hoopMat;
+        }
+      });
+      b2.scale.set(1.04, 1.15, 1.04);
+      b2.position.y = -0.437;
+      g.add(b2);
+    } else {
+      g.add(new THREE.Mesh(staveGeo, barrelMat));
+      [[-0.40, 0.252], [-0.20, 0.302], [0.20, 0.302], [0.40, 0.252]].forEach(([y, r]) => {
+        const h = new THREE.Mesh(new THREE.TorusGeometry(r + 0.008, 0.019, 5, 16), hoopMat);
+        h.rotation.x = Math.PI / 2; h.position.y = y; g.add(h);
+      });
+    }
     if (lying) { g.rotation.z = Math.PI / 2; g.position.set(x, 0.33, z); g.rotation.y = ry; }
     else g.position.set(x, 0.44, z);
     scene.add(g);
@@ -931,6 +944,26 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   const HOME = { x: 0, z: -3.35 };
   place(clerk, HOME.x, 0, HOME.z);
   pick.push(clerk);
+
+  /* 鋳造した人体をまとわせます（動きの参照は残したまま） */
+  const wearHuman = (grp: any, glb: any, jacketHex: number) => {
+    grp.traverse((o2: any) => { if (o2.isMesh) o2.visible = false; });
+    const mk = (c: number, ro: number, met = 0) => new THREE.MeshStandardMaterial({ color: c, roughness: ro, metalness: met });
+    const skin = mk(0xe6c19b, 0.6), hairM = mk(0x17120e, 0.4), jk = mk(jacketHex, 0.5);
+    const shirtM = mk(0xf4efe4, 0.6), bowM = mk(0x101010, 0.5), trM = mk(0x141312, 0.55);
+    const shoeM = mk(0x0c0a09, 0.3, 0.1), apM = mk(0x191512, 0.7), brM = mk(0xb08d4a, 0.3, 0.9);
+    glb.traverse((o2: any) => {
+      if (o2.isMesh) {
+        const n2 = (o2.material && o2.material.name) || '';
+        o2.material = n2 === 'skin' ? skin : n2 === 'hair' ? hairM : n2 === 'shirt' ? shirtM
+          : n2 === 'bow' ? bowM : n2 === 'trous' ? trM : n2 === 'shoe' ? shoeM
+          : n2 === 'apron' ? apM : n2 === 'brass' ? brM : jk;
+      }
+    });
+    glb.rotation.y = Math.PI;
+    grp.add(glb);
+  };
+  if (GCLERK) wearHuman(clerk, GCLERK, 0x121110);
   const halo = new THREE.PointLight(0xffcf9a, 2.6, 3.8, 1.6);
   scene.add(halo);
 
@@ -984,6 +1017,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   const P = pl.p;
   const pp = rz(0, -0.87);
   place(pl.g, pp[0], 0, pp[1], PA);
+  if (GPIANIST) wearHuman(pl.g, GPIANIST, 0xe9e2d2);
   const handHome = { L: P.handL.position.clone(), R: P.handR.position.clone() };
 
   const bp = rz(0, -1.03);
@@ -1131,6 +1165,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   function resize() {
     const w = o.mount.clientWidth || innerWidth, h = o.mount.clientHeight || innerHeight;
     renderer.setSize(w, h, false);
+    if (composer) composer.setSize(w, h);
     camera.aspect = w / h; camera.updateProjectionMatrix();
   }
   resize();
@@ -1286,7 +1321,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     }
     halo.position.set(clerk.position.x, 1.8, clerk.position.z + 0.45);
 
-    renderer.render(scene, camera);
+    if (composer) composer.render(); else renderer.render(scene, camera);
     if (first) { first = false; o.onReady(); }
   }
   frame();
