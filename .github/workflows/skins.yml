@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: '20'
       - name: 道具を入れる
-        run: npm install sharp --no-audit --no-fund
+        run: npm install --no-save sharp --no-audit --no-fund
       - name: 写真から衣装を拾う
         env:
           FORCE: ${{ inputs.force }}
@@ -39,6 +39,7 @@ jobs:
           if [ -z "$(git status --porcelain public/labels)" ]; then
             echo '変わりなし'; exit 0
           fi
+          git checkout -- package.json package-lock.json 2>/dev/null || true
           git add public/labels
           git commit -m '瓶の衣装（ラベルと色）を納めました'
           git pull --rebase origin main
