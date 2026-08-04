@@ -1188,3 +1188,13 @@ html[data-era="now"] .mx-head .fx-progress{
 @media (max-width:860px){
   html[data-era="now"] .mx-nav a{ border-bottom:0 !important; }
 }
+
+
+/* ── 帳場の品書きが言語切替と重ならないように ── */
+@media (min-width:861px){
+  html[data-era="now"] .mx-head,
+  html[data-era="now"] .mx-head.is-stuck{ padding-right:280px; }
+}
+@media (min-width:861px) and (max-width:1399px){
+  html[data-era="now"] .mx-nav a{ letter-spacing:.12em; font-size:11.5px; }
+}
