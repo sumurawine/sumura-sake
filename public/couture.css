@@ -1151,3 +1151,25 @@ html[data-era="now"] .mx-hero .mx-ch:nth-child(3){ transition-delay:.60s }
 html[data-era="now"] .mx-hero .mx-ch:nth-child(4){ transition-delay:.80s }
 html[data-era="now"] .mx-hero .mx-ch:nth-child(5){ transition-delay:1.0s }
 html[data-era="now"] .mx-hero .mx-ch:nth-child(n+6){ transition-delay:1.2s }
+
+
+/* ── 表紙の題字は塗りを単色に（文字ごとの動きと網掛け塗りは同居できない） ── */
+html[data-era="now"] .mx-hero .mx-h1{
+  background:none !important;
+  -webkit-background-clip:border-box !important; background-clip:border-box !important;
+  -webkit-text-fill-color:currentColor !important; color:var(--mx-paper) !important;
+  text-shadow:0 2px 46px rgba(0,0,0,.65) !important;
+}
+
+/* ── 入店口の家紋：暗がりを背に、くっきりと ── */
+html[data-era="now"] #modern-entrance::before{
+  width:66px; height:66px;
+  filter:drop-shadow(0 3px 22px rgba(0,0,0,.9)) drop-shadow(0 0 2px rgba(0,0,0,.5));
+}
+html[data-era="now"] .mx-door-veil{
+  background:
+    radial-gradient(46% 40% at 50% 30%, rgba(10,6,4,.55), transparent 74%),
+    radial-gradient(60% 46% at 50% 32%, rgba(201,173,130,.06), transparent 68%),
+    radial-gradient(78% 62% at 50% 48%, rgba(14,9,7,.46) 0%, rgba(14,9,7,.82) 64%, rgba(11,7,5,.96) 100%),
+    linear-gradient(to bottom, rgba(14,9,7,.6), rgba(14,9,7,.9)) !important;
+}
