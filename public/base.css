@@ -324,3 +324,109 @@ body:has(.mk-wrap)::after{ opacity:.08; mix-blend-mode:overlay; }
 
 
 
+
+
+/* ══ 昔日 ── 1998年、開店前夜の端末（緑燐光） ═══════════ */
+body:has(.mk-wrap){
+  background:#040604 !important; background-image:none !important;
+  color:#35f04a !important;
+  font-family:"Osaka-Mono","MS Gothic","ＭＳ ゴシック","DotGothic16",monospace !important;
+  font-size:15px !important; line-height:1.95 !important; letter-spacing:.04em !important;
+  padding:34px 20px 80px !important;
+  text-shadow:0 0 7px rgba(53,240,74,.45);
+}
+/* 走査線と管面の暗がり */
+body:has(.mk-wrap)::after{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:60;
+  opacity:1 !important; mix-blend-mode:normal !important;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.24) 0px, rgba(0,0,0,.24) 1px, transparent 1px, transparent 3px),
+    radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(0,8,0,.6) 100%) !important;
+}
+/* たまのちらつき */
+@keyframes mkCrt{ 0%,95.9%,98.1%,100%{opacity:1} 96%{opacity:.84} 98%{opacity:.95} }
+body:has(.mk-wrap) .mk-wrap{
+  animation:mkCrt 7s steps(1,end) infinite;
+  max-width:860px; text-align:left;
+}
+@media (prefers-reduced-motion:reduce){ body:has(.mk-wrap) .mk-wrap{ animation:none } }
+
+/* 起動画面と目録 */
+body:has(.mk-wrap) .mk-wrap::before{
+  content:"SUMURA-DOS (C) 1998 洲村酒店\A メモリ 640KB OK ── カラー表示 準備完了\A\A C:¥SUMURA>DIR 昔日\A .        <DIR>\A ..       <DIR>\A KIOKU_01 JPG   ── 写真\A KIOKU_02 JPG   ── 写真\A MUKASHI  TXT   ── 記録\A\A C:¥SUMURA>TYPE MUKASHI.TXT";
+  display:block; white-space:pre; overflow-x:hidden;
+  font-size:13px; line-height:1.95; color:#2ecc40; opacity:.94; margin-bottom:38px;
+}
+
+/* 題と小さな英字 */
+body:has(.mk-wrap) .mk-title{
+  color:#35f04a !important; font-size:24px !important; font-weight:400 !important;
+  letter-spacing:.5em !important; text-indent:0 !important;
+  text-shadow:0 0 12px rgba(53,240,74,.55) !important;
+}
+body:has(.mk-wrap) .mk-title::after{ content:"█"; margin-left:8px; animation:bl 1s steps(1,end) infinite; }
+body:has(.mk-wrap) .mk-en{ color:#1f8f2c !important; letter-spacing:.3em !important; text-indent:0 !important; }
+
+/* 罫は点線に */
+body:has(.mk-wrap) .mk-rule{
+  background:none !important; border:none !important; height:auto !important;
+  width:auto !important; margin:34px 0 !important;
+  overflow:hidden; white-space:nowrap;
+}
+body:has(.mk-wrap) .mk-rule::before{ content:"────────────────────────────────────────"; color:#1f8f2c; }
+
+/* 額装をやめ、端末の枠へ */
+body:has(.mk-wrap) .mk-card{
+  background:#020502 !important; border:1px solid #1f8f2c !important;
+  outline:none !important; box-shadow:0 0 20px rgba(53,240,74,.10) !important;
+  padding:10px !important; transform:none !important;
+  max-width:560px; margin:36px 0 0 !important;
+}
+body:has(.mk-wrap) .mk-card::before{ display:none !important; }
+body:has(.mk-wrap) .mk-card img, body:has(.mk-wrap) .mk-photo img{
+  filter:grayscale(1) brightness(1.04) contrast(1.18) sepia(1) hue-rotate(62deg) saturate(3.4) !important;
+}
+body:has(.mk-wrap) .mk-photo{ background:transparent !important; box-shadow:none !important; padding:0 !important; transform:none !important; }
+
+/* 銘板→ファイル札 */
+body:has(.mk-wrap) .mk-cap{
+  display:block !important; margin:10px 0 0 !important; padding:0 !important;
+  background:none !important; border:none !important; border-radius:0 !important;
+  color:#2ecc40 !important; font-size:12.5px !important; letter-spacing:.12em !important;
+  position:static !important;
+}
+body:has(.mk-wrap) .mk-cap::before{ content:"[IMG] "; color:#1f8f2c; }
+body:has(.mk-wrap) .mk-era{ display:none !important; }
+
+/* 本文 */
+body:has(.mk-wrap) .mk-story, body:has(.mk-wrap) .mk-wrap p{
+  color:#35f04a !important; font-size:14.5px !important; line-height:2.15 !important;
+  max-width:660px; margin-left:0 !important; text-align:left !important;
+}
+body:has(.mk-wrap) .mk-story{ margin-top:26px !important; }
+body:has(.mk-wrap) .mk-sig{ color:#2ecc40 !important; letter-spacing:.3em !important; margin-top:34px !important; }
+body:has(.mk-wrap) .mk-sig::after{
+  content:"\A\A C:¥SUMURA>_"; white-space:pre; display:block;
+  color:#35f04a; animation:bl 1.1s steps(1,end) infinite;
+}
+
+/* 戻る */
+body:has(.mk-wrap) .mk-back{
+  background:transparent !important; border:1px solid #1f8f2c !important;
+  color:#35f04a !important; letter-spacing:.2em !important;
+  padding:10px 26px !important; border-radius:0 !important; margin-top:40px !important;
+}
+body:has(.mk-wrap) .mk-back::before{ content:"> "; }
+body:has(.mk-wrap) .mk-back:hover{ background:#35f04a !important; color:#020502 !important; border-color:#35f04a !important; }
+
+/* 言語切替も端末色に */
+body:has(.mk-wrap) #lang-bar{
+  background:#020502 !important; border:1px solid #1f8f2c !important;
+  box-shadow:0 0 14px rgba(53,240,74,.15) !important; border-radius:0 !important;
+}
+body:has(.mk-wrap) #lang-bar button.active{ border-color:#35f04a !important; background:#0a220d !important; }
+
+@media (max-width:600px){
+  body:has(.mk-wrap) .mk-wrap::before{ font-size:11px; }
+  body:has(.mk-wrap) .mk-title{ font-size:20px !important; letter-spacing:.32em !important; }
+}
