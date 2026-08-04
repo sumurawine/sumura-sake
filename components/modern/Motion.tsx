@@ -101,6 +101,8 @@ export function useSmoothScroll(enabled = true) {
     if (!enabled || typeof window === 'undefined') return;
     const mm = window.matchMedia;
     if (mm && mm('(prefers-reduced-motion: reduce)').matches) return;
+    /* 指で操る端末は、端末本来の滑りに任せます（重い引き戸は机の上だけ） */
+    if (!(mm && mm('(pointer: fine)').matches)) return;
 
     const maxY = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
     let target = window.scrollY;
@@ -170,16 +172,10 @@ export function useSmoothScroll(enabled = true) {
     };
 
     window.addEventListener('wheel', onWheel, { passive: false });
-    window.addEventListener('touchstart', onTS, { passive: true });
-    window.addEventListener('touchmove', onTM, { passive: false });
-    window.addEventListener('touchend', onTE, { passive: true });
     window.addEventListener('scroll', sync, { passive: true });
     return () => {
       alive = false;
       window.removeEventListener('wheel', onWheel);
-      window.removeEventListener('touchstart', onTS);
-      window.removeEventListener('touchmove', onTM);
-      window.removeEventListener('touchend', onTE);
       window.removeEventListener('scroll', sync);
     };
   }, [enabled]);
