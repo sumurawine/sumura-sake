@@ -453,12 +453,14 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   const camera = new THREE.PerspectiveCamera(66, 1, 0.05, 60);
   camera.position.set(0, 1.62, D / 2 - 2.9);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(0.68);
-  renderer.shadowMap.enabled = false;
-  renderer.toneMapping = THREE.NoToneMapping;
+  /* 映画の質感で描きます：実解像度・柔らかい影・フィルムの階調 */
+  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(2, (typeof window !== 'undefined' && window.devicePixelRatio) || 1));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.35;
   o.mount.appendChild(renderer.domElement);
-  renderer.domElement.style.imageRendering = 'pixelated';
   const maxAniso = renderer.capabilities.getMaxAnisotropy?.() || 1;
 
   const tex = (c: HTMLCanvasElement, rx: number, ry: number) => {
@@ -568,7 +570,9 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     fl.position.set(Math.cos(a) * 0.44, 0.28, Math.sin(a) * 0.44); chand.add(fl);
     flames.push({ p: null, fl, base: 0, seed: Math.random() * 90, v: 1 });
   }
-  const cp = new THREE.PointLight(0xffbc78, 6.4, 10, 1.5); cp.position.y = 0.27; chand.add(cp);
+  const cp = new THREE.PointLight(0xffbc78, 6.4, 10, 1.5); cp.position.y = 0.27;
+  cp.castShadow = true; cp.shadow.mapSize.set(1024, 1024); cp.shadow.bias = -0.005;
+  cp.shadow.camera.near = 0.12; cp.shadow.camera.far = 11; chand.add(cp);
   flames.push({ p: cp, fl: null, base: 6.4, seed: 3.1, v: 1 });
   const rope = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.8, 5), lam({ color: 0x191411 }));
   rope.position.y = 0.42; chand.add(rope);
@@ -1004,6 +1008,15 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   let doorOpen = 0, doorFired = false, alive = true;
   let armed = false, walked = 0, bob = 0;
   let drink = 0, drinkAt = 16;
+  /* 燭台のあかりで、すべてのものが影を落とします（炎など透けるものは除きます） */
+  scene.traverse((obj: any) => {
+    if (obj.isMesh) {
+      const tr = obj.material && (obj.material.transparent || obj.material.blending === THREE.AdditiveBlending);
+      obj.castShadow = !tr;
+      obj.receiveShadow = true;
+    }
+  });
+
   const clock = new THREE.Clock();
 
   function resize() {
