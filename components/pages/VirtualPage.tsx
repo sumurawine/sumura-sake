@@ -26,7 +26,7 @@ const W: Record<Lang, Record<string, string>> = {
     err: 'うまく伝わりませんでした。お手数ですが、もう一度お願いいたします。',
     need: 'ご用件をご記入ください。', needMail: 'メールアドレスをご記入ください。',
     sndOn: '音を出す', sndOff: '音を消す',
-    kWalk: 'W A S D 歩く', kLook: 'マウス 見回す', kTake: 'クリック 手に取る',
+    kWalk: 'W A S D 歩く', kLook: 'マウス 見回す', kTake: 'クリック 手に取る', kLeave: '退店',
     callC: '店員を呼ぶ', talkC: '店員に話しかける', oBtn: '手に取る', xBtn: '閉じる',
     coming: '店員がこちらへ向かっております…',
     nameL: 'お名前', nl: 'メールマガジンを受け取る（任意）', body: 'この一本について、お伝えする内容',
@@ -46,7 +46,7 @@ const W: Record<Lang, Record<string, string>> = {
     err: 'Something went wrong. Please try once more.',
     need: 'Please write your request.', needMail: 'Please enter your email address.',
     sndOn: 'Sound on', sndOff: 'Sound off',
-    kWalk: 'W A S D  walk', kLook: 'Mouse  look', kTake: 'Click  pick up',
+    kWalk: 'W A S D  walk', kLook: 'Mouse  look', kTake: 'Click  pick up', kLeave: 'Leave',
     callC: 'Call the clerk', talkC: 'Speak to the clerk', oBtn: 'Pick up', xBtn: 'Close',
     coming: 'The clerk is on the way…',
     nameL: 'Your name', nl: 'Receive our newsletter (optional)', body: 'What we will pass on',
@@ -66,7 +66,7 @@ const W: Record<Lang, Record<string, string>> = {
     err: 'Une erreur est survenue. Merci de réessayer.',
     need: 'Merci d’écrire votre demande.', needMail: 'Merci d’indiquer votre e-mail.',
     sndOn: 'Son activé', sndOff: 'Son coupé',
-    kWalk: 'W A S D  marcher', kLook: 'Souris  regarder', kTake: 'Clic  prendre',
+    kWalk: 'W A S D  marcher', kLook: 'Souris  regarder', kTake: 'Clic  prendre', kLeave: 'Sortir',
     callC: 'Appeler le sommelier', talkC: 'Parler au sommelier', oBtn: 'Prendre', xBtn: 'Fermer',
     coming: 'Le sommelier arrive…',
     nameL: 'Votre nom', nl: 'Recevoir notre lettre (facultatif)', body: 'Ce que nous transmettrons',
@@ -86,7 +86,7 @@ const W: Record<Lang, Record<string, string>> = {
     err: '发送失败，请再试一次。',
     need: '请填写您的需求。', needMail: '请填写电子邮箱。',
     sndOn: '开启声音', sndOff: '关闭声音',
-    kWalk: 'W A S D 行走', kLook: '鼠标 环视', kTake: '点击 取用',
+    kWalk: 'W A S D 行走', kLook: '鼠标 环视', kTake: '点击 取用', kLeave: '离店',
     callC: '呼叫店员', talkC: '与店员交谈', oBtn: '取用', xBtn: '关闭',
     coming: '店员正在过来…',
     nameL: '姓名', nl: '订阅本店通讯（任意）', body: '将转达的内容',
@@ -106,7 +106,7 @@ const W: Record<Lang, Record<string, string>> = {
     err: '전달되지 않았습니다. 다시 한 번 부탁드립니다.',
     need: '용건을 적어 주세요.', needMail: '이메일 주소를 적어 주세요.',
     sndOn: '소리 켜기', sndOff: '소리 끄기',
-    kWalk: 'W A S D 걷기', kLook: '마우스 둘러보기', kTake: '클릭 집기',
+    kWalk: 'W A S D 걷기', kLook: '마우스 둘러보기', kTake: '클릭 집기', kLeave: '퇴점',
     callC: '점원 부르기', talkC: '점원에게 말 걸기', oBtn: '집기', xBtn: '닫기',
     coming: '점원이 오고 있습니다…',
     nameL: '성함', nl: '뉴스레터 받기 (선택)', body: '전달할 내용',
@@ -306,6 +306,7 @@ export function VirtualPage() {
               <span><span className="vs-cap">✥</span>{t.kLook}</span>
               <span><span className="vs-cap">◉</span>{t.kTake}</span>
               <span><span className="vs-cap">C</span>{near ? t.talkC : t.callC}</span>
+              <span><span className="vs-cap">E</span>{t.kLeave}</span>
             </div>
           ) : (
             <>
