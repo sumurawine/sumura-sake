@@ -463,6 +463,22 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   o.mount.appendChild(renderer.domElement);
   const maxAniso = renderer.capabilities.getMaxAnisotropy?.() || 1;
 
+  /* まわりの映り込み。蝋燭色の天と、暗い床。艶ものが生きます */
+  {
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const env = new THREE.Scene();
+    env.add(new THREE.Mesh(
+      new THREE.SphereGeometry(10, 16, 12),
+      new THREE.MeshBasicMaterial({ color: 0x241a12, side: THREE.BackSide }),
+    ));
+    const warm = new THREE.Mesh(new THREE.PlaneGeometry(6, 3), new THREE.MeshBasicMaterial({ color: 0xffd9a0 }));
+    warm.position.set(0, 4.6, 0); warm.rotation.x = Math.PI / 2; env.add(warm);
+    const win = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 1.5), new THREE.MeshBasicMaterial({ color: 0xfff1d8 }));
+    win.position.set(0, 1.7, 6); win.rotation.y = Math.PI; env.add(win);
+    scene.environment = pmrem.fromScene(env, 0.04).texture;
+    pmrem.dispose();
+  }
+
   const tex = (c: HTMLCanvasElement, rx: number, ry: number) => {
     const t = new THREE.CanvasTexture(c);
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
@@ -618,9 +634,10 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
       new THREE.Vector2(0.0135, 0.21), new THREE.Vector2(0.0135, 0.30),
     ], 9
   );
-  const glassA = lam({ color: 0x1d3319 });
-  const glassB = lam({ color: 0x431619 });
-  const capMat = lam({ color: 0x7a1226 });
+  /* 瓶はガラスの艶で。映り込みが命です */
+  const glassA = new THREE.MeshStandardMaterial({ color: 0x1d3319, roughness: 0.14, metalness: 0.0, envMapIntensity: 1.25 });
+  const glassB = new THREE.MeshStandardMaterial({ color: 0x431619, roughness: 0.14, metalness: 0.0, envMapIntensity: 1.25 });
+  const capMat = new THREE.MeshStandardMaterial({ color: 0x7a1226, roughness: 0.4, metalness: 0.45 });
   const pick: any[] = [];
   const labelGeo = new THREE.PlaneGeometry(0.062, 0.04);
 
@@ -842,9 +859,10 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   scene.add(halo);
 
   /* 竪型ピアノと弾き手。部屋の左半分で、扉のほうを向いて */
-  const PX = -3.5, PZ = -0.35;
+  const PX = -2.55, PZ = -0.95;   /* 入店した目の先、左手前へ */
   const piano = new THREE.Group();
-  const pm = lam({ map: tex(wood('#2c1c12', '#100804'), 1.4, 1) });
+  /* 黒漆のアップライト。灯りを鏡のように返します */
+  const pm = new THREE.MeshStandardMaterial({ color: 0x0d0c0b, roughness: 0.16, metalness: 0.42, envMapIntensity: 1.35 });
   const body = new THREE.Mesh(new THREE.BoxGeometry(1.48, 1.18, 0.58), pm);
   body.position.set(0, 0.72, -0.12); piano.add(body);
   const lid = new THREE.Mesh(new THREE.BoxGeometry(1.54, 0.06, 0.64), pm);
@@ -860,7 +878,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   });
   const pedal = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.03, 0.12), lam({ color: 0xa8925f }));
   pedal.position.set(0, 0.10, 0.08); piano.add(pedal);
-  const PA = 0.62;                                        // 店の中ほどへ、すこし斜めに構えます
+  const PA = 0.85;                                        // 鍵盤と弾き手が、扉から見えるように
   const rz = (x: number, z: number) =>
     [PX + x * Math.cos(PA) + z * Math.sin(PA), PZ - x * Math.sin(PA) + z * Math.cos(PA)];
   place(piano, PX, 0, PZ, Math.PI + PA);
@@ -890,7 +908,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
   pglow.position.set(PX + 0.4, 1.9, PZ + 0.5); scene.add(pglow);
 
   /* 見回しと歩き */
-  let yaw = 0, pitch = -0.02;
+  let yaw = -0.34, pitch = -0.02;   /* 入店の一目は、ピアノのほうへ */
   const keys: Record<string, boolean> = {};
   let locked = false, paused = false;
   let padX = 0, padY = 0, lookX = 0, lookY = 0;
