@@ -936,7 +936,6 @@ html[data-era="now"] #tw-leave-ov .tw-bye-bg{
 html[data-era="now"] #tw-leave-ov .tw-bye,
 html[data-era="now"] #tw-leave-ov h2{
   font-family:var(--mx-serif,serif) !important; letter-spacing:.2em !important;
-  animation:meFade 1.6s .4s ease both;
 }
 
 
