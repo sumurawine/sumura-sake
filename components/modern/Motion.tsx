@@ -95,7 +95,96 @@ export function useStuck(px = 40) {
   return stuck;
 }
 
-/** 画面全体のスクロールに粘りを持たせ、節目で気持ちよく止めます */
+/** 重い引き戸のスクロール。常に同じ粘りで、途切れも吸い付きもありません */
+export function useSmoothScroll(enabled = true) {
+  useEffect(() => {
+    if (!enabled || typeof window === 'undefined') return;
+    const mm = window.matchMedia;
+    if (mm && mm('(prefers-reduced-motion: reduce)').matches) return;
+
+    const maxY = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    let target = window.scrollY;
+    let current = target;
+    let vel = 0;              /* 指を離したあとの惰性 */
+    let alive = true;
+    const K = 0.072;          /* 粘りの濃さ。小さいほど重い */
+    const HOT = '.mx-rail, select, textarea, input, .modal-ov, .vs-panel';
+
+    const tick = () => {
+      if (!alive) return;
+      if (Math.abs(vel) > 0.04) {
+        target = Math.max(0, Math.min(target + vel, maxY()));
+        vel *= 0.945;
+      }
+      const d = target - current;
+      if (Math.abs(d) > 0.08) {
+        current += d * K;
+        window.scrollTo(0, current);
+      } else {
+        current = target;
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) return;
+      const el = e.target as HTMLElement | null;
+      if (el && el.closest(HOT)) return;
+      e.preventDefault();
+      const step = e.deltaY > 0 ? e.deltaY * 0.28 : e.deltaY * 0.8;
+      target = Math.max(0, Math.min(target + step, maxY()));
+      vel = 0;
+    };
+
+    /* 指にも同じ粘りを。二本指（拡大）は端末に任せます */
+    let ty = 0, tv = 0, tAt = 0, touching = false;
+    const onTS = (e: TouchEvent) => {
+      if (e.touches.length !== 1) { touching = false; return; }
+      const el = e.target as HTMLElement | null;
+      if (el && el.closest(HOT)) { touching = false; return; }
+      touching = true; vel = 0;
+      ty = e.touches[0].clientY; tv = 0; tAt = performance.now();
+    };
+    const onTM = (e: TouchEvent) => {
+      if (!touching || e.touches.length !== 1) return;
+      e.preventDefault();
+      const y = e.touches[0].clientY;
+      const dy = ty - y;
+      const now = performance.now();
+      const dt = Math.max(8, now - tAt);
+      tv = (dy / dt) * 16;
+      ty = y; tAt = now;
+      const step = dy > 0 ? dy * 0.5 : dy * 0.85;
+      target = Math.max(0, Math.min(target + step, maxY()));
+    };
+    const onTE = () => {
+      if (!touching) return;
+      touching = false;
+      vel = tv > 0 ? tv * 0.45 : tv * 0.8;
+    };
+
+    /* 帯や検索ジャンプなど、よそから動かされたときは素直に従います */
+    const sync = () => {
+      if (Math.abs(window.scrollY - current) > 3) { target = window.scrollY; current = target; vel = 0; }
+    };
+
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('touchstart', onTS, { passive: true });
+    window.addEventListener('touchmove', onTM, { passive: false });
+    window.addEventListener('touchend', onTE, { passive: true });
+    window.addEventListener('scroll', sync, { passive: true });
+    return () => {
+      alive = false;
+      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('touchstart', onTS);
+      window.removeEventListener('touchmove', onTM);
+      window.removeEventListener('touchend', onTE);
+      window.removeEventListener('scroll', sync);
+    };
+  }, [enabled]);
+}
+
 export function useSmoothScroll(enabled = true, ease = 0.11) {
   useEffect(() => {
     if (!enabled) return;
