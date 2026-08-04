@@ -21,14 +21,18 @@ export function Finesse() {
     const bar = document.createElement('div');
     bar.className = 'fx-progress';
     document.body.appendChild(bar);
-    const onScroll = () => {
+    let pCur = 0, pRaf = 0;
+    const pTick = () => {
       const h = document.documentElement;
       const max = h.scrollHeight - h.clientHeight;
-      bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, h.scrollTop / max) : 0) + ')';
+      const t = max > 0 ? Math.min(1, h.scrollTop / max) : 0;
+      pCur += (t - pCur) * 0.22;
+      if (Math.abs(t - pCur) < 0.0004) pCur = t;
+      bar.style.transform = 'scaleX(' + pCur.toFixed(4) + ')';
+      pRaf = requestAnimationFrame(pTick);
     };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    undo.push(() => { window.removeEventListener('scroll', onScroll); bar.remove(); });
+    pRaf = requestAnimationFrame(pTick);
+    undo.push(() => { cancelAnimationFrame(pRaf); bar.remove(); });
 
     if (fine && !calm) {
       /* ── 金の輪 ── */
