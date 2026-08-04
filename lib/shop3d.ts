@@ -337,7 +337,7 @@ function noiseOver(g: CanvasRenderingContext2D, s: number, n: number, a: number)
 }
 
 function rock(base: string, mortar: string, rows = 5, cols = 5): HTMLCanvasElement {
-  const S = 256;
+  const S = 512;
   const c = document.createElement('canvas');
   c.width = c.height = S;
   const g = c.getContext('2d')!;
@@ -382,7 +382,7 @@ function rock(base: string, mortar: string, rows = 5, cols = 5): HTMLCanvasEleme
 }
 
 function wood(base: string, dark: string): HTMLCanvasElement {
-  const S = 256;
+  const S = 512;
   const c = document.createElement('canvas');
   c.width = c.height = S;
   const g = c.getContext('2d')!;
