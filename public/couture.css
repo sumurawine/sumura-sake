@@ -961,3 +961,149 @@ html[data-era="now"] .mx-door-shot{ filter:brightness(.72) !important; }
 
 
 
+
+
+/* ════════════════════════════════════════════════════════════
+   メゾンの仕立て ── パリ老舗の風格
+   （象牙とノワール、金の細罫、家紋、額装、静かな所作）
+   ════════════════════════════════════════════════════════════ */
+
+/* 家紋（洲）── 二重の環と四方の菱 */
+:root{
+  --mx-gold2:#e0c391;
+  --mx-crest:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><g fill='none' stroke='%23c9ad82'><circle cx='48' cy='48' r='45' stroke-width='1' opacity='.85'/><circle cx='48' cy='48' r='38.5' stroke-width='.6' opacity='.5'/></g><g fill='%23c9ad82'><path d='M48 1.8 L50.4 6 L48 10.2 L45.6 6 Z' opacity='.9'/><path d='M48 85.8 L50.4 90 L48 94.2 L45.6 90 Z' opacity='.9'/><path d='M1.8 48 L6 45.6 L10.2 48 L6 50.4 Z' opacity='.9'/><path d='M85.8 48 L90 45.6 L94.2 48 L90 50.4 Z' opacity='.9'/></g><text x='48' y='61' font-family='Hiragino Mincho ProN,Yu Mincho,serif' font-size='36' fill='%23d8bd8e' text-anchor='middle'>%E6%B4%B2</text></svg>");
+}
+
+/* 画面のふちに、証書のような二重の細罫 */
+html[data-era="now"] body::before{
+  content:""; position:fixed; inset:16px; z-index:95; pointer-events:none;
+  border:1px solid rgba(201,173,130,.15);
+  outline:1px solid rgba(201,173,130,.05); outline-offset:5px;
+}
+@media (max-width:860px){
+  html[data-era="now"] body::before{ inset:9px; outline:none; border-color:rgba(201,173,130,.11); }
+}
+/* 三次元の店内では消します（幕や札に線が重ならないように） */
+html[data-era="now"] body:has(.vs)::before{ display:none; }
+
+/* 章の小見出し：金の小さな文字と、左右の細い線 */
+html[data-era="now"] .mx-kicker{ letter-spacing:.4em; }
+html[data-era="now"][data-mx="1"] .mx-kicker{ color:rgba(208,183,138,.72) !important; }
+html[data-era="now"] .mx-kicker::after{
+  content:""; flex:0 0 auto; width:38px; height:1px;
+  background:linear-gradient(270deg, var(--mx-gold), rgba(201,173,130,0));
+}
+
+/* 大見出し：象牙からシャンパーニュへ沈む色 */
+html[data-era="now"] .mx-h1{
+  background:linear-gradient(180deg, #f7f2e9 58%, #ddc79b 140%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:#f7f2e9;
+  text-shadow:none;
+}
+@media (max-width:860px){
+  html[data-era="now"] .mx-h1{
+    background:none; -webkit-background-clip:border-box; background-clip:border-box;
+    -webkit-text-fill-color:currentColor; color:var(--mx-paper);
+  }
+}
+
+/* 釦：角を立て、文字を離し、金で満たす */
+html[data-era="now"] .mx-btn,
+html[data-era="now"] .ag-btn,
+.vs-btn,
+html[data-era="now"] .mx-legacy .btn,
+html[data-mx="1"] .btn,
+html[data-mx="1"] #tw-leave-ov .tw-bye-a{ border-radius:0 !important; }
+html[data-era="now"] .mx-btn{
+  letter-spacing:.3em; border-color:rgba(201,173,130,.4);
+}
+html[data-era="now"] .mx-btn::before{
+  background:linear-gradient(115deg, #c3a678, #e2c795 58%, #cfb384);
+}
+html[data-era="now"] .mx-btn:hover{ border-color:#d9bd8e; }
+html[data-mx="1"] #cat-nav a{ border-radius:0 !important; letter-spacing:.14em !important; }
+html[data-mx="1"] select.field, html[data-mx="1"] #stock-btn{ border-radius:0 !important; }
+
+/* 罫の中央に、小さな菱 */
+html[data-era="now"] .mx-rule, html[data-era="now"] #modern-entrance .me-rule, .vs-rule{
+  position:relative; overflow:visible;
+}
+html[data-era="now"] .mx-rule::after,
+html[data-era="now"] #modern-entrance .me-rule::after,
+.vs-rule::after{
+  content:""; position:absolute; left:50%; top:50%; width:5px; height:5px;
+  transform:translate(-50%,-50%) rotate(45deg);
+  border:1px solid rgba(201,173,130,.85); background:#0b0908;
+}
+
+/* 写真と陳列台は、離れた細い金の額で飾る */
+@media (min-width:861px){
+  html[data-era="now"] .mx-vitrine,
+  html[data-era="now"] .mx-photo{ outline:1px solid rgba(201,173,130,.20); outline-offset:9px; }
+}
+
+/* 天の帯と品書き：文字を離して、静かに */
+html[data-era="now"] .mx-brand{ letter-spacing:.2em; }
+html[data-era="now"] .mx-brand small{ letter-spacing:.44em; }
+html[data-era="now"] .mx-nav a{ letter-spacing:.2em; font-size:12px; }
+
+/* 地の帯：罫の上に封蝋のように家紋を据える */
+html[data-era="now"] .mx-foot{ position:relative; }
+html[data-era="now"] .mx-foot::before{
+  content:""; position:absolute; left:50%; top:-28px; transform:translateX(-50%);
+  width:56px; height:56px;
+  background:var(--mx-crest) center/contain no-repeat,
+             radial-gradient(closest-side, #0a0709 97%, rgba(10,7,9,0));
+  opacity:.9;
+}
+
+/* ── 入店の間：メゾンの扉として ─────────────────────── */
+html[data-era="now"] #modern-entrance{
+  padding:60px 48px 54px !important;
+  border:1px solid rgba(201,173,130,.30) !important;
+  outline:1px solid rgba(201,173,130,.12) !important; outline-offset:7px;
+  background:rgba(12,8,6,.42) !important;
+  -webkit-backdrop-filter:blur(12px) saturate(1.05); backdrop-filter:blur(12px) saturate(1.05);
+  box-shadow:0 70px 160px -60px rgba(0,0,0,.92) !important;
+}
+html[data-era="now"] #modern-entrance::before{
+  content:""; display:block; width:72px; height:72px; margin:0 auto 26px;
+  background:var(--mx-crest) center/contain no-repeat;
+  animation:meFade 1.3s .15s ease both;
+}
+html[data-era="now"] #modern-entrance .me-en{ letter-spacing:.5em !important; }
+html[data-era="now"] #modern-entrance .me-btn{ border-radius:0 !important; letter-spacing:.34em !important; }
+@media (max-width:860px){
+  html[data-era="now"] #modern-entrance{ padding:44px 26px 40px !important; }
+  html[data-era="now"] #modern-entrance::before{ width:58px; height:58px; }
+}
+
+/* ── バーチャル店舗の門：同じ礼装で ──────────────────── */
+.vs-gate-in{
+  padding:54px 46px;
+  border:1px solid rgba(201,173,130,.28);
+  outline:1px solid rgba(201,173,130,.10); outline-offset:7px;
+  background:rgba(10,7,6,.40);
+  -webkit-backdrop-filter:blur(10px) saturate(1.05); backdrop-filter:blur(10px) saturate(1.05);
+}
+.vs-gate-in::before{
+  content:""; display:block; width:64px; height:64px; margin:0 auto 22px;
+  background:var(--mx-crest) center/contain no-repeat;
+}
+.vs-kick{ letter-spacing:.5em; }
+.vs-gate h1{
+  background:linear-gradient(180deg, #f7f2e9 58%, #ddc79b 140%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+@media (max-width:600px){
+  .vs-gate-in{ padding:38px 22px; }
+  .vs-gate-in::before{ width:52px; height:52px; }
+}
+
+/* ── 退店の幕：家紋で見送る ──────────────────────────── */
+html[data-mx="1"] #tw-leave-ov .tw-bye::before{
+  content:""; display:block; width:56px; height:56px; margin:0 auto 26px;
+  background:var(--mx-crest) center/contain no-repeat; opacity:.85;
+}
+html[data-mx="1"] #tw-leave-ov .tw-bye-a{ letter-spacing:.3em !important; }
