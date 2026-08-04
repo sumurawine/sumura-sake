@@ -256,13 +256,12 @@ export function StorePage() {
                         <span className="price">{yenOf(it.price, lang)}</span>
                         {out ? <><br /><span className="hint">{u('soldout', lang)}</span></> : null}
                         <br />
-                        <button className="btn" style={{ marginTop: 5 }} onClick={() => setModal(it)}>{dec(u('detail', lang))}</button>
                         {SLUG[it.id] ? (
-                          <><br />
-                            <Link className="hint" style={{ display: 'inline-block', marginTop: 4 }}
-                                  href={winePath(SLUG[it.id], lang)}>{u('page', lang)}</Link>
-                          </>
-                        ) : null}
+                          <Link className="btn" style={{ marginTop: 5, display: 'inline-block' }}
+                                href={winePath(SLUG[it.id], lang)}>{dec(u('detail', lang))}</Link>
+                        ) : (
+                          <button className="btn" style={{ marginTop: 5 }} onClick={() => setModal(it)}>{dec(u('detail', lang))}</button>
+                        )}
                       </div>
                     </div>
                   );
