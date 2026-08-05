@@ -1330,3 +1330,22 @@ html[data-era="now"][data-mx="1"] .mx-legacy .pr-list li:hover .pr-jp{
   color:#fff8ec !important; font-weight:700 !important;
 }
 html[data-era="now"] .pr-list li:hover{ background:rgba(244,236,228,.05) !important; }
+
+
+/* ── 門の手引き：はっきり読めるように ─────────────────── */
+.vs-gate p, html[data-era="now"] .vs-gate p, html[data-mx="1"] .vs-gate p{
+  color:rgba(248,242,232,.95) !important;
+  font-size:15.5px !important; line-height:2.1 !important; letter-spacing:.05em !important;
+  text-shadow:0 2px 14px rgba(0,0,0,.85) !important;
+  max-width:26em; margin-left:auto !important; margin-right:auto !important;
+}
+.vs-gate .vs-kick{ color:rgba(226,199,149,.95) !important; }
+.vs-gate .vs-btn{ font-size:13.5px !important; }
+.vs-gate .vs-back, a.vs-back{
+  color:rgba(248,242,232,.78) !important; font-size:13px !important;
+  text-decoration:none !important;
+}
+.vs-gate .vs-back:hover, a.vs-back:hover{ color:#e8cf9e !important; }
+@media (max-width:600px){
+  .vs-gate p{ font-size:15px !important; line-height:2.0 !important; }
+}
