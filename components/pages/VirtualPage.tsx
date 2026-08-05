@@ -341,7 +341,6 @@ export function VirtualPage() {
               </dl>
               <p>{ab.deal}</p>
             </div>
-            </p>
             <button className="vs-btn vs-primary" disabled={!items.length}
                     onClick={() => setStarted(true)}>
               {items.length ? t.enter : t.loading}
