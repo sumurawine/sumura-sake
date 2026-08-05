@@ -65,17 +65,17 @@ html[data-edit="1"] body{ padding-bottom:56px }
    ══════════════════════════════════════════════════ */
 
 /* 直せるところは、うっすら黄の下敷きと点線で示します */
-html[data-edit="1"] [data-blog-field]{
+html[data-edit="1"] [data-field]{
   position:relative; cursor:pointer;
   outline:2px dashed rgba(255,214,110,.55); outline-offset:4px;
   background:rgba(255,214,110,.07);
   border-radius:3px;
   transition:background .15s ease, outline-color .15s ease;
 }
-html[data-edit="1"] [data-blog-field]:hover{
+html[data-edit="1"] [data-field]:hover{
   outline-color:#ffd66e; background:rgba(255,214,110,.16);
 }
-html[data-edit="1"] [data-blog-field]::after{
+html[data-edit="1"] [data-field]::after{
   content:"✎ ここを押すと直せます";
   position:absolute; right:0; top:-26px; z-index:60;
   font-size:12px; line-height:1; letter-spacing:.04em; white-space:nowrap;
@@ -84,8 +84,8 @@ html[data-edit="1"] [data-blog-field]::after{
   opacity:0; transform:translateY(4px); transition:opacity .15s ease, transform .15s ease;
   pointer-events:none;
 }
-html[data-edit="1"] [data-blog-field]:hover::after{ opacity:1; transform:none; }
-html[data-edit="1"] img[data-blog-field]{ display:block; }
+html[data-edit="1"] [data-field]:hover::after{ opacity:1; transform:none; }
+html[data-edit="1"] img[data-field]{ display:block; }
 
 /* 画面の下に、いつも出ている案内と「新しい記事」 */
 .bi-hint{
