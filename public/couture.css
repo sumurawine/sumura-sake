@@ -1373,3 +1373,16 @@ html[data-era="now"] .pr-list li:hover{ background:rgba(244,236,228,.05) !import
   position:static !important; inset:auto !important;
   transform:none !important; width:auto !important;
 }
+
+
+/* 昔日：時間旅行と言語の札を緑の端末色に揃える */
+html[data-era="mukashi"] body #timewarp{ background:#040604 !important; border:1px solid #1e6b2c !important; color:#35f04a !important; box-shadow:none !important; }
+html[data-era="mukashi"] body #timewarp .tw-t,
+html[data-era="mukashi"] body #timewarp .tw-body,
+html[data-era="mukashi"] body #timewarp span{ color:#35f04a !important; }
+html[data-era="mukashi"] body #timewarp button{ color:#35f04a !important; background:#0a220d !important; border-color:#1e6b2c !important; }
+html[data-era="mukashi"] body #timewarp button.on,
+html[data-era="mukashi"] body #timewarp button:hover{ color:#040604 !important; background:#35f04a !important; border-color:#35f04a !important; }
+html[data-era="mukashi"] body #lang-bar{ background:#040604 !important; border-color:#1e6b2c !important; box-shadow:none !important; }
+html[data-era="mukashi"] body #lang-bar button{ color:#35f04a !important; background:#0a220d !important; border:1px solid #1e6b2c !important; opacity:1 !important; }
+html[data-era="mukashi"] body #lang-bar button.active{ color:#040604 !important; background:#35f04a !important; border-color:#35f04a !important; }
