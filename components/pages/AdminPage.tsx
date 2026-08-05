@@ -24,14 +24,16 @@ export function AdminPage() {
   const { lang } = useSite();
   const [here, setHere] = useState<'見ている' | '鏡' | null>(null);
   const [on, setOn] = useState(false);
+  const [base, setBase] = useState('');   /* 練習用のサイトでは '/preview' が頭につきます */
 
   useEffect(() => {
     setHere(isMirror() ? '鏡' : '見ている');
     setOn(editMode());
+    setBase(window.location.pathname.indexOf('/preview') === 0 ? '/preview' : '');
   }, []);
 
   const P = pre(lang);
-  const go = (to: string) => P + to;
+  const go = (to: string) => base + P + to;
 
   const turn = (v: boolean) => { setEditMode(v); setOn(v); };
 
