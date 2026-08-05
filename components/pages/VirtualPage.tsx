@@ -115,57 +115,9 @@ const W: Record<Lang, Record<string, string>> = {
 };
 
 
-/* 入店前の頁に、静的な文章として置く店の案内でございます（検索にも読まれます） */
-const VS_ABOUT: Record<Lang, {
-  lead: string; lName: string; name: string; lAddr: string; addr: string;
-  lHours: string; hours: string; lTel: string; deal: string;
-}> = {
-  jp: {
-    lead: 'ここは、山口県宇部市のワイン専門店「すむら酒店（洲村酒店）」の店内を、そのまま歩いていただけるバーチャル店舗でございます。棚の一本を手に取り、店員にお声がけいただけます。',
-    lName: '店名', name: 'すむら酒店（洲村酒店）／ Liquor Shop Sumura',
-    lAddr: '所在地', addr: '〒755-0072　山口県宇部市中村3-6-20',
-    lHours: '営業時間', hours: '10:00〜18:30（火曜定休）',
-    lTel: '電話',
-    deal: 'ブルゴーニュを中心に、ボルドー、コート デュ ローヌ、ジュラ、ロワール、アルザスのフランス銘醸ワインを正規ルートで取り揃えております。ドメーヌ ド ラ ロマネ コンティ、ドメーヌ ルロワ、ドメーヌ ドーヴネの正規取り扱い店でございます。',
-  },
-  en: {
-    lead: 'This is a virtual walk through Liquor Shop Sumura (すむら酒店 / 洲村酒店), a wine merchant in Ube, Yamaguchi, Japan. Take a bottle from the shelf, or call the shopkeeper over.',
-    lName: 'Shop', name: 'Liquor Shop Sumura (すむら酒店・洲村酒店)',
-    lAddr: 'Address', addr: '3-6-20 Nakamura, Ube, Yamaguchi 755-0072, Japan',
-    lHours: 'Opening hours', hours: '10:00–18:30, closed Tuesdays',
-    lTel: 'Telephone',
-    deal: 'Burgundy above all, with Bordeaux, the Rhône, Jura, the Loire and Alsace, all sourced through official channels. An authorised stockist of Domaine de la Romanée-Conti, Domaine Leroy and Domaine d’Auvenay.',
-  },
-  fr: {
-    lead: 'Voici une visite virtuelle de Liquor Shop Sumura (すむら酒店 / 洲村酒店), caviste à Ube, Yamaguchi, au Japon. Prenez une bouteille dans le rayon, ou appelez le caviste.',
-    lName: 'Maison', name: 'Liquor Shop Sumura (すむら酒店・洲村酒店)',
-    lAddr: 'Adresse', addr: '3-6-20 Nakamura, Ube, Yamaguchi 755-0072, Japon',
-    lHours: 'Horaires', hours: '10h00–18h30, fermé le mardi',
-    lTel: 'Téléphone',
-    deal: 'La Bourgogne avant tout, mais aussi Bordeaux, le Rhône, le Jura, la Loire et l’Alsace, en filière officielle. Dépositaire agréé de la Romanée-Conti, du Domaine Leroy et du Domaine d’Auvenay.',
-  },
-  zh: {
-    lead: '这里是日本山口县宇部市的葡萄酒专门店「すむら酒店（洲村酒店）」的虚拟店铺，您可以在店内自由走动，取下架上的酒瓶，或呼叫店员。',
-    lName: '店名', name: 'すむら酒店（洲村酒店）／ Liquor Shop Sumura',
-    lAddr: '地址', addr: '日本山口县宇部市中村3-6-20（邮编 755-0072）',
-    lHours: '营业时间', hours: '10:00〜18:30（周二休息）',
-    lTel: '电话',
-    deal: '以勃艮第为中心，同时备有波尔多、罗讷河谷、汝拉、卢瓦尔、阿尔萨斯的法国名酿，全部经由正规渠道进货。本店为罗曼尼·康帝、勒桦、多维内的正规代理店。',
-  },
-  ko: {
-    lead: '이곳은 일본 야마구치현 우베시의 와인 전문점 「스무라 주점(洲村酒店)」 매장을 그대로 걸어 볼 수 있는 가상 매장입니다. 선반의 한 병을 집어 들거나, 점원을 부르실 수 있습니다.',
-    lName: '상호', name: '스무라 주점(すむら酒店・洲村酒店) / Liquor Shop Sumura',
-    lAddr: '주소', addr: '〒755-0072 일본 야마구치현 우베시 나카무라 3-6-20',
-    lHours: '영업시간', hours: '10:00〜18:30 (화요일 휴무)',
-    lTel: '전화',
-    deal: '부르고뉴를 중심으로 보르도, 코트 뒤 론, 쥐라, 루아르, 알자스의 프랑스 명양 와인을 정규 루트로 갖추고 있습니다. 도멘 드 라 로마네 콩티, 도멘 르로이, 도멘 도브네 정규 취급점입니다.',
-  },
-};
-
 export function VirtualPage() {
   const { lang } = useSite();
   const t = W[lang] || W.jp;
-  const ab = VS_ABOUT[lang] || VS_ABOUT.jp;
   const box = useRef<HTMLDivElement>(null);
   const shop = useRef<ShopHandle | null>(null);
 
@@ -331,16 +283,6 @@ export function VirtualPage() {
               ))}
             </p>
 
-            <div className="vs-about">
-              <p>{ab.lead}</p>
-              <dl>
-                <dt>{ab.lName}</dt><dd>{ab.name}</dd>
-                <dt>{ab.lAddr}</dt><dd>{ab.addr}</dd>
-                <dt>{ab.lHours}</dt><dd>{ab.hours}</dd>
-                <dt>{ab.lTel}</dt><dd>0836-21-4721</dd>
-              </dl>
-              <p>{ab.deal}</p>
-            </div>
             <button className="vs-btn vs-primary" disabled={!items.length}
                     onClick={() => setStarted(true)}>
               {items.length ? t.enter : t.loading}
