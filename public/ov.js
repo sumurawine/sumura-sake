@@ -48,6 +48,8 @@
     if (SKIP[el.tagName]) return false;
     if (ours(el)) return false;
     if (!textOnly(el, 0)) return false;
+    /* 品書きのように、押し先が二つ以上並ぶ入れ物は、まとめて直させません */
+    if (el.tagName !== 'A' && el.querySelectorAll('a').length > 1) return false;
     /* 文の一部だけの飾りは選ばせません。外側の文をまるごと選べるようにします */
     if (INLINE[el.tagName] && !el.hasAttribute('data-ov') && !el.hasAttribute('data-i18n')) {
       var p = el.parentElement;
