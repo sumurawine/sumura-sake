@@ -1421,17 +1421,23 @@ html[data-era="mukashi"] body #lang-bar button.active{ color:#040604 !important;
   .vs-exit{ left: 12px; bottom: 14px; padding: 12px 18px; font-size: 15px; }
 }
 
-/* ── バーチャル店舗：入店前の店の案内 ─────────── */
-.vs-about{
-  margin: 18px auto 22px; max-width: 34rem; text-align: left;
-  font-size: 13px; line-height: 1.9; color: rgba(253, 247, 234, .72);
+
+
+/* ── 扉の頁：見出しにしても見た目は変わりません ───────── */
+.door-page h1.me-jp{ margin:0; font-size:inherit; font-weight:inherit; line-height:inherit; letter-spacing:inherit; }
+
+/* 扉の足元に置く、静かな覚書 */
+.door-seo{
+  position:relative; z-index:2;
+  max-width:44rem; margin:72px auto 30px; padding:0 22px;
+  text-align:center; font-size:11px; line-height:2.05;
+  letter-spacing:.06em; color:rgba(253,247,234,.46);
 }
-.vs-about p{ margin: 0 0 10px; }
-.vs-about dl{ margin: 0 0 10px; display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; }
-.vs-about dt{ opacity: .62; white-space: nowrap; }
-.vs-about dd{ margin: 0; }
-@media (max-width: 640px){
-  .vs-about{ font-size: 12.5px; }
-  .vs-about dl{ grid-template-columns: 1fr; gap: 0 0; }
-  .vs-about dt{ margin-top: 6px; }
+.door-seo p{ margin:0 0 5px; }
+.door-seo nav{ margin-top:12px; display:flex; flex-wrap:wrap; gap:3px 18px; justify-content:center; }
+.door-seo a{ color:rgba(253,247,234,.62) !important; text-decoration:none; border-bottom:1px solid transparent; }
+.door-seo a:hover{ color:rgba(253,247,234,.92) !important; border-bottom-color:rgba(253,247,234,.4); }
+@media (max-width:640px){
+  .door-seo{ margin-top:48px; font-size:10.5px; line-height:1.95; }
+  .door-seo nav{ gap:3px 14px; }
 }
