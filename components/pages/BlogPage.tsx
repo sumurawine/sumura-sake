@@ -1,6 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
-import Link from 'next/link';
+import { A } from '@/components/A';
 import { asset } from '@/lib/paths';
 import { useSite } from '@/components/Providers';
 import { isModern } from '@/lib/era';
@@ -105,21 +105,21 @@ const href = (r: Record<string, string>) => P + '/blog/post?id=' + r['_row'];
                      data-sheet="blog" data-row={r['_row']} data-field="日付と分類">
                   {dateOf(r['日付'], lang)}{(r['カテゴリ'] || '').trim() ? '　｜　' + blogCatOf(r['カテゴリ'], lang) : ''}
                 </div>
-                <Link href={href(r)} onClick={() => keep(r)} onMouseEnter={() => keep(r)} onTouchStart={() => keep(r)} style={{ textDecoration: 'none' }} prefetch>
+                <A href={href(r)} onClick={() => keep(r)} onMouseEnter={() => keep(r)} onTouchStart={() => keep(r)} style={{ textDecoration: 'none' }}>
                   <div className="pixhead" style={{ fontSize: 18 }}
                        data-sheet="blog" data-row={r['_row']} data-field="題名(日本語)">{pick(r, lang, '題名(日本語)', '題名' + L)}</div>
-                </Link>
+                </A>
                 {photoOf(r) ? (
                   <p style={{ textAlign: 'center' }}>
-                    <Link href={href(r)} onClick={() => keep(r)} onMouseEnter={() => keep(r)} onTouchStart={() => keep(r)} prefetch>
+                    <A href={href(r)} onClick={() => keep(r)} onMouseEnter={() => keep(r)} onTouchStart={() => keep(r)}>
                       <img src={photoOf(r)} alt="" style={{ maxWidth: '100%', height: 'auto' }} loading="lazy"
                            data-sheet="blog" data-row={r['_row']} data-field="写真" />
-                    </Link>
+                    </A>
                   </p>
                 ) : null}
                 <p style={{ whiteSpace: 'pre-wrap' }}
                    data-sheet="blog" data-row={r['_row']} data-field="本文(日本語)">{short}</p>
-                <p><Link href={href(r)} onClick={() => keep(r)} onMouseEnter={() => keep(r)} onTouchStart={() => keep(r)} prefetch>{t('more')} →</Link></p>
+                <p><A href={href(r)} onClick={() => keep(r)} onMouseEnter={() => keep(r)} onTouchStart={() => keep(r)}>{t('more')} →</A></p>
               </div>
             );
           })
