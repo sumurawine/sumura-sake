@@ -265,7 +265,7 @@ export function Editor() {
 function pickable(t: HTMLElement | null): HTMLElement | null {
   if (!t) return null;
   if (t.closest('.ed-panel, .ed-bar, .ed-msg, .ed-new, .ed-form, .bi-wrap, .bi-hint')) return null;
-  if (t.closest('[data-blog-field]')) return null;   /* ブログは専用の道具で直します */
+  if (t.closest('[data-field]')) return null;   /* ブログは専用の道具で直します */
   const img = t.closest('img') as HTMLElement | null;
   if (img) return img;
   const marked = t.closest('[data-img]') as HTMLElement | null;
