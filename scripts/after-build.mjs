@@ -64,7 +64,7 @@ for (const era of ERAS) for (const lang of LANGS) {
 }
 
 /* ── sitemap ─────────────────────────────────── */
-const PAGES = ['/home', '/store', '/producers', '/about', '/access', '/news', '/blog', '/contact', '/legal', '/mukashi', '/virtual'];
+const PAGES = ['/home', '/store', '/producers', '/about', '/access', '/news', '/blog', '/contact', '/legal'];
 const today = new Date().toISOString().slice(0, 10);
 const rows = [];
 const put = (paths, prio, freq) => {
