@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { A } from '@/components/A';
 import { useSite } from '@/components/Providers';
 import { Shell } from '@/components/Shell';
 import { Comments, useComments } from '@/components/Comments';
@@ -56,7 +56,7 @@ export function BlogPostPage() {
         ) : ready ? (
           <p>{LOADING[lang] || LOADING.jp}</p>
         ) : null}
-        <p style={{ marginTop: 18 }}><Link href={P + '/blog'}>{BACK[lang] || BACK.jp}</Link></p>
+        <p style={{ marginTop: 18 }}><A href={P + '/blog'}>{BACK[lang] || BACK.jp}</A></p>
       </div>
     </Shell>
   );
