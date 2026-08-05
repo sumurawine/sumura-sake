@@ -7,7 +7,7 @@ import { tr, type Lang } from '@/lib/i18n';
 import { useSite } from '@/components/Providers';
 import { MC } from '@/lib/modernCopy';
 import { pre } from '@/lib/slug';
-import { CATS, isOut, nameOf, type I18nData, type Item, type ProductData } from '@/lib/store';
+import { CATS, isOut, nameOf, yenOf, type I18nData, type Item, type ProductData } from '@/lib/store';
 import { MShell } from './MShell';
 import { Chars, Reveal, useParallax, useSmoothScroll } from './Motion';
 
@@ -162,7 +162,7 @@ function Selection({ lang }: { lang: Lang }) {
               <div style={{ marginTop: 14, fontSize: 12.5, lineHeight: 1.8, letterSpacing: '.05em', color: 'var(--mx-dim)' }}>
                 {nameOf(it, lang, i18n)}
               </div>
-              <div className="mx-cap" style={{ marginTop: 6 }}>{it.price}</div>
+              <div className="mx-cap" style={{ marginTop: 6 }}>{yenOf(it.price, lang)}</div>
             </Link>
           </Reveal>
         ))}
