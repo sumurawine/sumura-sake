@@ -115,7 +115,7 @@ export function metaFor(path: string, lang: 'jp' | 'en' | 'fr' | 'zh' | 'ko' = '
     : p ? `${p.title}${SUFFIX}` : `${SITE.name} ｜ ${SITE.nameEn}`;
   const desc = alt ? alt.d
     : p ? p.desc : `${SITE.name}は山口県宇部市のワイン専門店でございます。`;
-  const jpUrl = SITE.url + path + '.html';
+  const jpUrl = SITE.url + (path === '/' ? '/' : path);
   const canonical = lang === 'jp' ? jpUrl : `${SITE.url}/${lang}${path}`;
   const langs = ['en', 'fr', 'zh', 'ko'] as const;
   return {
