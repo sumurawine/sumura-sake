@@ -264,7 +264,7 @@ export function Editor() {
 /** 触れる場所か見分けます。文言と、ページ中のすべての写真が対象です */
 function pickable(t: HTMLElement | null): HTMLElement | null {
   if (!t) return null;
-  if (t.closest('.ed-panel, .ed-bar, .ed-msg, .ed-new, .ed-form, .bi-wrap, .bi-hint')) return null;
+  if (t.closest('.ed-panel, .ed-bar, .ed-msg, .ed-new, .ed-form, .bi-wrap, .bi-hint, .rm-wrap')) return null;
   if (t.closest('[data-field]')) return null;   /* ブログは専用の道具で直します */
   const img = t.closest('img') as HTMLElement | null;
   if (img) return img;
