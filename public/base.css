@@ -611,3 +611,17 @@ html[data-era="mukashi"] body:has(.mk-wrap) #lang-bar button.active{
     white-space:nowrap !important; width:auto !important;
   }
 }
+
+
+/* ══ 昔日：畳んだ時間旅行は全幅で横並びの小箱に ═══════════ */
+html[data-era="mukashi"] body:has(.mk-wrap) #timewarp .tw-t{
+  writing-mode:horizontal-tb !important; white-space:nowrap !important;
+  font-size:12px !important; letter-spacing:.12em !important;
+  padding:2px 4px 6px !important; margin:0 !important;
+  display:inline-block !important; line-height:1.4 !important; width:auto !important;
+}
+html[data-era="mukashi"] body:has(.mk-wrap) #timewarp{
+  width:auto !important; min-width:0 !important; height:auto !important;
+  top:8px !important; left:8px !important; bottom:auto !important;
+}
+body:has(.mk-wrap){ padding-top:96px !important; }
