@@ -1198,3 +1198,21 @@ html[data-era="now"] .mx-head .fx-progress{
 @media (min-width:861px) and (max-width:1399px){
   html[data-era="now"] .mx-nav a{ letter-spacing:.12em; font-size:11.5px; }
 }
+
+
+/* ── 表紙の上では縁の罫を出しません（写真に光の筋のように見えるため） ── */
+html[data-era="now"] body::before{ display:none; }
+html[data-era="now"] .mx{ position:relative; }
+/* 罫は本文の器の側に、内側から静かに引きます */
+html[data-era="now"] .mx-legacy{ position:relative; }
+html[data-era="now"] .mx-legacy::before{
+  content:""; position:fixed; inset:16px; z-index:95; pointer-events:none;
+  border:1px solid rgba(201,173,130,.13);
+}
+@media (max-width:860px){
+  html[data-era="now"] .mx-legacy::before{ inset:9px; border-color:rgba(201,173,130,.10); }
+}
+/* 表紙まわりは、写真と背景の境目に線が出ないように */
+html[data-era="now"] .mx-hero{ overflow:hidden; background:var(--mx-ink); }
+html[data-era="now"] .mx-hero-bg{ inset:-6% !important; }
+html[data-era="now"] .mx-hero-shade{ inset:-1px !important; }
