@@ -79,7 +79,7 @@ export function ProducersPage() {
                     <span className="pr-jp">{lang === 'jp' ? r.jp : (r.latin || r.jp)}</span>
                     {lang === 'jp'
                       ? (r.latin && r.latin !== r.jp ? <span className="pr-latin2">{r.latin}</span> : null)
-                      : (r.latin && r.latin !== r.jp ? <span className="pr-latin2">{r.jp}</span> : null)}
+                      : null}
                   </A>
                   {r.n ? <span className="pr-n">{r.n}{c.itemsUnit}</span> : null}
                 </li>
