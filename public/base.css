@@ -628,3 +628,9 @@ body:has(.mk-wrap){ padding-top:96px !important; }
 }
 body:has(.mk-wrap) .mk-dos{ font-size:16px !important; line-height:24px !important; }
 @media (max-width:600px){ .mk-dos{ font-size:11px; } body:has(.mk-wrap) .mk-dos{ font-size:12px !important; line-height:19px !important; } }
+
+
+/* 昔日：説明文の頭に置く年代 */
+.mk-decade{ font-weight:700; letter-spacing:.04em; }
+body:has(.mk-wrap) .mk-cap .mk-decade{ color:#7dff9b !important; opacity:1 !important; display:inline !important; }
+body:has(.mk-wrap) .mk-cap{ color:#cfe8cf !important; }
