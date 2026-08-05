@@ -16,19 +16,43 @@
     return !!(el.closest && el.closest('.ed-panel, .ed-bar, .ed-msg, .ed-new, .ed-form, .bi-wrap, .bi-hint'));
   }
 
-  function editable(el) {
+  /* 文の中の飾り（太字・小文字・一字ずつの箱など）。
+     これらが混ざっていても「文まるごと」を選べるようにします。
+     ただし A（リンク）は、押し先を守るため今までどおり別扱いにします。 */
+  var INLINE = { SPAN:1, B:1, STRONG:1, EM:1, I:1, U:1, S:1, SMALL:1, MARK:1,
+                 CODE:1, ABBR:1, SUB:1, SUP:1, FONT:1, WBR:1, RUBY:1, RT:1, RP:1, BDI:1, BDO:1 };
+
+  /* 中身が文字だけかどうか。飾りの入れ物は、その中も見て判じます */
+  function textOnly(el, depth) {
     if (SKIP[el.tagName]) return false;
-    if (ours(el)) return false;
     var kids = el.childNodes, has = false;
     if (!kids.length) return false;
     for (var i = 0; i < kids.length; i++) {
       var n = kids[i];
       if (n.nodeType === 3) { if ((n.nodeValue || '').trim()) has = true; }
-      else if (n.nodeType === 1 && n.tagName === 'BR') continue;
       else if (n.nodeType === 8) continue;
-      else return false;
+      else if (n.nodeType === 1) {
+        if (n.tagName === 'BR') continue;
+        if (depth < 4 && INLINE[n.tagName] && !ours(n) && textOnly(n, depth + 1)) {
+          if ((n.textContent || '').trim()) has = true;
+          continue;
+        }
+        return false;
+      }
     }
     return has;
+  }
+
+  function editable(el) {
+    if (SKIP[el.tagName]) return false;
+    if (ours(el)) return false;
+    if (!textOnly(el, 0)) return false;
+    /* 文の一部だけの飾りは選ばせません。外側の文をまるごと選べるようにします */
+    if (INLINE[el.tagName] && !el.hasAttribute('data-ov') && !el.hasAttribute('data-i18n')) {
+      var p = el.parentElement;
+      if (p && p !== document.body && !SKIP[p.tagName] && !ours(p) && textOnly(p, 0)) return false;
+    }
+    return true;
   }
 
   function isTarget(el) {
