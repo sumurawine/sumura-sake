@@ -1223,3 +1223,87 @@ html[data-era="now"][data-mx="1"] .mx-legacy .panel p{
   color:rgba(244,236,228,.88) !important; font-size:16px !important; line-height:2.2 !important;
 }
 html[data-era="now"][data-mx="1"] .mx-legacy .panel .pixhead{ margin-bottom:22px !important; }
+
+
+/* ════════════════════════════════════════════════════════════
+   読みやすさ ── 高級感は保ったまま、老眼に優しく
+   （品書きと造り手の一覧：触れた行の字が太く、明るくなります）
+   ════════════════════════════════════════════════════════════ */
+
+/* ── 品書き（オンラインストア） ───────────────────────── */
+html[data-era="now"][data-mx="1"] .mx-legacy .card{
+  padding:14px 10px !important; border-radius:2px;
+  transition:background .35s ease, box-shadow .35s ease;
+}
+html[data-era="now"][data-mx="1"] .mx-legacy .card b{
+  font-size:17px !important; line-height:1.85 !important; font-weight:500 !important;
+  color:rgba(244,236,228,.92) !important;
+  transition:color .3s ease, font-weight .3s ease, letter-spacing .3s ease;
+}
+html[data-era="now"][data-mx="1"] .mx-legacy .card .hint{
+  font-size:14px !important; color:rgba(244,236,228,.66) !important;
+  transition:color .3s ease;
+}
+html[data-era="now"][data-mx="1"] .mx-legacy .card .price{
+  font-size:16.5px !important; color:rgba(224,195,145,.92) !important;
+  transition:color .3s ease;
+}
+html[data-era="now"][data-mx="1"] .mx-legacy .card:hover{
+  background:rgba(244,236,228,.045) !important;
+  box-shadow:inset 3px 0 0 rgba(201,173,130,.55);
+}
+html[data-era="now"][data-mx="1"] .mx-legacy .card:hover b{
+  color:#fff8ec !important; font-weight:700 !important; letter-spacing:.02em !important;
+}
+html[data-era="now"][data-mx="1"] .mx-legacy .card:hover .hint{ color:rgba(244,236,228,.9) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy .card:hover .price{ color:#e8cf9e !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy .card:hover .btn{
+  border-color:rgba(224,195,145,.75) !important; color:#fff8ec !important;
+}
+
+/* 産地の見出しと絞り込みも、少しだけ大きく */
+html[data-mx="1"] #cat-nav a{ font-size:13.5px !important; padding:10px 18px !important; }
+html[data-mx="1"] #cat-nav a:hover{ color:#fff8ec !important; font-weight:600 !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy .x-amber{ font-size:19px !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy #result-count{ font-size:14px !important; }
+
+/* ── 造り手の一覧（お取り扱い生産者） ─────────────────── */
+html[data-era="now"] .pr-list li{
+  font-size:16px !important; padding:9px 4px !important;
+  border-bottom:1px solid rgba(244,236,228,.06);
+  transition:background .35s ease;
+}
+html[data-era="now"] .pr-list li:hover{ background:rgba(244,236,228,.045); }
+html[data-era="now"] .pr-list a, html[data-era="now"] .pr-jp{
+  transition:color .3s ease, font-weight .3s ease;
+}
+html[data-era="now"] .pr-list li:hover .pr-jp,
+html[data-era="now"] .pr-list li:hover a{
+  color:#fff8ec !important; font-weight:700 !important;
+}
+html[data-era="now"] .pr-latin2{ font-size:12.5px !important; }
+html[data-era="now"] .pr-list li:hover .pr-latin2,
+html[data-era="now"] .pr-list li:hover .pr-n{ color:rgba(244,236,228,.82) !important; }
+html[data-era="now"] .pr-region{ font-size:17px !important; }
+html[data-era="now"] .pr-name{ font-size:20px !important; }
+html[data-era="now"] .pr-where{ font-size:13px !important; }
+html[data-era="now"] .pr-also{ font-size:13px !important; }
+
+/* ── 一本ずつの品書き（銘柄の頁）も同じ手ざわりで ──────── */
+html[data-era="now"] .w-card{ transition:border-color .35s ease, background .35s ease; }
+html[data-era="now"] .w-card .w-card-n{ font-size:13.5px !important; transition:color .3s ease, font-weight .3s ease; }
+html[data-era="now"] .w-card:hover .w-card-n{ color:#fff8ec !important; font-weight:700 !important; }
+html[data-era="now"] .w-card:hover{ background:rgba(244,236,228,.04); }
+html[data-era="now"] .w-list li{ font-size:15px !important; }
+html[data-era="now"] .w-list a{ transition:color .3s ease, font-weight .3s ease; }
+html[data-era="now"] .w-list a:hover{ color:#fff8ec !important; font-weight:700 !important; }
+
+/* ── 触れる場所は指の形に ─────────────────────────── */
+html[data-era="now"] .card, html[data-era="now"] .pr-list li{ cursor:default; }
+html[data-era="now"] .card a, html[data-era="now"] .card .btn,
+html[data-era="now"] .pr-list a{ cursor:pointer; }
+
+@media (max-width:860px){
+  html[data-era="now"][data-mx="1"] .mx-legacy .card b{ font-size:16.5px !important; }
+  html[data-era="now"] .pr-list li{ font-size:15.5px !important; }
+}
