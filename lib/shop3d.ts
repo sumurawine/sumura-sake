@@ -19,6 +19,7 @@ export type ShopHandle = {
   lookVel: (x: number, y: number) => void;
   use: () => void;
   callClerk: () => void;
+  leave: () => void;
 };
 
 export type ShopOpts = {
@@ -1341,6 +1342,7 @@ export async function createShop(o: ShopOpts): Promise<ShopHandle> {
     },
     lock() { au.start(); if (!matchMedia('(hover: none)').matches) el.requestPointerLock?.(); },
     sound(v: boolean) { au.set(v); },
+    leave() { au.start(); forceLeave = true; },
     moveVec(x: number, y: number) { au.start(); padX = x; padY = y; },
     lookVel(x: number, y: number) { lookX = x; lookY = y; },
     use() { au.start(); fire(); },
