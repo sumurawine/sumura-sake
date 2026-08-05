@@ -203,7 +203,7 @@ export function BlogInline({ toast }: { toast: (t: string, ms?: number) => void 
 
       {pick ? (
         <div className="bi-wrap" onClick={(e) => { if (e.target === e.currentTarget && !busy) setPick(null); }}>
-          <div className="bi-panel ed-panel">
+          <div className="bi-panel">
             <div className="bi-head">
               <span className="bi-kind">{LABEL[pick.field] || pick.field}をなおす</span>
               <span className="bi-of">{title}</span>
