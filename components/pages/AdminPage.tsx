@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useSite } from '@/components/Providers';
 import { pre } from '@/lib/slug';
 import { isMirror, editMode, setEditMode } from '@/lib/overrides';
@@ -75,14 +74,14 @@ export function AdminPage() {
 
       <div className="rm-cards">
         {CARDS.map((c) => (
-          <Link key={c.to} href={go(c.to)} className="rm-card">
+          <a key={c.to} href={go(c.to)} className="rm-card">
             <span className="rm-mark">{c.mark}</span>
             <span className="rm-body">
               <span className="rm-h">{c.head}</span>
               <span className="rm-s">{c.say}</span>
             </span>
             <span className="rm-arrow">ひらく →</span>
-          </Link>
+          </a>
         ))}
       </div>
 
