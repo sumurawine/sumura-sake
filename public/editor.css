@@ -57,3 +57,135 @@ html[data-edit="1"] body{ padding-bottom:56px }
 .ed-t{ font-size:14px; }
 .ed-draft{ font-size:11px; color:#a33; border:1px solid #a33; border-radius:3px; padding:0 6px; margin-left:auto; }
 .ed-check{ display:flex; gap:8px; align-items:center; margin:12px 0 2px; font-size:13px; cursor:pointer; }
+
+
+/* ══════════════════════════════════════════════════
+   ブログを頁の上で直す道具
+   はじめて触る方にも分かるよう、大きく・はっきりと
+   ══════════════════════════════════════════════════ */
+
+/* 直せるところは、うっすら黄の下敷きと点線で示します */
+html[data-edit="1"] [data-blog-field]{
+  position:relative; cursor:pointer;
+  outline:2px dashed rgba(255,214,110,.55); outline-offset:4px;
+  background:rgba(255,214,110,.07);
+  border-radius:3px;
+  transition:background .15s ease, outline-color .15s ease;
+}
+html[data-edit="1"] [data-blog-field]:hover{
+  outline-color:#ffd66e; background:rgba(255,214,110,.16);
+}
+html[data-edit="1"] [data-blog-field]::after{
+  content:"✎ ここを押すと直せます";
+  position:absolute; right:0; top:-26px; z-index:60;
+  font-size:12px; line-height:1; letter-spacing:.04em; white-space:nowrap;
+  padding:6px 10px; border-radius:3px;
+  background:#ffd66e; color:#1a1410; font-weight:700;
+  opacity:0; transform:translateY(4px); transition:opacity .15s ease, transform .15s ease;
+  pointer-events:none;
+}
+html[data-edit="1"] [data-blog-field]:hover::after{ opacity:1; transform:none; }
+html[data-edit="1"] img[data-blog-field]{ display:block; }
+
+/* 画面の下に、いつも出ている案内と「新しい記事」 */
+.bi-hint{
+  position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+  z-index:2147483000; display:flex; align-items:center; gap:14px;
+  padding:12px 16px; border-radius:6px;
+  background:#1a1410; border:1px solid #ffd66e;
+  box-shadow:0 14px 40px rgba(0,0,0,.6);
+  font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+}
+.bi-hint-t{ color:#f6efe4; font-size:15px; letter-spacing:.04em; }
+.bi-new{
+  padding:11px 20px; border:none; border-radius:5px; cursor:pointer;
+  background:#ffd66e; color:#1a1410; font-size:16px; font-weight:700; letter-spacing:.04em;
+}
+.bi-new:hover{ background:#ffe49a; }
+.bi-new:disabled{ opacity:.5; cursor:default; }
+@media (max-width:640px){
+  .bi-hint{ left:10px; right:10px; transform:none; flex-direction:column; align-items:stretch; gap:9px; }
+  .bi-new{ width:100%; padding:14px; font-size:17px; }
+  .bi-hint-t{ text-align:center; font-size:14px; }
+}
+
+/* 直すための窓 */
+.bi-wrap{
+  position:fixed; inset:0; z-index:2147483100;
+  background:rgba(10,7,5,.72);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+  font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+}
+.bi-panel{
+  width:min(680px,100%); max-height:88vh; overflow-y:auto;
+  background:#fffdf8; color:#1a1410; border-radius:8px;
+  box-shadow:0 30px 90px rgba(0,0,0,.7);
+}
+.bi-head{ padding:20px 24px 14px; border-bottom:1px solid #e6ddcc; }
+.bi-kind{ display:block; font-size:21px; font-weight:700; letter-spacing:.04em; }
+.bi-of{ display:block; margin-top:6px; font-size:13px; color:#7a6b55; }
+.bi-body{ padding:20px 24px; }
+.bi-say{ margin:0 0 14px; font-size:14px; line-height:1.9; color:#5c5040; }
+.bi-lab{ display:block; margin:16px 0 7px; font-size:15px; font-weight:700; }
+.bi-lab:first-child{ margin-top:0; }
+.bi-ta{
+  width:100%; min-height:260px; padding:14px; box-sizing:border-box;
+  border:2px solid #c9bda6; border-radius:5px; background:#fff;
+  font-size:17px; line-height:2; color:#1a1410; resize:vertical;
+  font-family:inherit;
+}
+.bi-ta-1{ min-height:78px; font-size:19px; }
+.bi-ta:focus, .bi-in:focus, .bi-date:focus{ outline:3px solid #ffd66e; border-color:#a08d68; }
+.bi-in, .bi-date{
+  width:100%; padding:12px 13px; box-sizing:border-box;
+  border:2px solid #c9bda6; border-radius:5px; background:#fff;
+  font-size:17px; color:#1a1410; font-family:inherit;
+}
+.bi-date{ width:auto; min-width:210px; }
+.bi-cats{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+.bi-cat{
+  padding:9px 15px; border:2px solid #c9bda6; border-radius:20px; cursor:pointer;
+  background:#fff; color:#1a1410; font-size:15px; font-family:inherit;
+}
+.bi-cat:hover{ border-color:#a08d68; }
+.bi-cat.bi-on{ background:#1a1410; color:#ffd66e; border-color:#1a1410; font-weight:700; }
+.bi-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.bi-go{
+  padding:15px 30px; border:none; border-radius:5px; cursor:pointer;
+  background:#1a1410; color:#ffd66e; font-size:18px; font-weight:700; letter-spacing:.06em;
+  font-family:inherit;
+}
+.bi-go:hover{ background:#33271d; }
+.bi-go:disabled{ opacity:.45; cursor:default; }
+.bi-sub{
+  padding:13px 22px; border:2px solid #c9bda6; border-radius:5px; cursor:pointer;
+  background:#fff; color:#5c5040; font-size:15px; font-family:inherit;
+}
+.bi-sub:hover{ border-color:#8d7c5e; color:#1a1410; }
+.bi-sub:disabled{ opacity:.45; cursor:default; }
+.bi-danger{ color:#9a3b2a; border-color:#e0bdb4; }
+.bi-danger:hover{ color:#7d2c1d; border-color:#9a3b2a; }
+.bi-foot{
+  padding:16px 24px 22px; border-top:1px solid #e6ddcc;
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+}
+.bi-ask{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+  padding:12px 14px; border:2px solid #9a3b2a; border-radius:5px; background:#fdf3f0;
+  font-size:14px; line-height:1.8; color:#7d2c1d;
+}
+.bi-del{
+  padding:11px 20px; border:none; border-radius:5px; cursor:pointer;
+  background:#9a3b2a; color:#fff; font-size:15px; font-weight:700; font-family:inherit;
+}
+.bi-del:hover{ background:#7d2c1d; }
+.bi-busy{
+  padding:14px 24px 20px; font-size:15px; color:#5c5040; text-align:center;
+}
+@media (max-width:640px){
+  .bi-wrap{ padding:0; align-items:flex-end; }
+  .bi-panel{ width:100%; max-height:94vh; border-radius:8px 8px 0 0; }
+  .bi-go{ width:100%; padding:17px; }
+  .bi-sub{ width:100%; }
+  .bi-row{ flex-direction:column; }
+}
