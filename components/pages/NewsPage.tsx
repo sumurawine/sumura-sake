@@ -4,6 +4,7 @@ import { T } from '@/components/T';
 import { A } from '@/components/A';
 import { useSite } from '@/components/Providers';
 import { useContent, pick, linkOf } from '@/lib/content';
+import { dateOf } from '@/lib/store';
 
 const ITEMS = [1, 2, 3, 4] as const;
 
@@ -23,7 +24,7 @@ export function NewsPage() {
             const link = linkOf(r, lang);
             return (
               <div className="panel" key={i}>
-                <div className="x-pink" style={{ fontSize: 14 }}>{r['日付']}</div>
+                <div className="x-pink" style={{ fontSize: 14 }}>{dateOf(r['日付'], lang)}</div>
                 <div className="pixhead" style={{ fontSize: 18 }}>
                   {pick(r, lang, '題名(日本語)', '題名' + L)}
                   {i === 0 ? <span className="new blink">NEW</span> : null}
