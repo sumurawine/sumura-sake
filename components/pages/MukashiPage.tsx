@@ -36,7 +36,7 @@ export function MukashiPage() {
       <div className="mk-rule" />
 
       <figure className="mk-card mk-fx">
-        <span className="mk-era" aria-hidden>昭和三十年頃</span>
+        <T k="mk-era1" as="span" className="mk-era" />
         <div className="mk-photo">
           <img src={asset('/images/showa30.webp')} alt="昭和30年頃のすむら酒店" width={900} height={693} />
         </div>
@@ -44,7 +44,7 @@ export function MukashiPage() {
       </figure>
 
       <figure className="mk-card mk-r mk-fx">
-        <span className="mk-era mk-era-r" aria-hidden>昭和三十年代</span>
+        <T k="mk-era2" as="span" className="mk-era mk-era-r" />
         <div className="mk-photo">
           <img src={asset('/images/showa30-sofu.webp')} alt="二代目。上宇部に店を移した頃" width={718} height={1096} loading="lazy" />
         </div>
