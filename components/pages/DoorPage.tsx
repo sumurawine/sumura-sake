@@ -197,6 +197,10 @@ export function DoorPage() {
         </a> : null}
       </div>
 
+      {!aged ? <AgeGate lang={lang} onPass={() => { setAged(true); router.push('/home'); }} /> : null}
+
+      <T k="index-age" as="div" id="age-note" />
+
       <footer className="door-seo">
         <p>{(DOOR_SEO[lang] || DOOR_SEO.jp).lead}</p>
         <p>{(DOOR_SEO[lang] || DOOR_SEO.jp).meta}</p>
@@ -206,10 +210,6 @@ export function DoorPage() {
           ))}
         </nav>
       </footer>
-
-      {!aged ? <AgeGate lang={lang} onPass={() => { setAged(true); router.push('/home'); }} /> : null}
-
-      <T k="index-age" as="div" id="age-note" />
 
       <div id="flash" className={flash ? 'on' : undefined} />
     </div>
