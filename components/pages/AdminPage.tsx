@@ -11,7 +11,7 @@ type Card = { to: string; head: string; say: string; mark: string };
 const CARDS: Card[] = [
   { to: '/blog',      mark: '筆', head: 'ブログを書く',        say: 'お店の日記です。新しく書く・前のものを直す・写真を入れる、すべてここから。' },
   { to: '/news',      mark: '報', head: 'お知らせを出す',      say: '入荷やお休みのご案内です。ホームのいちばん下にも同じものが出ます。' },
-  { to: '/store',     mark: '瓶', head: 'ワインの棚を直す',    say: '値段・在庫あるなし・説明文・写真。並んでいる一本を押して直します。' },
+  { to: '/store',     mark: '品', head: '商品在庫の管理',      say: '並んでいる商品の一覧です。値段と在庫は本店（sumura-sake.com）で直します。' },
   { to: '/about',     mark: '店', head: 'お店の情報を直す',    say: '住所・お電話・営業時間・定休日など。五つの言葉に自動で直ります。' },
   { to: '/home',      mark: '扉', head: 'ホームの文と写真',    say: 'お客様がいちばん最初に見る頁です。見出しや紹介文、写真を直せます。' },
   { to: '/producers', mark: '匠', head: '造り手の紹介を直す',  say: 'お取り扱いしている生産者の頁です。前書きや案内文を直せます。' },
