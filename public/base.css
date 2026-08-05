@@ -373,7 +373,7 @@ body:has(.mk-wrap) .mk-card{
 }
 body:has(.mk-wrap) .mk-card::before{ display:none !important; }
 body:has(.mk-wrap) .mk-card img, body:has(.mk-wrap) .mk-photo img{
-  filter:grayscale(1) brightness(1.04) contrast(1.18) sepia(1) hue-rotate(62deg) saturate(3.4) !important;
+  filter:none;
 }
 body:has(.mk-wrap) .mk-photo{ background:transparent !important; box-shadow:none !important; padding:0 !important; transform:none !important; }
 
@@ -634,3 +634,8 @@ body:has(.mk-wrap) .mk-dos{ font-size:16px !important; line-height:24px !importa
 .mk-decade{ font-weight:700; letter-spacing:.04em; }
 body:has(.mk-wrap) .mk-cap .mk-decade{ color:#7dff9b !important; opacity:1 !important; display:inline !important; }
 body:has(.mk-wrap) .mk-cap{ color:#cfe8cf !important; }
+
+
+/* 昔日：写真は元の色のまま（緑の蛍光管フィルタを外す） */
+.mk-photo img, body:has(.mk-wrap) .mk-photo img{ filter:none !important; -webkit-filter:none !important; }
+body:has(.mk-wrap) .mk-wrap{ filter:none !important; }
