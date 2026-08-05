@@ -46,9 +46,15 @@ export function wineLd(v: WineView, lang: Lang) {
     '@id': url + '#product',
     name: v.name,
     url,
-    category: v.region,
+    category:
+      v.item.cat === 'whisky'
+        ? 'Food, Beverages & Tobacco > Beverages > Alcoholic Beverages > Liquor & Spirits'
+        : 'Food, Beverages & Tobacco > Beverages > Alcoholic Beverages > Wine',
     image: v.item.img ? [v.item.img] : [SITE.url + SITE.ogImage],
-    ...(v.desc ? { description: v.desc } : {}),
+    description:
+      v.desc ||
+      v.name + '。山口県宇部市のワイン専門店「すむら酒店」がご案内する一本です。' +
+        (v.producer ? '造り手：' + v.producer + '。' : '') + (v.region ? '産地：' + v.region + '。' : ''),
     ...(v.producer ? { brand: { '@type': 'Brand', name: v.producer } } : {}),
     ...(v.producer ? { manufacturer: { '@type': 'Organization', name: v.producer } } : {}),
     additionalProperty: [
@@ -66,6 +72,22 @@ export function wineLd(v: WineView, lang: Lang) {
       availability: out ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
       seller: { '@id': SITE.url + '/#shop' },
+      /* 特定商取引法に基づく表記（/legal）の記載に沿っています */
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'JP',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnNotPermitted',
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: { '@type': 'MonetaryAmount', value: 1000, currency: 'JPY' },
+        shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'JP' },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 3, unitCode: 'DAY' },
+          transitTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 3, unitCode: 'DAY' },
+        },
+      },
     };
   }
   const crumb = {
@@ -77,7 +99,8 @@ export function wineLd(v: WineView, lang: Lang) {
       { '@type': 'ListItem', position: 3, name: v.name, item: url },
     ],
   };
-  return [product, crumb];
+  /* 名も値も無いものは、名札を出しません（欠けた札はかえって減点になります） */
+  return v.name && price ? [product, crumb] : [crumb];
 }
 
 export function makerLd(shown: string, slug: string, lang: Lang, list: Near[]) {
