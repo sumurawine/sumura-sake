@@ -44,3 +44,16 @@ html[data-edit="1"] body{ padding-bottom:56px }
 @media (max-width:560px){ .ed-who{ display:none } }
 
 @media (max-width:560px){  }
+
+
+/* ── ブログを更新する道具 ─────────────────────────── */
+.ed-blog{ max-height:82vh; overflow:auto; width:min(560px,94vw); }
+.ed-list{ list-style:none; margin:12px 0 0; padding:0; }
+.ed-item{ display:flex; gap:10px; align-items:baseline; width:100%; text-align:left;
+  background:none; border:0; border-top:1px solid rgba(0,0,0,.08); padding:10px 2px; cursor:pointer; font:inherit; }
+.ed-item:hover{ background:rgba(0,0,0,.05); }
+.ed-d{ font-size:12px; opacity:.7; white-space:nowrap; }
+.ed-c{ font-size:11px; border:1px solid currentColor; border-radius:999px; padding:1px 8px; opacity:.7; white-space:nowrap; }
+.ed-t{ font-size:14px; }
+.ed-draft{ font-size:11px; color:#a33; border:1px solid #a33; border-radius:3px; padding:0 6px; margin-left:auto; }
+.ed-check{ display:flex; gap:8px; align-items:center; margin:12px 0 2px; font-size:13px; cursor:pointer; }
