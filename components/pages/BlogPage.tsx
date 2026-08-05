@@ -58,7 +58,7 @@ export function BlogPage() {
 
   const P = pre(lang);
     /* 押した瞬間に、その記事の中身を控えます（次の頁で待たずに出すため） */
-  const keep = (r: Row) => {
+  const keep = (r: Record<string, string>) => {
     try { sessionStorage.setItem('sumura-post-' + r['_row'], JSON.stringify(r)); } catch { /* しずかに */ }
   };
 
