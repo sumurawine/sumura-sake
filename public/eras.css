@@ -713,3 +713,33 @@ html:not([data-era="now"]) .cal-off span{
   text-shadow:none !important;
 }
 html:not([data-era="now"]) .cal-today{ color:#1d1610 !important; -webkit-text-fill-color:#1d1610 !important; }
+
+
+/* ══════════════════════════════════════════════════════════
+   造り手の頁・銘柄一覧も同じ作りです。
+   現代の色づかいを、まとめて置き直します。
+   ══════════════════════════════════════════════════════════ */
+html:not([data-era="now"]) .w-wrap,
+html:not([data-era="now"]) .w-wrap p,
+html:not([data-era="now"]) .w-wrap span,
+html:not([data-era="now"]) .w-wrap li,
+html:not([data-era="now"]) .w-wrap dd,
+html:not([data-era="now"]) .w-wrap h1,
+html:not([data-era="now"]) .w-wrap h2,
+html:not([data-era="now"]) .w-wrap h3{
+  color:#241c14 !important; -webkit-text-fill-color:#241c14 !important;
+  opacity:1 !important; text-shadow:none !important;
+}
+html:not([data-era="now"]) .w-wrap a{ color:#5a3a1e !important; -webkit-text-fill-color:#5a3a1e !important; }
+html:not([data-era="now"]) .w-count,
+html:not([data-era="now"]) .w-n,
+html:not([data-era="now"]) .w-outmark,
+html:not([data-era="now"]) .w-note,
+html:not([data-era="now"]) .w-facts dt,
+html:not([data-era="now"]) .w-crumb{
+  color:#5a4a34 !important; -webkit-text-fill-color:#5a4a34 !important; opacity:1 !important;
+}
+html:not([data-era="now"]) .w-price,
+html:not([data-era="now"]) .w-card-p{
+  color:#8a2f22 !important; -webkit-text-fill-color:#8a2f22 !important; opacity:1 !important;
+}
