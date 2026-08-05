@@ -189,3 +189,45 @@ html[data-edit="1"] img[data-blog-field]{ display:block; }
   .bi-sub{ width:100%; }
   .bi-row{ flex-direction:column; }
 }
+
+
+/* ── まわりの意匠に負けないように、ここだけは強く言い切ります ── */
+.bi-wrap{
+  position:fixed !important; inset:0 !important; z-index:2147483100 !important;
+  display:flex !important; align-items:center !important; justify-content:center !important;
+  background:rgba(10,7,5,.74) !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important;
+}
+.bi-panel{
+  position:static !important; transform:none !important;
+  width:min(680px,100%) !important; max-width:680px !important;
+  background:#fffdf8 !important; color:#1a1410 !important;
+  border:none !important; border-radius:8px !important;
+  box-shadow:0 30px 90px rgba(0,0,0,.7) !important;
+  font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif !important;
+  letter-spacing:normal !important;
+}
+.bi-panel *{ font-family:inherit !important; letter-spacing:normal !important; }
+.bi-kind{ color:#1a1410 !important; font-size:21px !important; }
+.bi-of{ color:#7a6b55 !important; font-size:13px !important; }
+.bi-say{ color:#5c5040 !important; font-size:14px !important; line-height:1.9 !important; }
+.bi-lab{ color:#1a1410 !important; font-size:15px !important; }
+.bi-panel textarea.bi-ta, .bi-panel input.bi-in, .bi-panel input.bi-date{
+  background:#fff !important; color:#1a1410 !important;
+  border:2px solid #c9bda6 !important; border-radius:5px !important;
+  -webkit-text-fill-color:#1a1410 !important; opacity:1 !important;
+  box-shadow:none !important; text-shadow:none !important;
+}
+.bi-panel textarea.bi-ta{ font-size:17px !important; line-height:2 !important; }
+.bi-panel button{ text-shadow:none !important; }
+.bi-panel button.bi-go{ background:#1a1410 !important; color:#ffd66e !important; border:none !important; }
+.bi-panel button.bi-sub{ background:#fff !important; color:#5c5040 !important; border:2px solid #c9bda6 !important; }
+.bi-panel button.bi-sub.bi-danger{ color:#9a3b2a !important; border-color:#e0bdb4 !important; }
+.bi-panel button.bi-cat{ background:#fff !important; color:#1a1410 !important; border:2px solid #c9bda6 !important; }
+.bi-panel button.bi-cat.bi-on{ background:#1a1410 !important; color:#ffd66e !important; border-color:#1a1410 !important; }
+.bi-panel button.bi-del{ background:#9a3b2a !important; color:#fff !important; border:none !important; }
+.bi-busy{ color:#5c5040 !important; }
+
+/* 案内の帯は、いつもの道具立ての上に重ねます */
+.bi-hint{ bottom:86px !important; }
+@media (max-width:640px){ .bi-hint{ bottom:96px !important; } }
