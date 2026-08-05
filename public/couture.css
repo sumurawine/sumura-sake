@@ -1367,3 +1367,9 @@ html[data-era="now"] .pr-list li:hover{ background:rgba(244,236,228,.05) !import
   .vs-gate .vs-guide{ gap:6px; }
   .vs-gate .vs-guide-i{ font-size:13.5px; padding:6px 11px; white-space:normal; }
 }
+
+/* 手引きの札を、流れの中に据え直す（元の指定が浮いていたため） */
+.vs-gate .vs-guide, html[data-era="now"] .vs-gate .vs-guide{
+  position:static !important; inset:auto !important;
+  transform:none !important; width:auto !important;
+}
