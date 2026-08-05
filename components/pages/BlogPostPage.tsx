@@ -23,10 +23,18 @@ export function BlogPostPage() {
   const { blog, ready } = useContent();
   const L = lang.toUpperCase();
   const [id, setId] = useState('');
+  const [kept, setKept] = useState<Record<string, string> | null>(null);
   useEffect(() => {
-    try { setId(new URLSearchParams(location.search).get('id') || ''); } catch { /* しずかに */ }
+    try {
+      const n = new URLSearchParams(location.search).get('id') || '';
+      setId(n);
+      /* 一覧で押したときに控えておいた中身。これで待たずに出せます */
+      const s = sessionStorage.getItem('sumura-post-' + n);
+      if (s) setKept(JSON.parse(s));
+    } catch { /* しずかに */ }
   }, []);
-  const r = (blog || []).find((x) => String(x['_row']) === id);
+  const fresh = (blog || []).find((x) => String(x['_row']) === id);
+  const r = fresh || kept;
   const P = pre(lang);
   return (
     <Shell>
