@@ -1,5 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { asset } from '@/lib/paths';
 import { useSite } from '@/components/Providers';
 import { isModern } from '@/lib/era';
@@ -23,7 +24,7 @@ export function BlogPage() {
   const { lang, eraView } = useSite();
   const modern = isModern(eraView as any);
   const { all, reload } = useComments();
-  const { blog } = useContent();
+  const { blog, ready } = useContent();
   const L = lang.toUpperCase();
   const t = (k: string) => UI[k][lang] || UI[k].jp;
 
@@ -85,7 +86,9 @@ export function BlogPage() {
           </div>
         ) : null}
       </div>
-      {posts.length
+      {!ready
+        ? null
+        : posts.length
         ? shown.map((r) => {
             const body = pick(r, lang, '本文(日本語)', '本文' + L);
             const short = body.length > 140 ? body.slice(0, 140) + '…' : body;
@@ -94,18 +97,18 @@ export function BlogPage() {
                 <div className="x-pink" style={{ fontSize: 14 }}>
                   {r['日付']}{(r['カテゴリ'] || '').trim() ? '　｜　' + r['カテゴリ'] : ''}
                 </div>
-                <a href={href(r)} style={{ textDecoration: 'none' }}>
+                <Link href={href(r)} style={{ textDecoration: 'none' }} prefetch>
                   <div className="pixhead" style={{ fontSize: 18 }}>{pick(r, lang, '題名(日本語)', '題名' + L)}</div>
                 </a>
                 {photoOf(r) ? (
                   <p style={{ textAlign: 'center' }}>
-                    <a href={href(r)}>
+                    <Link href={href(r)} prefetch>
                       <img src={photoOf(r)} alt="" style={{ maxWidth: '100%', height: 'auto' }} loading="lazy" />
                     </a>
                   </p>
                 ) : null}
                 <p style={{ whiteSpace: 'pre-wrap' }}>{short}</p>
-                <p><a href={href(r)}>{t('more')} →</a></p>
+                <p><Link href={href(r)} prefetch>{t('more')} →</Link></p>
               </div>
             );
           })
