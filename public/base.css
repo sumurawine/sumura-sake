@@ -625,3 +625,9 @@ html[data-era="mukashi"] body:has(.mk-wrap) #timewarp{
   top:8px !important; left:8px !important; bottom:auto !important;
 }
 body:has(.mk-wrap){ padding-top:96px !important; }
+
+
+/* ── ブログの絞り込み（全時代共通の意匠） ───────────── */
+.bg-filters{ margin-top:16px; }
+.bg-filters .gm-menu{ margin:8px 0 2px; }
+.bg-filters .bg-cap{ font-size:12px; opacity:.75; align-self:center; margin-right:4px; letter-spacing:.08em; }
