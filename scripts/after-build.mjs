@@ -64,7 +64,7 @@ for (const era of ERAS) for (const lang of LANGS) {
 }
 
 /* ── sitemap ─────────────────────────────────── */
-const PAGES = ['/home', '/store', '/producers', '/about', '/access', '/news', '/blog', '/contact', '/legal'];
+const PAGES = ['/home', '/store', '/producers', '/about', '/access', '/news', '/blog', '/contact', '/legal', '/mukashi', '/virtual'];
 const today = new Date().toISOString().slice(0, 10);
 const rows = [];
 const put = (paths, prio, freq) => {
@@ -92,11 +92,11 @@ ${alts}
 };
 /* 主要ページ（日本語と、言語ごとの住所） */
 for (const p of PAGES) {
-  const alts = LANGS.map((l) => `    <xhtml:link rel="alternate" hreflang="${TAG[l]}" href="${l === 'jp' ? SITE + p + '.html' : SITE + pre(l) + p}"/>`).join('\n');
-  const xd = `    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}${p}.html"/>`;
+  const alts = LANGS.map((l) => `    <xhtml:link rel="alternate" hreflang="${TAG[l]}" href="${SITE + pre(l) + p}"/>`).join('\n');
+  const xd = `    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}${p}"/>`;
   const prio = p === '/home' ? '1.0' : '0.8';
   rows.push(`  <url>
-    <loc>${SITE}${p}.html</loc>
+    <loc>${SITE}${p}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${prio}</priority>
