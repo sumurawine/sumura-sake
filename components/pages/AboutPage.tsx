@@ -7,14 +7,14 @@ export function AboutPage() {
   return (
     <Shell>
       <div className="panel">
-        <div className="pixhead">■ 会社概要 ■</div>
+        <T k="about-head" as="div" kind="head" className="pixhead" />
         <table className="retro">
           <tbody>
             <tr><T k="about-name-label" as="th" style={{ width: '32%' }} /><T k="ab-name-val" as="td" /></tr>
             <tr><T k="about-alias-label" as="th" /><T k="about-alias-val" as="td" /></tr>
-            <tr><T k="about-location-label" as="th" /><td>〒755-0072　山口県宇部市中村3-6-20</td></tr>
+            <tr><T k="about-location-label" as="th" /><T k="about-location-val" as="td" /></tr>
             <tr><T k="about-phone-label" as="th" /><td>0836-21-4721</td></tr>
-            <tr><T k="about-rep-label" as="th" /><td>洲村 博志</td></tr>
+            <tr><T k="about-rep-label" as="th" /><T k="about-rep-val" as="td" /></tr>
             <tr><T k="about-history-label" as="th" /><T k="about-history-val" as="td" /></tr>
             <tr><T k="about-biz-label" as="th" /><T k="about-biz-val" as="td" /></tr>
             <tr><T k="about-products-label" as="th" /><T k="about-products-val" as="td" /></tr>
