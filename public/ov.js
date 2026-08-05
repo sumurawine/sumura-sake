@@ -13,7 +13,7 @@
   var working = false;
 
   function ours(el) {
-    return !!(el.closest && el.closest('.ed-panel, .ed-bar, .ed-msg, .ed-new, .ed-form, .bi-wrap, .bi-hint'));
+    return !!(el.closest && el.closest('.ed-panel, .ed-bar, .ed-msg, .ed-new, .ed-form, .bi-wrap, .bi-hint, .rm-wrap'));
   }
 
   /* 文の中の飾り（太字・小文字・一字ずつの箱など）。
