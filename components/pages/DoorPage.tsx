@@ -67,27 +67,27 @@ const DOOR_SHOTS = [
    検索の目に留まるよう、文と行き先だけを素直に置いております。 */
 const DOOR_SEO: Record<Lang, { lead: string; meta: string; nav: [string, string][] }> = {
   jp: {
-    lead: 'すむら酒店（洲村酒店）は山口県宇部市のワイン専門店です。ブルゴーニュを中心に、ボルドー、コート デュ ローヌ、ジュラ、ロワール、アルザスのフランス銘醸ワインを正規ルートで取り揃えております。ドメーヌ ド ラ ロマネ コンティ、ドメーヌ ルロワ、ドメーヌ ドーヴネ正規取扱店。',
+    lead: 'すむら酒店（洲村酒店）は山口県宇部市のワイン専門店です。ブルゴーニュを中心にフランス銘醸ワインを正規ルートで。ドメーヌ ド ラ ロマネ コンティ、ルロワ、ドーヴネ正規取扱店。',
     meta: '〒755-0072 山口県宇部市中村3-6-20 ／ 10:00〜18:30（火曜定休） ／ 0836-21-4721',
     nav: [['/store', 'オンラインストア'], ['/producers', 'お取り扱い生産者'], ['/about', '会社概要'], ['/access', 'アクセス'], ['/blog', 'ブログ'], ['/news', 'ニュース'], ['/contact', '問い合わせ']],
   },
   en: {
-    lead: 'Liquor Shop Sumura (すむら酒店・洲村酒店) is a wine merchant in Ube, Yamaguchi, Japan. Burgundy above all, with Bordeaux, the Rhône, Jura, the Loire and Alsace, sourced through official channels. An authorised stockist of Domaine de la Romanée-Conti, Domaine Leroy and Domaine d’Auvenay.',
+    lead: 'Liquor Shop Sumura (すむら酒店・洲村酒店) — a wine merchant in Ube, Yamaguchi, Japan. Burgundy above all, through official channels. Authorised stockist of Domaine de la Romanée-Conti, Leroy and d’Auvenay.',
     meta: '3-6-20 Nakamura, Ube, Yamaguchi 755-0072, Japan / 10:00–18:30, closed Tuesdays / +81 836-21-4721',
     nav: [['/en/store', 'Online store'], ['/en/producers', 'Growers'], ['/en/about', 'About us'], ['/en/access', 'Access'], ['/en/blog', 'Journal'], ['/en/news', 'News'], ['/en/contact', 'Contact']],
   },
   fr: {
-    lead: 'Liquor Shop Sumura (すむら酒店・洲村酒店) est un caviste à Ube, Yamaguchi, au Japon. La Bourgogne avant tout, mais aussi Bordeaux, le Rhône, le Jura, la Loire et l’Alsace, en filière officielle. Dépositaire agréé de la Romanée-Conti, du Domaine Leroy et du Domaine d’Auvenay.',
+    lead: 'Liquor Shop Sumura (すむら酒店・洲村酒店) — caviste à Ube, Yamaguchi, au Japon. La Bourgogne avant tout, en filière officielle. Dépositaire agréé de la Romanée-Conti, de Leroy et d’Auvenay.',
     meta: '3-6-20 Nakamura, Ube, Yamaguchi 755-0072, Japon / 10h00–18h30, fermé le mardi / +81 836-21-4721',
     nav: [['/fr/store', 'Boutique'], ['/fr/producers', 'Vignerons'], ['/fr/about', 'La maison'], ['/fr/access', 'Accès'], ['/fr/blog', 'Journal'], ['/fr/news', 'Actualités'], ['/fr/contact', 'Contact']],
   },
   zh: {
-    lead: 'すむら酒店（洲村酒店）是日本山口县宇部市的葡萄酒专门店。以勃艮第为中心，同时备有波尔多、罗讷河谷、汝拉、卢瓦尔、阿尔萨斯的法国名酿，全部经由正规渠道进货。罗曼尼·康帝、勒桦、多维内正规代理店。',
+    lead: 'すむら酒店（洲村酒店）是日本山口县宇部市的葡萄酒专门店。以勃艮第为中心，正规渠道进货。罗曼尼·康帝、勒桦、多维内正规代理店。',
     meta: '日本山口县宇部市中村3-6-20（〒755-0072） ／ 10:00〜18:30（周二休息） ／ +81 836-21-4721',
     nav: [['/zh/store', '在线商店'], ['/zh/producers', '合作生产者'], ['/zh/about', '关于本店'], ['/zh/access', '交通'], ['/zh/blog', '博客'], ['/zh/news', '最新消息'], ['/zh/contact', '联系我们']],
   },
   ko: {
-    lead: '스무라 주점(洲村酒店)은 일본 야마구치현 우베시의 와인 전문점입니다. 부르고뉴를 중심으로 보르도, 코트 뒤 론, 쥐라, 루아르, 알자스의 프랑스 명양 와인을 정규 루트로 갖추고 있습니다. 도멘 드 라 로마네 콩티, 도멘 르로이, 도멘 도브네 정규 취급점.',
+    lead: '스무라 주점(洲村酒店)은 일본 야마구치현 우베시의 와인 전문점입니다. 부르고뉴를 중심으로 정규 루트 매입. 로마네 콩티, 르로이, 도브네 정규 취급점.',
     meta: '〒755-0072 일본 야마구치현 우베시 나카무라 3-6-20 / 10:00〜18:30 (화요일 휴무) / +81 836-21-4721',
     nav: [['/ko/store', '온라인 스토어'], ['/ko/producers', '취급 생산자'], ['/ko/about', '회사 소개'], ['/ko/access', '오시는 길'], ['/ko/blog', '블로그'], ['/ko/news', '소식'], ['/ko/contact', '문의']],
   },
