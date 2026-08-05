@@ -8,6 +8,7 @@ import { BLOG_TITLE } from '@/lib/modernCopy';
 import { Shell } from '@/components/Shell';
 import { T } from '@/components/T';
 import { Comments, useComments } from '@/components/Comments';
+import { dateOf, blogCatOf } from '@/lib/store';
 import { useContent, pick, photoOf } from '@/lib/content';
 import { pre } from '@/lib/slug';
 
@@ -72,7 +73,7 @@ export function BlogPage() {
               <button className={cat ? 'gm-tab' : 'gm-tab is-on'} onClick={() => setCat('')}>{t('all')}</button>
               {cats.map((c) => (
                 <button key={c} className={cat === c ? 'gm-tab is-on' : 'gm-tab'}
-                        onClick={() => setCat(cat === c ? '' : c)}>{c}</button>
+                        onClick={() => setCat(cat === c ? '' : c)}>{blogCatOf(c, lang)}</button>
               ))}
             </div>
             <div className="gm-menu">
@@ -95,7 +96,7 @@ export function BlogPage() {
             return (
               <div className="panel" key={r['_row']}>
                 <div className="x-pink" style={{ fontSize: 14 }}>
-                  {r['日付']}{(r['カテゴリ'] || '').trim() ? '　｜　' + r['カテゴリ'] : ''}
+                  {dateOf(r['日付'], lang)}{(r['カテゴリ'] || '').trim() ? '　｜　' + blogCatOf(r['カテゴリ'], lang) : ''}
                 </div>
                 <Link href={href(r)} style={{ textDecoration: 'none' }} prefetch>
                   <div className="pixhead" style={{ fontSize: 18 }}>{pick(r, lang, '題名(日本語)', '題名' + L)}</div>
