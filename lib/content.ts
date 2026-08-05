@@ -7,9 +7,25 @@ import type { Lang } from './i18n';
 export type Row = Record<string, string>;
 export type SiteContent = {
   history: Row[]; today: Row[]; news: Row[]; blog: Row[]; items: Row[];
+  /** 管理画面の中身が届いたかどうか。届く前に古い見本を出さないための目印です */
+  ready: boolean;
 };
 
-const EMPTY: SiteContent = { history: [], today: [], news: [], blog: [], items: [] };
+const EMPTY: SiteContent = { history: [], today: [], news: [], blog: [], items: [], ready: false };
+
+/** 一度読んだ中身は、この画面のあいだ控えておきます（次からは待たずに出ます） */
+const KEEP = 'sumura-content-v1';
+function remember(c: SiteContent) {
+  try { sessionStorage.setItem(KEEP, JSON.stringify(c)); } catch { /* しずかに */ }
+}
+function recall(): SiteContent | null {
+  try {
+    const s = sessionStorage.getItem(KEEP);
+    if (!s) return null;
+    const o = JSON.parse(s);
+    return o && o.ready ? (o as SiteContent) : null;
+  } catch { return null; }
+}
 
 let cache: SiteContent | null = null;
 let inflight: Promise<SiteContent> | null = null;
@@ -18,6 +34,8 @@ let inflight: Promise<SiteContent> | null = null;
 export function loadContent(): Promise<SiteContent> {
   if (cache) return Promise.resolve(cache);
   if (inflight) return inflight;
+  const kept = recall();
+  if (kept) { cache = kept; }
   if (!apiReady()) return Promise.resolve(EMPTY);
   const v = '?action=content&v=' + new Date().toISOString().slice(0, 13);
   inflight = fetch(SUMURA_API + v, { redirect: 'follow' })
@@ -25,13 +43,14 @@ export function loadContent(): Promise<SiteContent> {
     .then((j) => {
       const c: SiteContent = {
         history: j?.history || [], today: j?.today || [], news: j?.news || [],
-        blog: j?.blog || [], items: j?.items || [],
+        blog: j?.blog || [], items: j?.items || [], ready: true,
       };
       cache = c;
+      remember(c);
       return c;
     })
     .catch(() => EMPTY);
-  return inflight;
+  return kept ? Promise.resolve(kept) : inflight;
 }
 
 export function useContent(): SiteContent {
