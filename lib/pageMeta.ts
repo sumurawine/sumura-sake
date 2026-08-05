@@ -8,12 +8,6 @@ export const PAGE_I18N: Record<string, Partial<Record<Lang, { t: string; d: stri
     zh: { t: 'すむら酒店（洲村酒店・Sumura）｜日本宇部 法国名酿葡萄酒专门店', d: 'すむら酒店（汉字：洲村酒店，罗马字：Sumura）位于日本山口县宇部市，专营法国名酿葡萄酒。以勃艮第为中心，兼备波尔多、罗讷河谷、汝拉、卢瓦尔与阿尔萨斯，均循正规渠道进口。罗曼尼·康帝（DRC）、勒桦、奥维那均为正规经销。' },
     ko: { t: '스무라 주점 すむら酒店（洲村酒店・Sumura）｜일본 우베', d: '스무라 주점(すむら酒店, 한자 洲村酒店, 로마자 Sumura)은 일본 야마구치현 우베시의 와인 전문점입니다. 부르고뉴를 중심으로 보르도, 론, 쥐라, 루아르, 알자스의 명양 와인을 정규 경로로 갖추고 있습니다. DRC·르로이·도브네 정규 취급점입니다.' },
   },
-  '/virtual': {
-    en: { t: 'Virtual shop — walk the aisles of Liquor Shop Sumura', d: 'Walk through Liquor Shop Sumura (すむら酒店・洲村酒店), a wine merchant in Ube, Yamaguchi, Japan. Take a bottle from the shelf and call the shopkeeper over. 3-6-20 Nakamura, Ube; open 10:00–18:30, closed Tuesdays.' },
-    fr: { t: 'Boutique virtuelle — parcourez les rayons de Sumura', d: 'Parcourez Liquor Shop Sumura (すむら酒店・洲村酒店), caviste à Ube, Yamaguchi, au Japon. Prenez une bouteille dans le rayon et appelez le caviste. 3-6-20 Nakamura, Ube ; ouvert 10h00–18h30, fermé le mardi.' },
-    zh: { t: '虚拟店铺｜在店内自由走动挑选', d: '在日本山口县宇部市的葡萄酒专门店すむら酒店（洲村酒店）店内自由走动，取下架上的酒瓶，或呼叫店员。地址：宇部市中村3-6-20，营业 10:00〜18:30，周二休息。' },
-    ko: { t: '버추얼 매장｜매장을 걸으며 고릅니다', d: '일본 야마구치현 우베시의 와인 전문점 스무라 주점(洲村酒店) 매장을 그대로 걸어 보실 수 있습니다. 선반의 병을 집어 들거나 점원을 부르실 수 있습니다. 우베시 나카무라 3-6-20, 10:00〜18:30, 화요일 휴무.' },
-  },
   '/producers': {
     en: { t: 'Producers we carry — DRC, Leroy, d’Auvenay and more', d: 'An authorised stockist of Domaine de la Romanée-Conti, Domaine Leroy and Domaine d’Auvenay, together with more than sixty growers, chiefly of Burgundy, presented region by region.' },
     fr: { t: 'Nos producteurs — DRC, Leroy, d’Auvenay et bien d’autres', d: 'Dépositaire agréé de la Romanée-Conti, du Domaine Leroy et du Domaine d’Auvenay, ainsi que de plus de soixante vignerons, surtout bourguignons, présentés par région.' },
