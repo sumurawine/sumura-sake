@@ -99,12 +99,12 @@ export function BlogPage() {
                 </div>
                 <Link href={href(r)} style={{ textDecoration: 'none' }} prefetch>
                   <div className="pixhead" style={{ fontSize: 18 }}>{pick(r, lang, '題名(日本語)', '題名' + L)}</div>
-                </a>
+                </Link>
                 {photoOf(r) ? (
                   <p style={{ textAlign: 'center' }}>
                     <Link href={href(r)} prefetch>
                       <img src={photoOf(r)} alt="" style={{ maxWidth: '100%', height: 'auto' }} loading="lazy" />
-                    </a>
+                    </Link>
                   </p>
                 ) : null}
                 <p style={{ whiteSpace: 'pre-wrap' }}>{short}</p>
