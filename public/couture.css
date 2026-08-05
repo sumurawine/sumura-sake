@@ -1426,18 +1426,18 @@ html[data-era="mukashi"] body #lang-bar button.active{ color:#040604 !important;
 /* ── 扉の頁：見出しにしても見た目は変わりません ───────── */
 .door-page h1.me-jp{ margin:0; font-size:inherit; font-weight:inherit; line-height:inherit; letter-spacing:inherit; }
 
-/* 扉の足元に置く、静かな覚書 */
+/* 扉の足元に置く、豆粒ほどの覚書 */
 .door-seo{
   position:relative; z-index:2;
-  max-width:47rem; margin:70px auto 24px; padding:0 22px;
-  text-align:center; font-size:10px; line-height:1.95;
-  letter-spacing:.05em; color:rgba(253,247,234,.34);
+  max-width:52rem; margin:96px auto 14px; padding:0 18px;
+  text-align:center; font-size:8.5px; line-height:1.8;
+  letter-spacing:.04em; color:rgba(253,247,234,.22);
 }
-.door-seo p{ margin:0 0 3px; text-wrap:balance; }
-.door-seo nav{ margin-top:9px; display:flex; flex-wrap:wrap; gap:2px 16px; justify-content:center; }
-html[data-era] .door-seo a{ color:rgba(253,247,234,.46) !important; text-decoration:none; border-bottom:1px solid transparent; }
-html[data-era] .door-seo a:hover{ color:rgba(253,247,234,.9) !important; border-bottom-color:rgba(253,247,234,.4); }
+.door-seo p{ margin:0 0 1px; text-wrap:balance; }
+.door-seo nav{ margin-top:5px; display:flex; flex-wrap:wrap; gap:1px 12px; justify-content:center; }
+html[data-era] .door-seo a{ color:rgba(253,247,234,.28) !important; text-decoration:none; }
+html[data-era] .door-seo a:hover{ color:rgba(253,247,234,.85) !important; }
 @media (max-width:640px){
-  .door-seo{ margin-top:42px; font-size:9.5px; line-height:1.9; }
-  .door-seo nav{ gap:2px 12px; }
+  .door-seo{ margin-top:56px; font-size:8px; line-height:1.75; }
+  .door-seo nav{ gap:1px 9px; }
 }
