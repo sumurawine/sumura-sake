@@ -13,6 +13,21 @@ const LABEL: Record<string, string> = {
   '日付と分類': '日付と種類',
 };
 
+
+/* サイトの中の行き先。押すだけで本文に入ります */
+const LINKS: Array<[string, string]> = [
+  ['/store', 'オンラインストア'],
+  ['/producers', 'お取り扱い生産者'],
+  ['/blog', 'ブログ'],
+  ['/news', 'お知らせ'],
+  ['/about', '会社概要'],
+  ['/access', 'アクセス'],
+  ['/contact', 'お問い合わせ'],
+  ['/virtual', 'バーチャル店舗'],
+  ['/mukashi', '昔日のすむら酒店'],
+  ['/legal', '特定商取引法に基づく表記'],
+];
+
 /* よく使う種類。押すだけで入ります */
 const CATS = ['雑感', '試飲', 'プリムール', '入荷', 'お知らせ', '催し', '造り手', '産地', '食卓', '店より'];
 
@@ -66,6 +81,8 @@ export function BlogInline({ toast }: { toast: (t: string, ms?: number) => void 
   const [busy, setBusy] = useState(false);
   const [ask, setAsk] = useState(false);          // 消してよいか、の確かめ
   const file = useRef<HTMLInputElement | null>(null);
+  const box = useRef<HTMLTextAreaElement | null>(null);
+  const [link, setLink] = useState(false);      // リンクの選び場を出しているか
   const shot = useRef<string>('');                // 写真の入れ替え先
 
   /* この頁に記事があるかどうかを、いつも見ています */
@@ -117,6 +134,25 @@ export function BlogInline({ toast }: { toast: (t: string, ms?: number) => void 
     document.addEventListener('click', click, true);
     return () => document.removeEventListener('click', click, true);
   }, [here, rowOf, toast, load]);
+
+  /* 選んだ行き先を、いま文字を置いている場所へ差し込みます */
+  const insert = (to: string, name: string) => {
+    const el = box.current;
+    const mark = '[' + name + '](' + to + ')';
+    if (!el) { setDraft((d) => d + mark); return; }
+    const a = el.selectionStart ?? draft.length;
+    const b = el.selectionEnd ?? a;
+    const sel = draft.slice(a, b).trim();
+    const put = sel ? '[' + sel + '](' + to + ')' : mark;
+    const next = draft.slice(0, a) + put + draft.slice(b);
+    setDraft(next);
+    setLink(false);
+    window.setTimeout(() => {
+      el.focus();
+      const at = a + put.length;
+      try { el.setSelectionRange(at, at); } catch {}
+    }, 0);
+  };
 
   const done = (msg: string) => {
     toast(msg + ' 画面を新しくします…', 6000);
@@ -240,8 +276,27 @@ export function BlogInline({ toast }: { toast: (t: string, ms?: number) => void 
                     ? '日本語で書いてください。英語・フランス語・中国語・韓国語の訳は、保存のときにこちらで作ります。'
                     : '日本語で書いてください。行を変えたところは、そのまま行が変わります。訳は保存のときに作ります。'}
                 </p>
-                <textarea className={pick.field === '題名(日本語)' ? 'bi-ta bi-ta-1' : 'bi-ta'}
+                <textarea ref={box} className={pick.field === '題名(日本語)' ? 'bi-ta bi-ta-1' : 'bi-ta'}
                           value={draft} onChange={(e) => setDraft(e.target.value)} autoFocus />
+                {pick.field === '本文(日本語)' ? (
+                  <div className="bi-links">
+                    <button className="bi-sub" onClick={() => setLink((v) => !v)}>
+                      {link ? '閉じる' : '🔗 サイトの中のページへリンクを入れる'}
+                    </button>
+                    {link ? (
+                      <>
+                        <p className="bi-say" style={{ margin: '12px 0 8px' }}>
+                          入れたい場所に文字の位置を置いてから、下から選んでください。
+                        </p>
+                        <div className="bi-cats">
+                          {LINKS.map(([to, name]) => (
+                            <button key={to} className="bi-cat" onClick={() => insert(to, name)}>{name}</button>
+                          ))}
+                        </div>
+                      </>
+                    ) : null}
+                  </div>
+                ) : null}
                 <div className="bi-row">
                   <button className="bi-go" disabled={busy} onClick={() => save({ [pick.field]: draft })}>これでなおす</button>
                   <button className="bi-sub" disabled={busy} onClick={() => setPick(null)}>やめる</button>
