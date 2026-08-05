@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { editMode, setEditMode, loadOverrides, overrides, isMirror } from '@/lib/overrides';
 import { applyOverrides, keyOf, baseText, isTarget } from '@/lib/domtext';
 import { NewProduct } from './NewProduct';
+import { BlogAdmin } from './BlogAdmin';
 import { bridgeUrl, setBridgeUrl, call, openBridge } from './Bridge';
 import { useSite } from '@/components/Providers';
 
@@ -185,6 +186,7 @@ export function Editor() {
         {who ? <span className="ed-who">{who}</span> : <span className="ed-who">確認中…</span>}
         {editing ? <button className="ed-b" onClick={() => { loadOverrides(true).then(() => location.reload()); }}>読み直す</button> : null}
         {editing && /store/.test(location.pathname) ? <NewProduct /> : null}
+        {editing ? <BlogAdmin toast={toast} /> : null}
         {editing ? <button className="ed-b" onClick={() => setNeedUrl(true)}>つなぎ先</button> : null}
         <button className="ed-b" onClick={() => { window.open(location.href.replace('/preview/', '/'), '_blank'); }}>本番を見る</button>
       </div>
