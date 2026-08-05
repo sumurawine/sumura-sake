@@ -9,6 +9,8 @@ export const LANG_FLAGS: Record<Lang, string> = {
 
 export const dict: Record<Lang, Record<string, string>> = {
  "jp": {
+  "mk-era1": "昭和三十年頃",
+  "mk-era2": "昭和三十年代",
   "about-head": "■ 会社概要 ■",
   "about-location-val": "〒755-0072　山口県宇部市中村3-6-20",
   "about-rep-val": "洲村 博志",
@@ -231,6 +233,8 @@ export const dict: Record<Lang, Record<string, string>> = {
   "header:sub": "☆ Liquor Shop Sumura ☆ 山口・宇部 ☆ 時をおすそわけ ☆"
  },
  "en": {
+  "mk-era1": "around 1955",
+  "mk-era2": "the late 1950s",
   "about-head": "■ COMPANY ■",
   "about-location-val": "3-6-20 Nakamura, Ube, Yamaguchi 755-0072, Japan",
   "about-rep-val": "Hiroshi Sumura",
@@ -453,6 +457,8 @@ export const dict: Record<Lang, Record<string, string>> = {
   "mk-back": "← Back to the shop"
  },
  "fr": {
+  "mk-era1": "vers 1955",
+  "mk-era2": "fin des années 1950",
   "about-head": "■ LA MAISON ■",
   "about-location-val": "3-6-20 Nakamura, Ube, Yamaguchi 755-0072, Japon",
   "about-rep-val": "Hiroshi Sumura",
@@ -675,6 +681,8 @@ export const dict: Record<Lang, Record<string, string>> = {
   "mk-back": "← Retour à la boutique"
  },
  "zh": {
+  "mk-era1": "1955年前后",
+  "mk-era2": "1950年代后期",
   "about-head": "■ 公司概要 ■",
   "about-location-val": "日本 山口县宇部市中村3-6-20（邮编 755-0072）",
   "about-rep-val": "洲村 博志（Hiroshi Sumura）",
@@ -897,6 +905,8 @@ export const dict: Record<Lang, Record<string, string>> = {
   "mk-back": "← 返回店内"
  },
  "ko": {
+  "mk-era1": "1955년 무렵",
+  "mk-era2": "1950년대 후반",
   "about-head": "■ 회사 개요 ■",
   "about-location-val": "일본 야마구치현 우베시 나카무라 3-6-20 (우편번호 755-0072)",
   "about-rep-val": "스무라 히로시 (洲村 博志)",
