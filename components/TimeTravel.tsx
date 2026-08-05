@@ -26,6 +26,18 @@ export function TimeTravel() {
     if (narrow || era === 'now') setClosed(true);
   }, [era]);
 
+  /* 下へ読み進めたら、ひとりでに畳みます。本文の邪魔をしないように */
+  useEffect(() => {
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y > last + 4 && y > 90) setClosed(true);
+      last = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   const items: Array<[string, string]> = [
     ['now', t.a], ['2010', t.b], ['2005', t.c], ['1995', t.d], ['mukashi', t.e],
   ];
