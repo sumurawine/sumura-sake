@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSite } from '@/components/Providers';
 import { Shell } from '@/components/Shell';
 import { Comments, useComments } from '@/components/Comments';
+import { dateOf, blogCatOf } from '@/lib/store';
 import { useContent, pick, photoOf } from '@/lib/content';
 import { pre } from '@/lib/slug';
 
@@ -32,7 +33,7 @@ export function BlogPostPage() {
         {r ? (
           <>
             <div className="x-pink" style={{ fontSize: 14 }}>
-              {r['日付']}{(r['カテゴリ'] || '').trim() ? '　｜　' + r['カテゴリ'] : ''}
+              {dateOf(r['日付'], lang)}{(r['カテゴリ'] || '').trim() ? '　｜　' + blogCatOf(r['カテゴリ'], lang) : ''}
             </div>
             <div className="pixhead" style={{ fontSize: 20 }}>{pick(r, lang, '題名(日本語)', '題名' + L)}</div>
             {photoOf(r) ? (
