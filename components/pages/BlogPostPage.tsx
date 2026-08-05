@@ -33,16 +33,16 @@ export function BlogPostPage() {
       <div className="panel">
         {r ? (
           <>
-            <div className="x-pink" style={{ fontSize: 14 }} data-blog-row={r['_row']} data-blog-field="日付と分類">
+            <div className="x-pink" style={{ fontSize: 14 }} data-sheet="blog" data-row={r['_row']} data-field="日付と分類">
               {dateOf(r['日付'], lang)}{(r['カテゴリ'] || '').trim() ? '　｜　' + blogCatOf(r['カテゴリ'], lang) : ''}
             </div>
-            <div className="pixhead" style={{ fontSize: 20 }} data-blog-row={r['_row']} data-blog-field="題名(日本語)">{pick(r, lang, '題名(日本語)', '題名' + L)}</div>
+            <div className="pixhead" style={{ fontSize: 20 }} data-sheet="blog" data-row={r['_row']} data-field="題名(日本語)">{pick(r, lang, '題名(日本語)', '題名' + L)}</div>
             {photoOf(r) ? (
               <p style={{ textAlign: 'center' }}>
-                <img src={photoOf(r)} alt="" style={{ maxWidth: '100%', height: 'auto' }} data-blog-row={r['_row']} data-blog-field="写真" />
+                <img src={photoOf(r)} alt="" style={{ maxWidth: '100%', height: 'auto' }} data-sheet="blog" data-row={r['_row']} data-field="写真" />
               </p>
             ) : null}
-            <p style={{ whiteSpace: 'pre-wrap' }} data-blog-row={r['_row']} data-blog-field="本文(日本語)">{richText(pick(r, lang, '本文(日本語)', '本文' + L), lang)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }} data-sheet="blog" data-row={r['_row']} data-field="本文(日本語)">{richText(pick(r, lang, '本文(日本語)', '本文' + L), lang)}</p>
             <Comments post={'r' + id} all={all} reload={reload} />
           </>
         ) : ready ? (
