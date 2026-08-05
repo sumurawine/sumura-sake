@@ -45,7 +45,7 @@ export function ProducersPage() {
     const byCat: Record<string, Row[]> = {};
     for (const p of Object.keys(count)) {
       const cat = Object.entries(where[p]).sort((a, b) => b[1] - a[1])[0][0];
-      const latin = I18N?.producers?.[p]?.en || '';
+      const latin = I18N?.producers?.[p]?.[lang] || I18N?.producers?.[p]?.en || '';
       (byCat[cat] = byCat[cat] || []).push({ jp: p, latin, n: count[p] });
     }
     // ストアに載せていない造り手も、同じ欄に並べます
@@ -56,7 +56,7 @@ export function ProducersPage() {
       cat: k,
       rows: byCat[k].sort((a, b) => b.n - a.n),
     }));
-  }, [DATA, I18N]);
+  }, [DATA, I18N, lang]);
 
   return (
     <Shell>
@@ -76,8 +76,10 @@ export function ProducersPage() {
               {g.rows.map((r) => (
                 <li key={r.jp}>
                   <A href={r.n ? makerPath(prodSlug(r.jp, I18N), lang) : `/contact?item=${encodeURIComponent(r.jp)}`}>
-                    <span className="pr-jp">{r.jp}</span>
-                    {r.latin && r.latin !== r.jp ? <span className="pr-latin2">{r.latin}</span> : null}
+                    <span className="pr-jp">{lang === 'jp' ? r.jp : (r.latin || r.jp)}</span>
+                    {lang === 'jp'
+                      ? (r.latin && r.latin !== r.jp ? <span className="pr-latin2">{r.latin}</span> : null)
+                      : (r.latin && r.latin !== r.jp ? <span className="pr-latin2">{r.jp}</span> : null)}
                   </A>
                   {r.n ? <span className="pr-n">{r.n}{c.itemsUnit}</span> : null}
                 </li>
