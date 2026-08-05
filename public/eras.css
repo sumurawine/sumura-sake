@@ -532,3 +532,50 @@ html[data-era="now"][data-mx="1"] .pr-region{ font-family:"Cormorant Garamond",s
 html[data-era="now"][data-mx="1"] .pr-card{ border-top-color:var(--mx-line) !important }
 html[data-era="now"][data-mx="1"] .pr-also,html[data-era="now"][data-mx="1"] .pr-where,
 html[data-era="now"][data-mx="1"] .pr-n,html[data-era="now"][data-mx="1"] .pr-latin2{ color:var(--mx-faint) !important }
+
+
+/* ════════════════════════════════════════════════════════════
+   その時代の粗さ ── 文字を当時の画面らしく
+   （なめらかな輪郭処理を止め、点の粒だちを残します）
+   ════════════════════════════════════════════════════════════ */
+
+/* ── 1990年代・2000年代 ─────────────────────────────── */
+html[data-era="1995"] body, html[data-era="1995"] body *,
+html[data-era="2005"] body, html[data-era="2005"] body *{
+  -webkit-font-smoothing:none !important;
+  -moz-osx-font-smoothing:unset !important;
+  text-rendering:optimizeSpeed !important;
+  font-synthesis:none;
+  font-variant-ligatures:none;
+  font-kerning:none;
+  letter-spacing:0.02em;
+}
+/* 当時の画面に合わせ、点で刻まれた書体を先に */
+html[data-era="1995"] body, html[data-era="1995"] body *{
+  font-family:"DotGothic16","MS Gothic","ＭＳ ゴシック","Osaka-Mono",monospace !important;
+}
+html[data-era="2005"] body, html[data-era="2005"] body *{
+  font-family:"MS PGothic","ＭＳ Ｐゴシック","Osaka","Hiragino Kaku Gothic Pro",sans-serif !important;
+}
+/* 大きな文字ほど粒が見えるように、ごく浅い段差をつけます */
+html[data-era="1995"] .pixhead, html[data-era="1995"] h1, html[data-era="1995"] h2,
+html[data-era="2005"] .pixhead, html[data-era="2005"] h1, html[data-era="2005"] h2{
+  text-shadow:1px 0 0 currentColor, 0 1px 0 rgba(0,0,0,.35);
+}
+/* 写真や飾りも当時の粗さで */
+html[data-era="1995"] img, html[data-era="2005"] img{ image-rendering:pixelated; }
+
+/* ── 昔日（1998年の端末） ───────────────────────────── */
+body:has(.mk-wrap), body:has(.mk-wrap) *{
+  -webkit-font-smoothing:none !important;
+  -moz-osx-font-smoothing:unset !important;
+  text-rendering:optimizeSpeed !important;
+  font-variant-ligatures:none; font-kerning:none;
+}
+/* 走査の粒を、文字の上にも薄くのせます */
+body:has(.mk-wrap) .mk-wrap{
+  text-shadow:0 0 1px rgba(41,251,87,.9), 1px 0 0 rgba(41,251,87,.25);
+}
+@media (prefers-reduced-motion:no-preference){
+  body:has(.mk-wrap) .mk-wrap{ filter:contrast(1.06) saturate(1.05); }
+}
