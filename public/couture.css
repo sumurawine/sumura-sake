@@ -1216,3 +1216,10 @@ html[data-era="now"] .mx-legacy::before{
 html[data-era="now"] .mx-hero{ overflow:hidden; background:var(--mx-ink); }
 html[data-era="now"] .mx-hero-bg{ inset:-6% !important; }
 html[data-era="now"] .mx-hero-shade{ inset:-1px !important; }
+
+
+/* ── 一本の記事の頁：本文をはっきりと ── */
+html[data-era="now"][data-mx="1"] .mx-legacy .panel p{
+  color:rgba(244,236,228,.88) !important; font-size:16px !important; line-height:2.2 !important;
+}
+html[data-era="now"][data-mx="1"] .mx-legacy .panel .pixhead{ margin-bottom:22px !important; }
