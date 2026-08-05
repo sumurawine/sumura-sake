@@ -659,3 +659,48 @@ html[data-era="2005"] #lang-bar, html[data-era="2005"] #lang-bar *{
 html[data-era="1995"] #timewarp, html[data-era="2005"] #timewarp{
   width:auto !important; min-width:0 !important; max-width:none !important;
 }
+
+
+/* ══════════════════════════════════════════════════════════
+   ワインの頁は、現代の黒い地に合わせた色でできています。
+   昔の時代は地が明るいため文字が飛んでしまうので、
+   明るい地に、黒の文字で置き直します。
+   ══════════════════════════════════════════════════════════ */
+html:not([data-era="now"]) .w-wrap{ color:#241c14 !important; }
+html:not([data-era="now"]) .w-wrap *{ text-shadow:none !important; }
+html:not([data-era="now"]) .w-name,
+html:not([data-era="now"]) .w-name span,
+html:not([data-era="now"]) .w-body h1,
+html:not([data-era="now"]) .w-body h2,
+html:not([data-era="now"]) .w-more h2{
+  color:#1d1610 !important; -webkit-text-fill-color:#1d1610 !important;
+  background:none !important; opacity:1 !important;
+}
+html:not([data-era="now"]) .w-desc,
+html:not([data-era="now"]) .w-facts dd,
+html:not([data-era="now"]) .w-card-n{
+  color:#241c14 !important; -webkit-text-fill-color:#241c14 !important; opacity:1 !important;
+}
+html:not([data-era="now"]) .w-facts dt,
+html:not([data-era="now"]) .w-note,
+html:not([data-era="now"]) .w-crumb,
+html:not([data-era="now"]) .w-crumb a{
+  color:#5a4a34 !important; -webkit-text-fill-color:#5a4a34 !important; opacity:1 !important;
+}
+html:not([data-era="now"]) .w-crumb a{ text-decoration:underline !important; }
+html:not([data-era="now"]) .w-price,
+html:not([data-era="now"]) .w-card-p{
+  color:#8a2f22 !important; -webkit-text-fill-color:#8a2f22 !important;
+  font-weight:700 !important; opacity:1 !important;
+}
+html:not([data-era="now"]) .w-out{ color:#7a6552 !important; -webkit-text-fill-color:#7a6552 !important; opacity:1 !important; }
+html:not([data-era="now"]) .w-card{ background:#fffdf6 !important; border:1px solid #d8c9a8 !important; }
+html:not([data-era="now"]) .w-cta,
+html:not([data-era="now"]) .w-back,
+html:not([data-era="now"]) .w-cta span,
+html:not([data-era="now"]) .w-back span{
+  color:#fffdf6 !important; -webkit-text-fill-color:#fffdf6 !important;
+  background:#4a3423 !important; border-color:#4a3423 !important;
+}
+html:not([data-era="now"]) .w-cta:hover,
+html:not([data-era="now"]) .w-back:hover{ background:#2f2015 !important; }
