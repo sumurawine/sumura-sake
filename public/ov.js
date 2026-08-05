@@ -13,7 +13,7 @@
   var working = false;
 
   function ours(el) {
-    return !!(el.closest && el.closest('.ed-panel, .ed-bar, .ed-msg, .ed-new, .ed-form'));
+    return !!(el.closest && el.closest('.ed-panel, .ed-bar, .ed-msg, .ed-new, .ed-form, .bi-wrap, .bi-hint'));
   }
 
   function editable(el) {
