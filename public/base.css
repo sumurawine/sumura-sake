@@ -639,3 +639,19 @@ body:has(.mk-wrap) .mk-cap{ color:#cfe8cf !important; }
 /* 昔日：写真は元の色のまま（緑の蛍光管フィルタを外す） */
 .mk-photo img, body:has(.mk-wrap) .mk-photo img{ filter:none !important; -webkit-filter:none !important; }
 body:has(.mk-wrap) .mk-wrap{ filter:none !important; }
+
+
+/* 昔日：時間旅行と言語の札 */
+body:has(.mk-wrap) .tw-wrap,
+body:has(.mk-wrap) .tw-closed,
+body:has(.mk-wrap) .tw-open{ background:#040604 !important; border-color:#1e6b2c !important; box-shadow:none !important; }
+body:has(.mk-wrap) .tw-t,
+body:has(.mk-wrap) .tw-body{ color:#35f04a !important; }
+body:has(.mk-wrap) .tw-toggle,
+body:has(.mk-wrap) .tw-body button{ color:#35f04a !important; background:#0a220d !important; border-color:#1e6b2c !important; }
+body:has(.mk-wrap) .tw-body button.on,
+body:has(.mk-wrap) .tw-toggle:hover,
+body:has(.mk-wrap) .tw-body button:hover{ color:#040604 !important; background:#35f04a !important; border-color:#35f04a !important; }
+body:has(.mk-wrap) #lang-bar{ background:#040604 !important; border-color:#1e6b2c !important; box-shadow:none !important; }
+body:has(.mk-wrap) #lang-bar button{ color:#35f04a !important; background:#0a220d !important; border-color:#1e6b2c !important; }
+body:has(.mk-wrap) #lang-bar button.active{ color:#040604 !important; background:#35f04a !important; border-color:#35f04a !important; }
