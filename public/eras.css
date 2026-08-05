@@ -647,3 +647,15 @@ body:has(.mk-wrap) #timewarp, body:has(.mk-wrap) #timewarp *{ font-size:14px !im
 body:has(.mk-wrap) .mk-wrap{
   text-shadow:1px 0 0 rgba(41,251,87,.35), 0 0 2px rgba(41,251,87,.75) !important;
 }
+
+/* 時間旅行の札と言語の札は、寸法を強いない（縦に潰れるため） */
+html[data-era="1995"] #timewarp, html[data-era="1995"] #timewarp *,
+html[data-era="2005"] #timewarp, html[data-era="2005"] #timewarp *,
+html[data-era="1995"] #lang-bar, html[data-era="1995"] #lang-bar *,
+html[data-era="2005"] #lang-bar, html[data-era="2005"] #lang-bar *{
+  font-size:12px !important; line-height:1.5 !important;
+  white-space:nowrap !important;
+}
+html[data-era="1995"] #timewarp, html[data-era="2005"] #timewarp{
+  width:auto !important; min-width:0 !important; max-width:none !important;
+}
