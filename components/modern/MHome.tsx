@@ -6,6 +6,8 @@ import { asset } from '@/lib/paths';
 import { tr, type Lang } from '@/lib/i18n';
 import { useSite } from '@/components/Providers';
 import { MC } from '@/lib/modernCopy';
+import { useContent, pick, linkOf } from '@/lib/content';
+import { dateOf } from '@/lib/store';
 import { pre } from '@/lib/slug';
 import { CATS, isOut, nameOf, yenOf, type I18nData, type Item, type ProductData } from '@/lib/store';
 import { MShell } from './MShell';
@@ -239,17 +241,33 @@ function History({ lang }: { lang: Lang }) {
 
 function News({ lang }: { lang: Lang }) {
   const c = MC[lang];
-  const rows = ['home-hist-1', 'home-hist-2', 'home-hist-3'];
+  const { news } = useContent();          /* お知らせの頁と同じ表を見ています */
+  const L = lang.toUpperCase();
+  const rows = news.slice(0, 3);
+  const line: any = { borderTop: '1px solid var(--mx-line)', padding: '24px 0', fontSize: 14.5, lineHeight: 2, letterSpacing: '.05em', color: 'var(--mx-dim)' };
   return (
     <section className="mx-sec-tight">
       <div className="mx-in">
         <Reveal as="p" className="mx-kicker">{c.newsHead}</Reveal>
         <div>
-          {rows.map((k, i) => (
-            <Reveal key={k} delay={(i + 1) as any}
-              style={{ borderTop: '1px solid var(--mx-line)', padding: '24px 0', fontSize: 14.5, lineHeight: 2, letterSpacing: '.05em', color: 'var(--mx-dim)' }}
-              dangerouslySetInnerHTML={{ __html: tr(lang, k) }} />
-          ))}
+          {rows.length
+            ? rows.map((r, i) => {
+                const link = linkOf(r, lang);
+                return (
+                  <Reveal key={r['_row'] || i} delay={(i + 1) as any} style={line}>
+                    <span style={{ opacity: 0.75 }}>{dateOf(r['日付'], lang)}</span>
+                    {'　'}
+                    <Link href={`${pre(lang)}/news`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                      {pick(r, lang, '題名(日本語)', '題名' + L)}
+                    </Link>
+                    {link ? <>{'　'}<a href={link.href} style={{ color: 'inherit' }}>{link.text}</a></> : null}
+                  </Reveal>
+                );
+              })
+            : ['home-hist-1', 'home-hist-2', 'home-hist-3'].map((k, i) => (
+                <Reveal key={k} delay={(i + 1) as any} style={line}
+                  dangerouslySetInnerHTML={{ __html: tr(lang, k) }} />
+              ))}
         </div>
         <Reveal delay={2} style={{ marginTop: 34 }}>
           <Link href={`${pre(lang)}/news`} className="mx-link">{c.newsMore}</Link>
