@@ -8,8 +8,15 @@ import { A } from '@/components/A';
 export function MukashiPage() {
   /* ゆっくりと現れる写真。仕掛けが動かない環境では、はじめから見えています */
   useEffect(() => {
+    /* 電源を入れた画面は、いつでも先頭から */
+    try { window.history.scrollRestoration = 'manual'; } catch { /* しずかに */ }
+    window.scrollTo(0, 0);
+    const top = () => window.scrollTo(0, 0);
+    const t1 = window.setTimeout(top, 60);
+    const t2 = window.setTimeout(top, 400);
+
     const wrap = document.querySelector('.mk-wrap');
-    if (!wrap) return;
+    if (!wrap) return () => { clearTimeout(t1); clearTimeout(t2); };
     wrap.classList.add('mk-ready');
     const io = new IntersectionObserver(
       (es) => es.forEach((e) => {
@@ -18,7 +25,7 @@ export function MukashiPage() {
       { threshold: 0.16 },
     );
     wrap.querySelectorAll('.mk-fx').forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    return () => { clearTimeout(t1); clearTimeout(t2); io.disconnect(); };
   }, []);
 
   return (
