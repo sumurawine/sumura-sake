@@ -5,6 +5,7 @@ import { useSite } from '@/components/Providers';
 import { Shell } from '@/components/Shell';
 import { Comments, useComments } from '@/components/Comments';
 import { dateOf, blogCatOf } from '@/lib/store';
+import { richText } from '@/lib/richText';
 import { useContent, pick, photoOf } from '@/lib/content';
 import { pre } from '@/lib/slug';
 
@@ -41,7 +42,7 @@ export function BlogPostPage() {
                 <img src={photoOf(r)} alt="" style={{ maxWidth: '100%', height: 'auto' }} data-blog-row={r['_row']} data-blog-field="写真" />
               </p>
             ) : null}
-            <p style={{ whiteSpace: 'pre-wrap' }} data-blog-row={r['_row']} data-blog-field="本文(日本語)">{pick(r, lang, '本文(日本語)', '本文' + L)}</p>
+            <p style={{ whiteSpace: 'pre-wrap' }} data-blog-row={r['_row']} data-blog-field="本文(日本語)">{richText(pick(r, lang, '本文(日本語)', '本文' + L), lang)}</p>
             <Comments post={'r' + id} all={all} reload={reload} />
           </>
         ) : ready ? (
