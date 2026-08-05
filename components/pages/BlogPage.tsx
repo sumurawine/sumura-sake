@@ -57,7 +57,12 @@ export function BlogPage() {
     (!year || String(r['日付'] || '').slice(0, 4) === year));
 
   const P = pre(lang);
-  const href = (r: Record<string, string>) => P + '/blog/post?id=' + r['_row'];
+    /* 押した瞬間に、その記事の中身を控えます（次の頁で待たずに出すため） */
+  const keep = (r: Row) => {
+    try { sessionStorage.setItem('sumura-post-' + r['_row'], JSON.stringify(r)); } catch { /* しずかに */ }
+  };
+
+const href = (r: Record<string, string>) => P + '/blog/post?id=' + r['_row'];
 
   return (
     <Shell>
@@ -100,13 +105,13 @@ export function BlogPage() {
                      data-sheet="blog" data-row={r['_row']} data-field="日付と分類">
                   {dateOf(r['日付'], lang)}{(r['カテゴリ'] || '').trim() ? '　｜　' + blogCatOf(r['カテゴリ'], lang) : ''}
                 </div>
-                <Link href={href(r)} style={{ textDecoration: 'none' }} prefetch>
+                <Link href={href(r)} onClick={() => keep(r)} onMouseEnter={() => keep(r)} onTouchStart={() => keep(r)} style={{ textDecoration: 'none' }} prefetch>
                   <div className="pixhead" style={{ fontSize: 18 }}
                        data-sheet="blog" data-row={r['_row']} data-field="題名(日本語)">{pick(r, lang, '題名(日本語)', '題名' + L)}</div>
                 </Link>
                 {photoOf(r) ? (
                   <p style={{ textAlign: 'center' }}>
-                    <Link href={href(r)} prefetch>
+                    <Link href={href(r)} onClick={() => keep(r)} onMouseEnter={() => keep(r)} onTouchStart={() => keep(r)} prefetch>
                       <img src={photoOf(r)} alt="" style={{ maxWidth: '100%', height: 'auto' }} loading="lazy"
                            data-sheet="blog" data-row={r['_row']} data-field="写真" />
                     </Link>
@@ -114,7 +119,7 @@ export function BlogPage() {
                 ) : null}
                 <p style={{ whiteSpace: 'pre-wrap' }}
                    data-sheet="blog" data-row={r['_row']} data-field="本文(日本語)">{short}</p>
-                <p><Link href={href(r)} prefetch>{t('more')} →</Link></p>
+                <p><Link href={href(r)} onClick={() => keep(r)} onMouseEnter={() => keep(r)} onTouchStart={() => keep(r)} prefetch>{t('more')} →</Link></p>
               </div>
             );
           })
