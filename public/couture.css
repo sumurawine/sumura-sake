@@ -1386,3 +1386,52 @@ html[data-era="mukashi"] body #timewarp button:hover{ color:#040604 !important; 
 html[data-era="mukashi"] body #lang-bar{ background:#040604 !important; border-color:#1e6b2c !important; box-shadow:none !important; }
 html[data-era="mukashi"] body #lang-bar button{ color:#35f04a !important; background:#0a220d !important; border:1px solid #1e6b2c !important; opacity:1 !important; }
 html[data-era="mukashi"] body #lang-bar button.active{ color:#040604 !important; background:#35f04a !important; border-color:#35f04a !important; }
+
+
+/* ── スマホの改行を整えます ─────────────────── */
+@media (max-width: 860px){
+  html{ word-break: auto-phrase; line-break: strict; }
+  body, p, li, dd, dt, td, th, figcaption, blockquote,
+  h1, h2, h3, h4, h5, h6, a, button, label, summary{ overflow-wrap: break-word; }
+  h1, h2, h3, h4, h5, h6, figcaption, dt, dd, th, td,
+  .lead, .w-name, .w-desc, .p-name, .card-t, .sec-t, .hero-t,
+  a, button, label, summary{ text-wrap: balance; }
+  p, li, blockquote{ text-wrap: pretty; }
+}
+
+/* 商品の一覧：値段と在庫を次の行へ送り、品名に幅を渡します */
+@media (max-width: 640px){
+  .card:has(img.x-thumb){ flex-wrap: wrap; align-items: flex-start; }
+  .card:has(img.x-thumb) > div:nth-child(2){ flex: 1 1 0; min-width: 0; }
+  .card:has(img.x-thumb) > div:nth-child(3){ flex: 1 0 100%; text-align: left; margin-top: 4px; }
+}
+
+/* ── バーチャル店舗：画面上の退店ボタン ───────── */
+.vs-exit{
+  position: absolute; left: 14px; top: 14px; z-index: 8;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 16px; border-radius: 999px; cursor: pointer;
+  font: inherit; font-size: 14px; letter-spacing: .04em;
+  color: #fdf7ea; background: rgba(28, 20, 14, .72);
+  border: 1px solid rgba(253, 247, 234, .34);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.vs-exit:hover{ background: rgba(28, 20, 14, .9); }
+@media (max-width: 640px){
+  .vs-exit{ left: 12px; top: 12px; padding: 12px 16px; font-size: 15px; }
+}
+
+/* ── バーチャル店舗：入店前の店の案内 ─────────── */
+.vs-about{
+  margin: 18px auto 22px; max-width: 34rem; text-align: left;
+  font-size: 13px; line-height: 1.9; color: rgba(253, 247, 234, .72);
+}
+.vs-about p{ margin: 0 0 10px; }
+.vs-about dl{ margin: 0 0 10px; display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; }
+.vs-about dt{ opacity: .62; white-space: nowrap; }
+.vs-about dd{ margin: 0; }
+@media (max-width: 640px){
+  .vs-about{ font-size: 12.5px; }
+  .vs-about dl{ grid-template-columns: 1fr; gap: 0 0; }
+  .vs-about dt{ margin-top: 6px; }
+}
