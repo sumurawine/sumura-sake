@@ -579,3 +579,71 @@ body:has(.mk-wrap) .mk-wrap{
 @media (prefers-reduced-motion:no-preference){
   body:has(.mk-wrap) .mk-wrap{ filter:contrast(1.06) saturate(1.05); }
 }
+
+
+/* ════════════════════════════════════════════════════════════
+   点の格子をそのまま ── 当時の画面で組まれた文字
+   DotGothic16 は 16 の点で設計された書体です。
+   16・24・32px のように、設計どおりの寸法で使うと格子が揃います。
+   ════════════════════════════════════════════════════════════ */
+
+/* ── 1990年代 ─────────────────────────────────────── */
+html[data-era="1995"] body, html[data-era="1995"] body *{
+  font-family:"DotGothic16","MS Gothic","ＭＳ ゴシック",monospace !important;
+  font-weight:400 !important;
+  -webkit-font-smoothing:none !important;
+  text-rendering:optimizeSpeed !important;
+}
+html[data-era="1995"] body{ font-size:16px !important; line-height:24px !important; letter-spacing:0 !important; }
+html[data-era="1995"] p, html[data-era="1995"] li, html[data-era="1995"] td,
+html[data-era="1995"] .field, html[data-era="1995"] .btn, html[data-era="1995"] .hint{
+  font-size:16px !important; line-height:24px !important;
+}
+html[data-era="1995"] .hint, html[data-era="1995"] small{ font-size:16px !important; }
+html[data-era="1995"] .pixhead{ font-size:32px !important; line-height:40px !important; letter-spacing:0 !important; }
+html[data-era="1995"] .sub{ font-size:16px !important; }
+html[data-era="1995"] .nav a{ font-size:16px !important; }
+/* 太字は当時どおり、右下へ一つ分ずらして重ねます */
+html[data-era="1995"] b, html[data-era="1995"] strong, html[data-era="1995"] .pixhead{
+  font-weight:400 !important; text-shadow:1px 0 0 currentColor;
+}
+
+/* ── 2000年代 ─────────────────────────────────────── */
+html[data-era="2005"] body, html[data-era="2005"] body *{
+  font-family:"DotGothic16","MS PGothic","ＭＳ Ｐゴシック",monospace !important;
+  font-weight:400 !important;
+  -webkit-font-smoothing:none !important;
+  text-rendering:optimizeSpeed !important;
+}
+html[data-era="2005"] body{ font-size:16px !important; line-height:26px !important; letter-spacing:0 !important; }
+html[data-era="2005"] p, html[data-era="2005"] li, html[data-era="2005"] td,
+html[data-era="2005"] .field, html[data-era="2005"] .btn, html[data-era="2005"] .hint{
+  font-size:16px !important; line-height:26px !important;
+}
+html[data-era="2005"] .pixhead{ font-size:24px !important; line-height:34px !important; }
+html[data-era="2005"] b, html[data-era="2005"] strong{ font-weight:400 !important; text-shadow:1px 0 0 currentColor; }
+
+/* ── 昔日（1998年の端末） ───────────────────────────── */
+body:has(.mk-wrap), body:has(.mk-wrap) *{
+  font-family:"DotGothic16","MS Gothic","ＭＳ ゴシック",monospace !important;
+  font-weight:400 !important;
+  -webkit-font-smoothing:none !important;
+  text-rendering:optimizeSpeed !important;
+  letter-spacing:0 !important;
+}
+body:has(.mk-wrap){ font-size:16px !important; line-height:24px !important; }
+body:has(.mk-wrap) .mk-wrap::before{ font-size:16px !important; line-height:24px !important; }
+body:has(.mk-wrap) .mk-story, body:has(.mk-wrap) .mk-wrap p{
+  font-size:16px !important; line-height:26px !important;
+}
+body:has(.mk-wrap) .mk-title{ font-size:32px !important; line-height:40px !important; letter-spacing:.25em !important; }
+body:has(.mk-wrap) .mk-en{ font-size:16px !important; letter-spacing:.16em !important; }
+body:has(.mk-wrap) .mk-cap{ font-size:16px !important; letter-spacing:.06em !important; }
+body:has(.mk-wrap) .mk-sig{ font-size:16px !important; letter-spacing:.16em !important; }
+body:has(.mk-wrap) .mk-back{ font-size:16px !important; }
+body:has(.mk-wrap) #timewarp, body:has(.mk-wrap) #timewarp *{ font-size:14px !important; }
+
+/* 画面の点がにじむ具合まで（燐光は横へ、走査は縦へ） */
+body:has(.mk-wrap) .mk-wrap{
+  text-shadow:1px 0 0 rgba(41,251,87,.35), 0 0 2px rgba(41,251,87,.75) !important;
+}
