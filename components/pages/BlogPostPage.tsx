@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useSite } from '@/components/Providers';
 import { Shell } from '@/components/Shell';
 import { Comments, useComments } from '@/components/Comments';
@@ -17,7 +18,7 @@ const LOADING: Record<string, string> = {
 export function BlogPostPage() {
   const { lang } = useSite();
   const { all, reload } = useComments();
-  const { blog } = useContent();
+  const { blog, ready } = useContent();
   const L = lang.toUpperCase();
   const [id, setId] = useState('');
   useEffect(() => {
@@ -42,10 +43,10 @@ export function BlogPostPage() {
             <p style={{ whiteSpace: 'pre-wrap' }}>{pick(r, lang, '本文(日本語)', '本文' + L)}</p>
             <Comments post={'r' + id} all={all} reload={reload} />
           </>
-        ) : (
+        ) : ready ? (
           <p>{LOADING[lang] || LOADING.jp}</p>
-        )}
-        <p style={{ marginTop: 18 }}><a href={P + '/blog'}>{BACK[lang] || BACK.jp}</a></p>
+        ) : null}
+        <p style={{ marginTop: 18 }}><Link href={P + '/blog'}>{BACK[lang] || BACK.jp}</Link></p>
       </div>
     </Shell>
   );
