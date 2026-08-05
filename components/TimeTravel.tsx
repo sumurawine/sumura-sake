@@ -31,7 +31,9 @@ export function TimeTravel() {
     let last = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
-      if (y > last + 4 && y > 90) setClosed(true);
+      const box = document.getElementById('timewarp');
+      const busy = box ? box.matches(':hover') : false;
+      if (!busy && y > last + 24 && y > 160) setClosed(true);
       last = y;
     };
     window.addEventListener('scroll', onScroll, { passive: true });
