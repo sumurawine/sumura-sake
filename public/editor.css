@@ -231,3 +231,86 @@ html[data-edit="1"] img[data-blog-field]{ display:block; }
 /* 案内の帯は、いつもの道具立ての上に重ねます */
 .bi-hint{ bottom:86px !important; }
 @media (max-width:640px){ .bi-hint{ bottom:96px !important; } }
+
+
+/* ══════════════════════════════════════════════════
+   お店の控室
+   はじめて触る方が、迷わず一歩目を踏めることだけを考えた作りです。
+   ══════════════════════════════════════════════════ */
+.rm-wrap{
+  max-width:900px; margin:0 auto; padding:44px 20px 120px;
+  font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  color:#1a1410; letter-spacing:normal;
+}
+html[data-era] .rm-wrap, html[data-era] .rm-wrap *{
+  font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif !important;
+  letter-spacing:normal !important; text-shadow:none !important;
+}
+.rm-head{ text-align:center; margin-bottom:30px; }
+.rm-kick{ font-size:13px; letter-spacing:.4em; color:#8a7454; margin-bottom:10px; }
+.rm-title{ font-size:34px; font-weight:700; margin:0 0 16px; color:#1a1410; }
+.rm-lead{ font-size:17px; line-height:2; color:#4a3f30; margin:0; }
+
+/* いまどういう状態か、を一言で */
+.rm-note{
+  margin:0 0 30px; padding:20px 22px; border-radius:8px;
+  background:#fdf8ec; border:2px solid #e2d3b0;
+}
+.rm-note b{ display:block; font-size:19px; margin-bottom:8px; }
+.rm-note p{ margin:0 0 14px; font-size:15px; line-height:1.9; color:#5c5040; }
+.rm-note.rm-on{ background:#eef7ec; border-color:#8fbb85; }
+.rm-note.rm-warn{ background:#fdf1ee; border-color:#d99a8a; }
+.rm-note.rm-warn b{ color:#9a3b2a; }
+.rm-go, a.rm-go{
+  display:inline-block; padding:15px 30px; border:none; border-radius:6px; cursor:pointer;
+  background:#1a1410; color:#ffd66e; font-size:18px; font-weight:700; letter-spacing:.06em;
+  text-decoration:none; font-family:inherit;
+}
+.rm-go:hover{ background:#33271d; }
+.rm-stop{
+  display:inline-block; padding:13px 26px; border:2px solid #7a6b55; border-radius:6px; cursor:pointer;
+  background:#fff; color:#4a3f30; font-size:16px; font-family:inherit;
+}
+.rm-stop:hover{ border-color:#1a1410; color:#1a1410; }
+
+/* 札 */
+.rm-cards{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.rm-card{
+  display:flex; align-items:center; gap:16px;
+  padding:20px 20px; border-radius:8px; text-decoration:none;
+  background:#fffdf8; border:2px solid #e2d3b0; color:#1a1410;
+  transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+.rm-card:hover{ border-color:#1a1410; transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.12); }
+.rm-mark{
+  flex:0 0 auto; width:52px; height:52px; border-radius:6px;
+  display:flex; align-items:center; justify-content:center;
+  background:#1a1410; color:#ffd66e; font-size:24px; font-weight:700;
+}
+.rm-body{ flex:1 1 auto; min-width:0; }
+.rm-h{ display:block; font-size:19px; font-weight:700; margin-bottom:5px; }
+.rm-s{ display:block; font-size:13.5px; line-height:1.8; color:#5c5040; }
+.rm-arrow{ flex:0 0 auto; font-size:14px; color:#8a7454; white-space:nowrap; }
+
+/* 使いかた */
+.rm-how{
+  margin-top:38px; padding:24px 26px; border-radius:8px;
+  background:#f7f2e6; border:1px solid #e2d3b0;
+}
+.rm-how h2{ font-size:20px; font-weight:700; margin:0 0 16px; }
+.rm-how ol{ margin:0; padding-left:1.4em; }
+.rm-how li{ font-size:15.5px; line-height:2; margin-bottom:12px; color:#3d3427; }
+.rm-how li b{ display:block; font-size:16.5px; color:#1a1410; }
+.rm-tip{ margin:16px 0 0; font-size:14px; line-height:2; color:#5c5040; }
+.rm-foot{ margin-top:30px; text-align:center; }
+.rm-plain{ font-size:14px; color:#7a6b55; }
+
+@media (max-width:720px){
+  .rm-wrap{ padding:28px 14px 120px; }
+  .rm-title{ font-size:28px; }
+  .rm-cards{ grid-template-columns:1fr; }
+  .rm-card{ padding:16px; gap:13px; }
+  .rm-mark{ width:46px; height:46px; font-size:21px; }
+  .rm-arrow{ display:none; }
+  .rm-go, a.rm-go{ display:block; text-align:center; }
+}
