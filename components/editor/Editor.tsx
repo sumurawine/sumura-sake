@@ -179,6 +179,7 @@ export function Editor() {
   return (
     <>
       <div className="ed-bar">
+        <a className="ed-b" href={typeof window !== 'undefined' && window.location.pathname.indexOf('/preview') === 0 ? '/preview/admin' : '/admin'}>← 控室にもどる</a>
         <button className={editing ? 'ed-b ed-primary' : 'ed-b'}
                 onClick={() => { const v = !editing; setEditMode(v); setEditing(v); setTarget(null);
                                  toast(v ? '文字や写真をクリックすると直せます' : 'ふつうに見て回れます。リンクも押せます'); }}>
