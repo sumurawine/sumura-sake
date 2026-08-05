@@ -661,85 +661,77 @@ html[data-era="1995"] #timewarp, html[data-era="2005"] #timewarp{
 }
 
 
+
+
 /* ══════════════════════════════════════════════════════════
-   ワインの頁は、現代の黒い地に合わせた色でできています。
-   昔の時代は地が明るいため文字が飛んでしまうので、
-   明るい地に、黒の文字で置き直します。
+   ワイン・造り手・銘柄一覧の頁は、現代（黒地）に合わせた色でできています。
+   地の明るい時代（2000年代・2010年代）だけ、墨の文字に置き直します。
+   1990年代と昔日は地が暗いので、元の色のままが正しく読めます。
+   釦は、それ自体が濃い地を持っているので触りません。
    ══════════════════════════════════════════════════════════ */
-html:not([data-era="now"]) .w-wrap{ color:#241c14 !important; }
-html:not([data-era="now"]) .w-wrap *{ text-shadow:none !important; }
-html:not([data-era="now"]) .w-name,
-html:not([data-era="now"]) .w-name span,
-html:not([data-era="now"]) .w-body h1,
-html:not([data-era="now"]) .w-body h2,
-html:not([data-era="now"]) .w-more h2{
-  color:#1d1610 !important; -webkit-text-fill-color:#1d1610 !important;
-  background:none !important; opacity:1 !important;
+html[data-era="2005"] .w-wrap,
+html[data-era="2010"] .w-wrap{ color:#241c14 !important; }
+
+html[data-era="2005"] .w-wrap p, html[data-era="2010"] .w-wrap p,
+html[data-era="2005"] .w-wrap li, html[data-era="2010"] .w-wrap li,
+html[data-era="2005"] .w-wrap dd, html[data-era="2010"] .w-wrap dd,
+html[data-era="2005"] .w-wrap h1, html[data-era="2010"] .w-wrap h1,
+html[data-era="2005"] .w-wrap h2, html[data-era="2010"] .w-wrap h2,
+html[data-era="2005"] .w-wrap h3, html[data-era="2010"] .w-wrap h3,
+html[data-era="2005"] .w-name, html[data-era="2010"] .w-name,
+html[data-era="2005"] .w-desc, html[data-era="2010"] .w-desc,
+html[data-era="2005"] .w-card-n, html[data-era="2010"] .w-card-n{
+  color:#241c14 !important; -webkit-text-fill-color:#241c14 !important;
+  background:none !important; opacity:1 !important; text-shadow:none !important;
 }
-html:not([data-era="now"]) .w-desc,
-html:not([data-era="now"]) .w-facts dd,
-html:not([data-era="now"]) .w-card-n{
-  color:#241c14 !important; -webkit-text-fill-color:#241c14 !important; opacity:1 !important;
-}
-html:not([data-era="now"]) .w-facts dt,
-html:not([data-era="now"]) .w-note,
-html:not([data-era="now"]) .w-crumb,
-html:not([data-era="now"]) .w-crumb a{
+html[data-era="2005"] .w-facts dt, html[data-era="2010"] .w-facts dt,
+html[data-era="2005"] .w-note, html[data-era="2010"] .w-note,
+html[data-era="2005"] .w-crumb, html[data-era="2010"] .w-crumb,
+html[data-era="2005"] .w-count, html[data-era="2010"] .w-count,
+html[data-era="2005"] .w-n, html[data-era="2010"] .w-n,
+html[data-era="2005"] .w-outmark, html[data-era="2010"] .w-outmark{
   color:#5a4a34 !important; -webkit-text-fill-color:#5a4a34 !important; opacity:1 !important;
 }
-html:not([data-era="now"]) .w-crumb a{ text-decoration:underline !important; }
-html:not([data-era="now"]) .w-price,
-html:not([data-era="now"]) .w-card-p{
-  color:#8a2f22 !important; -webkit-text-fill-color:#8a2f22 !important;
-  font-weight:700 !important; opacity:1 !important;
+html[data-era="2005"] .w-price, html[data-era="2010"] .w-price,
+html[data-era="2005"] .w-card-p, html[data-era="2010"] .w-card-p{
+  color:#8a2f22 !important; -webkit-text-fill-color:#8a2f22 !important; opacity:1 !important;
 }
-html:not([data-era="now"]) .w-out{ color:#7a6552 !important; -webkit-text-fill-color:#7a6552 !important; opacity:1 !important; }
-html:not([data-era="now"]) .w-card{ background:#fffdf6 !important; border:1px solid #d8c9a8 !important; }
-html:not([data-era="now"]) .w-cta,
-html:not([data-era="now"]) .w-back,
-html:not([data-era="now"]) .w-cta span,
-html:not([data-era="now"]) .w-back span{
-  color:#fffdf6 !important; -webkit-text-fill-color:#fffdf6 !important;
-  background:#4a3423 !important; border-color:#4a3423 !important;
+html[data-era="2005"] .w-out, html[data-era="2010"] .w-out{
+  color:#7a6552 !important; -webkit-text-fill-color:#7a6552 !important; opacity:1 !important;
 }
-html:not([data-era="now"]) .w-cta:hover,
-html:not([data-era="now"]) .w-back:hover{ background:#2f2015 !important; }
+html[data-era="2005"] .w-card, html[data-era="2010"] .w-card{
+  background:#fffdf6 !important; border:1px solid #d8c9a8 !important;
+}
+html[data-era="2005"] .w-crumb a, html[data-era="2010"] .w-crumb a{
+  color:#5a3a1e !important; -webkit-text-fill-color:#5a3a1e !important; text-decoration:underline !important;
+}
 
+/* 釦は、どの時代でも濃い地に生成りの文字で。地に溶けないように言い切ります */
+html:not([data-era="now"]) .mx-btn,
+html:not([data-era="now"]) .mx-btn span,
+html:not([data-era="now"]) .mx-btn-solid,
+html:not([data-era="now"]) .mx-btn-solid span,
+html:not([data-era="now"]) .w-cta,
+html:not([data-era="now"]) .w-cta span,
+html:not([data-era="now"]) .w-back,
+html:not([data-era="now"]) .w-back span{
+  color:#fdf7ea !important; -webkit-text-fill-color:#fdf7ea !important;
+  opacity:1 !important; text-shadow:none !important; background-image:none !important;
+}
+html:not([data-era="now"]) .mx-btn,
+html:not([data-era="now"]) .mx-btn-solid,
+html:not([data-era="now"]) .w-cta,
+html:not([data-era="now"]) .w-back{
+  background-color:#4a3423 !important; border:1px solid #4a3423 !important;
+}
+html:not([data-era="now"]) .mx-btn:hover,
+html:not([data-era="now"]) .mx-btn-solid:hover,
+html:not([data-era="now"]) .w-cta:hover,
+html:not([data-era="now"]) .w-back:hover{ background-color:#2f2015 !important; }
 
 /* 定休の枡は、地が濃いので文字を明るく保ちます */
 html:not([data-era="now"]) .cal-off,
 html:not([data-era="now"]) .cal-off span{
-  color:#ffb08a !important; -webkit-text-fill-color:#ffb08a !important;
-  text-shadow:none !important;
+  color:#ffb08a !important; -webkit-text-fill-color:#ffb08a !important; text-shadow:none !important;
 }
 html:not([data-era="now"]) .cal-today{ color:#1d1610 !important; -webkit-text-fill-color:#1d1610 !important; }
-
-
-/* ══════════════════════════════════════════════════════════
-   造り手の頁・銘柄一覧も同じ作りです。
-   現代の色づかいを、まとめて置き直します。
-   ══════════════════════════════════════════════════════════ */
-html:not([data-era="now"]) .w-wrap,
-html:not([data-era="now"]) .w-wrap p,
-html:not([data-era="now"]) .w-wrap span,
-html:not([data-era="now"]) .w-wrap li,
-html:not([data-era="now"]) .w-wrap dd,
-html:not([data-era="now"]) .w-wrap h1,
-html:not([data-era="now"]) .w-wrap h2,
-html:not([data-era="now"]) .w-wrap h3{
-  color:#241c14 !important; -webkit-text-fill-color:#241c14 !important;
-  opacity:1 !important; text-shadow:none !important;
-}
-html:not([data-era="now"]) .w-wrap a{ color:#5a3a1e !important; -webkit-text-fill-color:#5a3a1e !important; }
-html:not([data-era="now"]) .w-count,
-html:not([data-era="now"]) .w-n,
-html:not([data-era="now"]) .w-outmark,
-html:not([data-era="now"]) .w-note,
-html:not([data-era="now"]) .w-facts dt,
-html:not([data-era="now"]) .w-crumb{
-  color:#5a4a34 !important; -webkit-text-fill-color:#5a4a34 !important; opacity:1 !important;
-}
-html:not([data-era="now"]) .w-price,
-html:not([data-era="now"]) .w-card-p{
-  color:#8a2f22 !important; -webkit-text-fill-color:#8a2f22 !important; opacity:1 !important;
-}
