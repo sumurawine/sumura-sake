@@ -9,6 +9,10 @@ export const LANG_FLAGS: Record<Lang, string> = {
 
 export const dict: Record<Lang, Record<string, string>> = {
  "jp": {
+  "about-head": "■ 会社概要 ■",
+  "about-location-val": "〒755-0072　山口県宇部市中村3-6-20",
+  "about-rep-val": "洲村 博志",
+  "law-rep-val": "洲村博志",
   "index-knock": "ここをノックして扉を開く",
   "index-tagline": "— 山口・宇部、フランス銘醸ワインの店 —",
   "index-age": "20歳未満の方への酒類の販売は、法律により固くお断りしております。",
@@ -227,6 +231,10 @@ export const dict: Record<Lang, Record<string, string>> = {
   "header:sub": "☆ Liquor Shop Sumura ☆ 山口・宇部 ☆ 時をおすそわけ ☆"
  },
  "en": {
+  "about-head": "■ COMPANY ■",
+  "about-location-val": "3-6-20 Nakamura, Ube, Yamaguchi 755-0072, Japan",
+  "about-rep-val": "Hiroshi Sumura",
+  "law-rep-val": "Hiroshi Sumura",
   "nav:home": "Home",
   "nav:store": "Wine",
   "nav:about": "About",
@@ -445,6 +453,10 @@ export const dict: Record<Lang, Record<string, string>> = {
   "mk-back": "← Back to the shop"
  },
  "fr": {
+  "about-head": "■ LA MAISON ■",
+  "about-location-val": "3-6-20 Nakamura, Ube, Yamaguchi 755-0072, Japon",
+  "about-rep-val": "Hiroshi Sumura",
+  "law-rep-val": "Hiroshi Sumura",
   "nav:home": "Accueil",
   "nav:store": "Vins",
   "nav:about": "À propos",
@@ -663,6 +675,10 @@ export const dict: Record<Lang, Record<string, string>> = {
   "mk-back": "← Retour à la boutique"
  },
  "zh": {
+  "about-head": "■ 公司概要 ■",
+  "about-location-val": "日本 山口县宇部市中村3-6-20（邮编 755-0072）",
+  "about-rep-val": "洲村 博志（Hiroshi Sumura）",
+  "law-rep-val": "洲村博志（Hiroshi Sumura）",
   "nav:home": "首页",
   "nav:store": "葡萄酒",
   "nav:about": "关于我们",
@@ -881,6 +897,10 @@ export const dict: Record<Lang, Record<string, string>> = {
   "mk-back": "← 返回店内"
  },
  "ko": {
+  "about-head": "■ 회사 개요 ■",
+  "about-location-val": "일본 야마구치현 우베시 나카무라 3-6-20 (우편번호 755-0072)",
+  "about-rep-val": "스무라 히로시 (洲村 博志)",
+  "law-rep-val": "스무라 히로시 (洲村 博志)",
   "nav:home": "홈",
   "nav:store": "와인",
   "nav:about": "소개",
