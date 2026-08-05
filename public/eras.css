@@ -704,3 +704,12 @@ html:not([data-era="now"]) .w-back span{
 }
 html:not([data-era="now"]) .w-cta:hover,
 html:not([data-era="now"]) .w-back:hover{ background:#2f2015 !important; }
+
+
+/* 定休の枡は、地が濃いので文字を明るく保ちます */
+html:not([data-era="now"]) .cal-off,
+html:not([data-era="now"]) .cal-off span{
+  color:#ffb08a !important; -webkit-text-fill-color:#ffb08a !important;
+  text-shadow:none !important;
+}
+html:not([data-era="now"]) .cal-today{ color:#1d1610 !important; -webkit-text-fill-color:#1d1610 !important; }
