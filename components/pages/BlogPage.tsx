@@ -9,6 +9,7 @@ import { Shell } from '@/components/Shell';
 import { T } from '@/components/T';
 import { Comments, useComments } from '@/components/Comments';
 import { dateOf, blogCatOf } from '@/lib/store';
+import { plainText } from '@/lib/richText';
 import { useContent, pick, photoOf } from '@/lib/content';
 import { pre } from '@/lib/slug';
 
@@ -91,7 +92,7 @@ export function BlogPage() {
         ? null
         : posts.length
         ? shown.map((r) => {
-            const body = pick(r, lang, '本文(日本語)', '本文' + L);
+            const body = plainText(pick(r, lang, '本文(日本語)', '本文' + L));
             const short = body.length > 140 ? body.slice(0, 140) + '…' : body;
             return (
               <div className="panel" key={r['_row']} data-blog-card={r['_row']}>
