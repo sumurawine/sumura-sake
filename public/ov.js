@@ -20,7 +20,8 @@
      これらが混ざっていても「文まるごと」を選べるようにします。
      ただし A（リンク）は、押し先を守るため今までどおり別扱いにします。 */
   var INLINE = { SPAN:1, B:1, STRONG:1, EM:1, I:1, U:1, S:1, SMALL:1, MARK:1,
-                 CODE:1, ABBR:1, SUB:1, SUP:1, FONT:1, WBR:1, RUBY:1, RT:1, RP:1, BDI:1, BDO:1 };
+                 CODE:1, ABBR:1, SUB:1, SUP:1, FONT:1, WBR:1, RUBY:1, RT:1, RP:1, BDI:1, BDO:1,
+                 A:1 };   /* リンクも文の一部として扱います。押し先は「リンク先」の欄で直せます */
 
   /* 中身が文字だけかどうか。飾りの入れ物は、その中も見て判じます */
   function textOnly(el, depth) {
