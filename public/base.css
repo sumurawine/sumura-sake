@@ -352,14 +352,7 @@ body:has(.mk-wrap) .mk-wrap{
 @media (prefers-reduced-motion:reduce){ body:has(.mk-wrap) .mk-wrap{ animation:none } }
 
 /* 起動画面と目録 */
-body:has(.mk-wrap) .mk-wrap::before{ content:none; }
-
-/* 題と小さな英字 */
-body:has(.mk-wrap) .mk-title{
-  color:#35f04a !important; font-size:24px !important; font-weight:400 !important;
-  letter-spacing:.5em !important; text-indent:0 !important;
-  text-shadow:0 0 12px rgba(53,240,74,.55) !important;
-}
+body:has(.mk-wrap) .mk-wrap::before{ content:none !important; }
 body:has(.mk-wrap) .mk-title::after{ content:"█"; margin-left:8px; animation:bl 1s steps(1,end) infinite; }
 body:has(.mk-wrap) .mk-en{ color:#1f8f2c !important; letter-spacing:.3em !important; text-indent:0 !important; }
 
@@ -423,9 +416,7 @@ body:has(.mk-wrap) #lang-bar{
 body:has(.mk-wrap) #lang-bar button.active{ border-color:#35f04a !important; background:#0a220d !important; }
 
 @media (max-width:600px){
-  body:has(.mk-wrap) .mk-wrap::before{ font-size:11px; }
-  body:has(.mk-wrap) .mk-title{ font-size:20px !important; letter-spacing:.32em !important; }
-}
+  body:has(.mk-wrap) .mk-wrap::before{ content:none !important; }
 
 
 /* ══ 昔日 ── 実機の趣を強める（写真は素のまま） ═══════════ */
@@ -458,10 +449,7 @@ body:has(.mk-wrap) .mk-wrap{
 body:has(.mk-wrap) .mk-ready .mk-fx{ opacity:1 !important; transform:none !important; transition:none !important; }
 
 /* 本物の DIR 出力 */
-body:has(.mk-wrap) .mk-wrap::before{
-  content:"SUMURA-DOS バージョン 6.20\A (C)Copyright 洲村酒店 1998\A\A C:¥SUMURA>dir\A  ドライブ C のボリューム ラベルは SUMURA です\A  ボリューム シリアル番号は 1998-0401 です\A  C:¥SUMURA のディレクトリ\A\A 98-04-01  09:12  <DIR>          .\A 98-04-01  09:12  <DIR>          ..\A 98-04-01  09:15          48,640  KIOKU_01.JPG\A 98-04-01  09:16          51,200  KIOKU_02.JPG\A 98-04-01  09:21           4,096  MUKASHI .TXT\A         3 個のファイル        103,936 バイト\A         2 個のディレクトリ  1,258,291,200 バイトの空き領域\A\A C:¥SUMURA>type mukashi.txt";
-  font-size:13.5px; line-height:1.75; color:#29fb57; opacity:1;
-}
+body:has(.mk-wrap) .mk-wrap::before{ content:none !important; }
 
 /* 題：DOSらしい下線カーソル */
 body:has(.mk-wrap) .mk-title{
