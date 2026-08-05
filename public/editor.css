@@ -314,3 +314,17 @@ html[data-era] .rm-wrap, html[data-era] .rm-wrap *{
   .rm-arrow{ display:none; }
   .rm-go, a.rm-go{ display:block; text-align:center; }
 }
+
+
+/* 控室では、余計なものを出しません（時間旅行・言語の札は不要です） */
+body:has(.rm-wrap) #timewarp,
+body:has(.rm-wrap) #lang-bar{ display:none !important; }
+
+/* 札の題は、青いリンクの色ではなく墨で */
+.rm-card, .rm-card:visited{ color:#1a1410 !important; text-decoration:none !important; }
+.rm-card .rm-h{ color:#1a1410 !important; -webkit-text-fill-color:#1a1410 !important; }
+.rm-card .rm-s{ color:#5c5040 !important; -webkit-text-fill-color:#5c5040 !important; }
+.rm-card .rm-arrow{ color:#8a7454 !important; -webkit-text-fill-color:#8a7454 !important; }
+.rm-card .rm-mark{ color:#ffd66e !important; -webkit-text-fill-color:#ffd66e !important; }
+.rm-wrap a.rm-plain{ color:#7a6b55 !important; }
+.rm-wrap a.rm-go{ color:#ffd66e !important; -webkit-text-fill-color:#ffd66e !important; }
