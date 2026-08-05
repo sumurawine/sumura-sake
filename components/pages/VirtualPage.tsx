@@ -276,7 +276,11 @@ export function VirtualPage() {
           <div className="vs-gate-in">
             <div className="vs-kick">SUMURA — VIRTUAL SHOP</div>
             <h1>すむら酒店</h1>
-            <p>{isTouch ? t.hintSp : t.hintPc}</p>
+            <p className="vs-guide">
+              {(isTouch ? t.hintSp : t.hintPc).split(/[\uFF0F\/\u30FB,\uFF0C\u3001]/).map((s, i) => (
+                <span className="vs-guide-i" key={i}>{s.trim()}</span>
+              ))}
+            </p>
             <button className="vs-btn vs-primary" disabled={!items.length}
                     onClick={() => setStarted(true)}>
               {items.length ? t.enter : t.loading}
