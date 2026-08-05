@@ -94,21 +94,25 @@ export function BlogPage() {
             const body = pick(r, lang, '本文(日本語)', '本文' + L);
             const short = body.length > 140 ? body.slice(0, 140) + '…' : body;
             return (
-              <div className="panel" key={r['_row']}>
-                <div className="x-pink" style={{ fontSize: 14 }}>
+              <div className="panel" key={r['_row']} data-blog-card={r['_row']}>
+                <div className="x-pink" style={{ fontSize: 14 }}
+                     data-blog-row={r['_row']} data-blog-field="日付と分類">
                   {dateOf(r['日付'], lang)}{(r['カテゴリ'] || '').trim() ? '　｜　' + blogCatOf(r['カテゴリ'], lang) : ''}
                 </div>
                 <Link href={href(r)} style={{ textDecoration: 'none' }} prefetch>
-                  <div className="pixhead" style={{ fontSize: 18 }}>{pick(r, lang, '題名(日本語)', '題名' + L)}</div>
+                  <div className="pixhead" style={{ fontSize: 18 }}
+                       data-blog-row={r['_row']} data-blog-field="題名(日本語)">{pick(r, lang, '題名(日本語)', '題名' + L)}</div>
                 </Link>
                 {photoOf(r) ? (
                   <p style={{ textAlign: 'center' }}>
                     <Link href={href(r)} prefetch>
-                      <img src={photoOf(r)} alt="" style={{ maxWidth: '100%', height: 'auto' }} loading="lazy" />
+                      <img src={photoOf(r)} alt="" style={{ maxWidth: '100%', height: 'auto' }} loading="lazy"
+                           data-blog-row={r['_row']} data-blog-field="写真" />
                     </Link>
                   </p>
                 ) : null}
-                <p style={{ whiteSpace: 'pre-wrap' }}>{short}</p>
+                <p style={{ whiteSpace: 'pre-wrap' }}
+                   data-blog-row={r['_row']} data-blog-field="本文(日本語)">{short}</p>
                 <p><Link href={href(r)} prefetch>{t('more')} →</Link></p>
               </div>
             );
