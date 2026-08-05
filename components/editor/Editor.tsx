@@ -5,6 +5,7 @@ import { editMode, setEditMode, loadOverrides, overrides, isMirror } from '@/lib
 import { applyOverrides, keyOf, baseText, isTarget } from '@/lib/domtext';
 import { NewProduct } from './NewProduct';
 import { BlogAdmin } from './BlogAdmin';
+import { BlogInline } from './BlogInline';
 import { bridgeUrl, setBridgeUrl, call, openBridge } from './Bridge';
 import { useSite } from '@/components/Providers';
 
@@ -187,6 +188,7 @@ export function Editor() {
         {editing ? <button className="ed-b" onClick={() => { loadOverrides(true).then(() => location.reload()); }}>読み直す</button> : null}
         {editing && /store/.test(location.pathname) ? <NewProduct /> : null}
         {editing ? <BlogAdmin toast={toast} /> : null}
+      {editing && allowed ? <BlogInline toast={toast} /> : null}
         {editing ? <button className="ed-b" onClick={() => setNeedUrl(true)}>つなぎ先</button> : null}
         <button className="ed-b" onClick={() => { window.open(location.href.replace('/preview/', '/'), '_blank'); }}>本番を見る</button>
       </div>
@@ -261,7 +263,8 @@ export function Editor() {
 /** 触れる場所か見分けます。文言と、ページ中のすべての写真が対象です */
 function pickable(t: HTMLElement | null): HTMLElement | null {
   if (!t) return null;
-  if (t.closest('.ed-panel, .ed-bar, .ed-msg, .ed-new, .ed-form')) return null;
+  if (t.closest('.ed-panel, .ed-bar, .ed-msg, .ed-new, .ed-form, .bi-wrap, .bi-hint')) return null;
+  if (t.closest('[data-blog-field]')) return null;   /* ブログは専用の道具で直します */
   const img = t.closest('img') as HTMLElement | null;
   if (img) return img;
   const marked = t.closest('[data-img]') as HTMLElement | null;
