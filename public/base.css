@@ -352,11 +352,7 @@ body:has(.mk-wrap) .mk-wrap{
 @media (prefers-reduced-motion:reduce){ body:has(.mk-wrap) .mk-wrap{ animation:none } }
 
 /* 起動画面と目録 */
-body:has(.mk-wrap) .mk-wrap::before{
-  content:"SUMURA-DOS (C) 1998 洲村酒店\A メモリ 640KB OK ── カラー表示 準備完了\A\A C:¥SUMURA>DIR 昔日\A .        <DIR>\A ..       <DIR>\A KIOKU_01 JPG   ── 写真\A KIOKU_02 JPG   ── 写真\A MUKASHI  TXT   ── 記録\A\A C:¥SUMURA>TYPE MUKASHI.TXT";
-  display:block; white-space:pre; overflow-x:hidden;
-  font-size:13px; line-height:1.95; color:#2ecc40; opacity:.94; margin-bottom:38px;
-}
+body:has(.mk-wrap) .mk-wrap::before{ content:none; }
 
 /* 題と小さな英字 */
 body:has(.mk-wrap) .mk-title{
@@ -634,7 +630,13 @@ body:has(.mk-wrap){ padding-top:96px !important; }
 
 
 /* ── 端末の一覧表示を言語ごとに ───────────────────── */
-html[lang="en"] .mk-wrap::before{ content:"SUMURA-DOS (C) 1998 SUMURA LIQUOR\A MEMORY 640KB OK -- COLOR DISPLAY READY\A\A C:¥SUMURA>DIR OLDDAYS\A .        <DIR>\A ..       <DIR>\A KIOKU_01 JPG   -- PHOTO\A KIOKU_02 JPG   -- PHOTO\A MUKASHI  TXT   -- RECORD\A\A C:¥SUMURA>TYPE MUKASHI.TXT"; }
-html[lang="fr"] .mk-wrap::before{ content:"SUMURA-DOS (C) 1998 SUMURA LIQUOR\A MEMOIRE 640KO OK -- AFFICHAGE COULEUR PRET\A\A C:¥SUMURA>DIR AUTREFOIS\A .        <DIR>\A ..       <DIR>\A KIOKU_01 JPG   -- PHOTO\A KIOKU_02 JPG   -- PHOTO\A MUKASHI  TXT   -- ARCHIVE\A\A C:¥SUMURA>TYPE MUKASHI.TXT"; }
-html[lang="zh"] .mk-wrap::before{ content:"SUMURA-DOS (C) 1998 洲村酒店\A 内存 640KB 正常 ── 彩色显示 就绪\A\A C:¥SUMURA>DIR 昔日\A .        <DIR>\A ..       <DIR>\A KIOKU_01 JPG   ── 照片\A KIOKU_02 JPG   ── 照片\A MUKASHI  TXT   ── 记录\A\A C:¥SUMURA>TYPE MUKASHI.TXT"; }
-html[lang="ko"] .mk-wrap::before{ content:"SUMURA-DOS (C) 1998 SUMURA\A 메모리 640KB 정상 ── 컬러 표시 준비 완료\A\A C:¥SUMURA>DIR 옛날\A .        <DIR>\A ..       <DIR>\A KIOKU_01 JPG   ── 사진\A KIOKU_02 JPG   ── 사진\A MUKASHI  TXT   ── 기록\A\A C:¥SUMURA>TYPE MUKASHI.TXT"; }
+
+
+/* 端末の一覧。写真の枚数に合わせて頁の側でこしらえます */
+.mk-dos{
+  display:block; white-space:pre; overflow-x:auto;
+  font-family:inherit; font-size:13px; line-height:1.95;
+  color:#2ecc40; opacity:.94; margin:0 0 38px;
+}
+body:has(.mk-wrap) .mk-dos{ font-size:16px !important; line-height:24px !important; }
+@media (max-width:600px){ .mk-dos{ font-size:11px; } body:has(.mk-wrap) .mk-dos{ font-size:12px !important; line-height:19px !important; } }
