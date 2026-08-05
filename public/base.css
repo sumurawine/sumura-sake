@@ -489,3 +489,56 @@ body:has(.mk-wrap) .mk-story, body:has(.mk-wrap) .mk-wrap p{
   font-size:14px !important; line-height:1.9 !important; max-width:72ch;
 }
 body:has(.mk-wrap) .mk-sig::after{ content:"\A\A C:¥SUMURA>_"; }
+
+
+/* ══ 昔日 ── 時間旅行と言語切替も端末の道具に ═══════════ */
+body:has(.mk-wrap) #timewarp{
+  background:#020302 !important; border:1px solid #1f8f2c !important; border-radius:0 !important;
+  box-shadow:0 0 14px rgba(41,251,87,.12) !important; color:#29fb57 !important;
+  padding:10px !important;
+  font-family:"MS Gothic","ＭＳ ゴシック","Osaka-Mono","DotGothic16",monospace !important;
+}
+body:has(.mk-wrap) #timewarp *{
+  font-family:"MS Gothic","ＭＳ ゴシック","Osaka-Mono","DotGothic16",monospace !important;
+}
+body:has(.mk-wrap) #timewarp .tw-t{
+  color:#29fb57 !important; letter-spacing:.18em !important;
+  border-bottom:1px solid #1f8f2c; padding-bottom:6px !important; margin-bottom:6px !important;
+  background:none !important; text-shadow:none !important;
+}
+body:has(.mk-wrap) #timewarp button{
+  background:transparent !important; color:#29fb57 !important;
+  border:1px solid #1f8f2c !important; border-radius:0 !important;
+  box-shadow:none !important; text-shadow:none !important;
+  font-size:13px !important; padding:7px 10px !important; margin:3px 0 !important;
+  letter-spacing:.04em !important;
+}
+body:has(.mk-wrap) #timewarp button:hover{ background:#0a220d !important; color:#29fb57 !important; }
+body:has(.mk-wrap) #timewarp button.on{
+  background:#29fb57 !important; color:#020302 !important; border-color:#29fb57 !important; font-weight:400 !important;
+}
+body:has(.mk-wrap) #timewarp .tw-toggle{
+  background:transparent !important; color:#29fb57 !important; border:0 !important;
+}
+
+/* 言語切替：旗も燐光のモノクロに */
+body:has(.mk-wrap) #lang-bar{
+  background:#020302 !important; border:1px solid #1f8f2c !important; border-radius:0 !important;
+  box-shadow:0 0 14px rgba(41,251,87,.12) !important; padding:4px 6px !important;
+}
+body:has(.mk-wrap) #lang-bar button{
+  filter:grayscale(1) brightness(1.35) sepia(1) hue-rotate(60deg) saturate(4);
+  opacity:.5 !important; border:1px solid transparent !important; border-radius:0 !important;
+  background:none !important;
+}
+body:has(.mk-wrap) #lang-bar button:hover{ opacity:.85 !important; }
+body:has(.mk-wrap) #lang-bar button.active{
+  opacity:1 !important; border:1px solid #29fb57 !important; background:#0a220d !important;
+}
+
+/* 携帯：道具が本文に被らないように */
+@media (max-width:860px){
+  body:has(.mk-wrap){ padding-top:118px !important; }
+  body:has(.mk-wrap) #timewarp{ top:8px !important; left:8px !important; bottom:auto !important; max-width:46vw; }
+  body:has(.mk-wrap) #lang-bar{ top:8px !important; right:8px !important; bottom:auto !important; left:auto !important; }
+}
