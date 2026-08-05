@@ -9,6 +9,97 @@ import type { Lang } from '@/lib/i18n';
 
 type Shot = { src: string; era: Record<Lang, string>; cap: Record<Lang, string>; w: number; h: number };
 
+/* 端末の一覧表示。写真の枚数に合わせて、その場でこしらえます */
+const DOS: Record<Lang, (n: number, files: string) => string> = {
+  jp: (n, f) => `SUMURA-DOS バージョン 6.20
+(C)Copyright 洲村酒店 1998
+
+C:¥SUMURA>dir
+ ドライブ C のボリューム ラベルは SUMURA です
+ ボリューム シリアル番号は 1998-0401 です
+ C:¥SUMURA のディレクトリ
+
+98-04-01  09:12  <DIR>          .
+98-04-01  09:12  <DIR>          ..
+${f}98-04-01  09:21          4,096  MUKASHI .TXT
+       ${n + 1} 個のファイル        ${(n * 48640 + 4096).toLocaleString('en-US')} バイト
+        2 個のディレクトリ  1,258,291,200 バイトの空き領域
+
+C:¥SUMURA>type mukashi.txt`,
+  en: (n, f) => `SUMURA-DOS Version 6.20
+(C)Copyright SUMURA LIQUOR 1998
+
+C:¥SUMURA>DIR
+ Volume in drive C is SUMURA
+ Volume Serial Number is 1998-0401
+ Directory of C:¥SUMURA
+
+98-04-01  09:12  <DIR>          .
+98-04-01  09:12  <DIR>          ..
+${f}98-04-01  09:21          4,096  MUKASHI .TXT
+       ${n + 1} File(s)        ${(n * 48640 + 4096).toLocaleString('en-US')} bytes
+        2 Dir(s)     1,258,291,200 bytes free
+
+C:¥SUMURA>TYPE MUKASHI.TXT`,
+  fr: (n, f) => `SUMURA-DOS Version 6.20
+(C)Copyright SUMURA LIQUOR 1998
+
+C:¥SUMURA>DIR
+ Volume dans le lecteur C : SUMURA
+ Numero de serie du volume : 1998-0401
+ Repertoire de C:¥SUMURA
+
+98-04-01  09:12  <DIR>          .
+98-04-01  09:12  <DIR>          ..
+${f}98-04-01  09:21          4,096  MUKASHI .TXT
+       ${n + 1} fichier(s)        ${(n * 48640 + 4096).toLocaleString('en-US')} octets
+        2 repertoire(s)  1,258,291,200 octets libres
+
+C:¥SUMURA>TYPE MUKASHI.TXT`,
+  zh: (n, f) => `SUMURA-DOS 版本 6.20
+(C)Copyright 洲村酒店 1998
+
+C:¥SUMURA>DIR
+ 驱动器 C 中的卷是 SUMURA
+ 卷的序列号是 1998-0401
+ C:¥SUMURA 的目录
+
+98-04-01  09:12  <DIR>          .
+98-04-01  09:12  <DIR>          ..
+${f}98-04-01  09:21          4,096  MUKASHI .TXT
+       ${n + 1} 个文件        ${(n * 48640 + 4096).toLocaleString('en-US')} 字节
+        2 个目录  1,258,291,200 可用字节
+
+C:¥SUMURA>TYPE MUKASHI.TXT`,
+  ko: (n, f) => `SUMURA-DOS 버전 6.20
+(C)Copyright SUMURA 1998
+
+C:¥SUMURA>DIR
+ C 드라이브의 볼륨 레이블은 SUMURA
+ 볼륨 일련 번호는 1998-0401
+ C:¥SUMURA 디렉터리
+
+98-04-01  09:12  <DIR>          .
+98-04-01  09:12  <DIR>          ..
+${f}98-04-01  09:21          4,096  MUKASHI .TXT
+       ${n + 1}개 파일        ${(n * 48640 + 4096).toLocaleString('en-US')} 바이트
+        2개 디렉터리  1,258,291,200 바이트 남음
+
+C:¥SUMURA>TYPE MUKASHI.TXT`,
+};
+
+/** 写真の数だけ、記録の行をこしらえます */
+function fileLines(n: number): string {
+  let out = '';
+  for (let i = 1; i <= n; i++) {
+    const mm = String(12 + Math.floor((i - 1) / 4)).padStart(2, '0');
+    const ss = String(15 + ((i * 7) % 40)).padStart(2, '0');
+    const size = (46000 + ((i * 2731) % 9000)).toLocaleString('en-US');
+    out += `98-04-01  09:${mm}       ${size.padStart(9, ' ')}  KIOKU_${String(i).padStart(2, '0')}.JPG\n`;
+  }
+  return out;
+}
+
 const D50 = { jp: '1950年代', en: 'the 1950s', fr: 'années 1950', zh: '1950年代', ko: '1950년대' };
 const D60 = { jp: '1960年代', en: 'the 1960s', fr: 'années 1960', zh: '1960年代', ko: '1960년대' };
 const D70 = { jp: '1970年代', en: 'the 1970s', fr: 'années 1970', zh: '1970年代', ko: '1970년대' };
@@ -89,6 +180,7 @@ export function MukashiPage() {
 
   return (
     <div className="mk-wrap">
+      <pre className="mk-dos">{(DOS[lang] || DOS.jp)(SHOTS.length, fileLines(SHOTS.length))}</pre>
       <T k="mk-title" as="div" className="mk-title" />
       <div className="mk-en">Liquor Shop Sumura</div>
 
