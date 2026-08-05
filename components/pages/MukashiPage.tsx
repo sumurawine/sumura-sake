@@ -193,7 +193,10 @@ export function MukashiPage() {
             <img src={asset(s.src)} alt={s.cap.jp} width={s.w} height={s.h}
                  loading={i < 2 ? undefined : 'lazy'} />
           </div>
-          <figcaption className="mk-cap">{s.cap[lang] || s.cap.jp}</figcaption>
+          <figcaption className="mk-cap">
+            <span className="mk-decade">{s.era[lang] || s.era.jp}</span>
+            {'　'}{s.cap[lang] || s.cap.jp}
+          </figcaption>
         </figure>
       ))}
 
