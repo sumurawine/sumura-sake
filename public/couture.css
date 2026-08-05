@@ -1307,3 +1307,26 @@ html[data-era="now"] .pr-list a{ cursor:pointer; }
   html[data-era="now"][data-mx="1"] .mx-legacy .card b{ font-size:16.5px !important; }
   html[data-era="now"] .pr-list li{ font-size:15.5px !important; }
 }
+
+
+/* ── 触れた行を確実に太く（他の指定より後に置きます） ── */
+html[data-era="now"][data-mx="1"] .mx-legacy #catalogue .card:hover b,
+html[data-era="now"][data-mx="1"] #catalogue .card:hover b,
+html[data-mx="1"] #catalogue .card:hover b{
+  color:#fff8ec !important; font-weight:700 !important; letter-spacing:.02em !important;
+}
+html[data-era="now"][data-mx="1"] .mx-legacy #catalogue .card:hover .hint,
+html[data-mx="1"] #catalogue .card:hover .hint{ color:rgba(244,236,228,.9) !important; }
+html[data-era="now"][data-mx="1"] .mx-legacy #catalogue .card:hover .price,
+html[data-mx="1"] #catalogue .card:hover .price{ color:#e8cf9e !important; font-weight:600 !important; }
+html[data-mx="1"] #catalogue .card:hover{
+  background:rgba(244,236,228,.05) !important;
+  box-shadow:inset 3px 0 0 rgba(201,173,130,.6) !important;
+}
+html[data-era="now"] .pr-list li:hover .pr-jp,
+html[data-era="now"] .pr-list li:hover a,
+html[data-era="now"][data-mx="1"] .mx-legacy .pr-list li:hover a,
+html[data-era="now"][data-mx="1"] .mx-legacy .pr-list li:hover .pr-jp{
+  color:#fff8ec !important; font-weight:700 !important;
+}
+html[data-era="now"] .pr-list li:hover{ background:rgba(244,236,228,.05) !important; }
