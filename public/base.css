@@ -600,3 +600,14 @@ html[data-era="mukashi"] body:has(.mk-wrap) #lang-bar button.active{
   }
   body:has(.mk-wrap){ padding-top:96px !important; }
 }
+
+
+/* ══ 昔日・携帯：時間旅行は折り返さない小箱に ═══════════ */
+@media (max-width:860px){
+  html[data-era="mukashi"] body:has(.mk-wrap) #timewarp{
+    width:auto !important; min-width:0 !important; height:auto !important;
+  }
+  html[data-era="mukashi"] body:has(.mk-wrap) #timewarp .tw-t{
+    white-space:nowrap !important; width:auto !important;
+  }
+}
