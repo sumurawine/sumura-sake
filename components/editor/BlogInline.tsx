@@ -228,7 +228,10 @@ export function BlogInline({ toast }: { toast: (t: string, ms?: number) => void 
   if (!sheet) return null;
 
   const cur = pick ? rowOf(pick.sheet, pick.row) : null;
-  const title = cur ? String(cur['題名(日本語)'] || '（題名なし）') : '';
+  /* 題名に飾りの札が混ざっていることがあるので、文字だけにして見せます */
+  const title = cur
+    ? String(cur['題名(日本語)'] || '（題名なし）').replace(/<[^>]*>/g, '').trim() || '（題名なし）'
+    : '';
   const open = String(cur?.['公開'] || '').trim();
   const shown = open !== '下書き';
   const isBlog = pick?.sheet === 'blog';
