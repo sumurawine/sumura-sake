@@ -49,11 +49,12 @@ const shopLd = {
     closes: '18:30',
   }],
   areaServed: { '@type': 'Country', name: '日本' },
-  makesOffer: [
+  /* 取扱い銘柄は brand として持たせます（名無しの Product を作らないため） */
+  brand: [
     'Domaine de la Romanée-Conti',
     'Domaine Leroy',
     "Domaine d'Auvenay",
-  ].map((n) => ({ '@type': 'Offer', itemOffered: { '@type': 'Product', brand: { '@type': 'Brand', name: n } } })),
+  ].map((n) => ({ '@type': 'Brand', name: n })),
 };
 
 const siteLd = {
