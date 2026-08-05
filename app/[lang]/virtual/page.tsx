@@ -1,4 +1,4 @@
-import { metaFor } from '@/lib/siteMeta';
+import { metaPrivate } from '@/lib/siteMeta';
 import { OTHER_LANGS } from '@/lib/slug';
 import { VirtualPage } from '@/components/pages/VirtualPage';
 
@@ -11,7 +11,7 @@ export function generateStaticParams() { return OTHER_LANGS.map((l) => ({ lang: 
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  return metaFor('/virtual', (lang as any) || 'jp');
+  return metaPrivate(TITLE[lang] || 'バーチャル店舗');
 }
 
 export default function Page() { return <VirtualPage />; }
