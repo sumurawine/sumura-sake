@@ -430,3 +430,62 @@ body:has(.mk-wrap) #lang-bar button.active{ border-color:#35f04a !important; bac
   body:has(.mk-wrap) .mk-wrap::before{ font-size:11px; }
   body:has(.mk-wrap) .mk-title{ font-size:20px !important; letter-spacing:.32em !important; }
 }
+
+
+/* ══ 昔日 ── 実機の趣を強める（写真は素のまま） ═══════════ */
+body:has(.mk-wrap){
+  background:#020302 !important;
+  color:#29fb57 !important; font-size:14px !important;
+  line-height:1.75 !important; letter-spacing:0 !important;
+  font-family:"MS Gothic","ＭＳ ゴシック","Osaka-Mono","DotGothic16",monospace !important;
+  text-shadow:0 0 1.5px rgba(41,251,87,.85), 0 0 9px rgba(41,251,87,.22);
+}
+/* 走査線を細かく、管面の暗がりを深く */
+body:has(.mk-wrap)::after{
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.30) 0px, rgba(0,0,0,.30) 1px, transparent 1px, transparent 2px),
+    radial-gradient(130% 105% at 50% 50%, transparent 58%, rgba(0,5,0,.68) 100%) !important;
+}
+/* 電源投入：一本の輝線から画面が開く */
+@keyframes mkBoot{
+  0%{ transform:scaleY(.006); filter:brightness(4) saturate(.4); }
+  38%{ transform:scaleY(.006); filter:brightness(4) saturate(.4); }
+  58%{ transform:scaleY(1); filter:brightness(1.7); }
+  100%{ transform:none; filter:none; }
+}
+body:has(.mk-wrap) .mk-wrap{
+  animation:mkBoot 1.05s ease-out both, mkCrt 7s steps(1,end) 1.2s infinite;
+  transform-origin:50% 42%;
+}
+@media (prefers-reduced-motion:reduce){ body:has(.mk-wrap) .mk-wrap{ animation:none } }
+/* 今風のふわっとした現れ方は廃止（端末は即時表示） */
+body:has(.mk-wrap) .mk-ready .mk-fx{ opacity:1 !important; transform:none !important; transition:none !important; }
+
+/* 本物の DIR 出力 */
+body:has(.mk-wrap) .mk-wrap::before{
+  content:"SUMURA-DOS バージョン 6.20\A (C)Copyright 洲村酒店 1998\A\A C:¥SUMURA>dir\A  ドライブ C のボリューム ラベルは SUMURA です\A  ボリューム シリアル番号は 1998-0401 です\A  C:¥SUMURA のディレクトリ\A\A 98-04-01  09:12  <DIR>          .\A 98-04-01  09:12  <DIR>          ..\A 98-04-01  09:15          48,640  KIOKU_01.JPG\A 98-04-01  09:16          51,200  KIOKU_02.JPG\A 98-04-01  09:21           4,096  MUKASHI .TXT\A         3 個のファイル        103,936 バイト\A         2 個のディレクトリ  1,258,291,200 バイトの空き領域\A\A C:¥SUMURA>type mukashi.txt";
+  font-size:13.5px; line-height:1.75; color:#29fb57; opacity:1;
+}
+
+/* 題：DOSらしい下線カーソル */
+body:has(.mk-wrap) .mk-title{
+  font-size:22px !important; letter-spacing:.4em !important;
+  text-shadow:0 0 2px rgba(41,251,87,.9), 0 0 14px rgba(41,251,87,.3) !important;
+}
+body:has(.mk-wrap) .mk-title::after{ content:"_"; margin-left:10px; animation:bl 1s steps(1,end) infinite; }
+
+/* 写真は素のまま（色も画質も一切いじらない） */
+body:has(.mk-wrap) .mk-card img, body:has(.mk-wrap) .mk-photo img{
+  filter:none !important; image-rendering:auto !important;
+}
+body:has(.mk-wrap) .mk-card{
+  border:1px solid #4c544c !important; background:#000 !important;
+  box-shadow:none !important; padding:8px !important;
+}
+body:has(.mk-wrap) .mk-cap::before{ content:"[JPG] "; color:#1f8f2c; }
+
+/* 本文は78桁の文書らしく */
+body:has(.mk-wrap) .mk-story, body:has(.mk-wrap) .mk-wrap p{
+  font-size:14px !important; line-height:1.9 !important; max-width:72ch;
+}
+body:has(.mk-wrap) .mk-sig::after{ content:"\A\A C:¥SUMURA>_"; }
