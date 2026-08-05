@@ -1349,3 +1349,21 @@ html[data-era="now"] .pr-list li:hover{ background:rgba(244,236,228,.05) !import
 @media (max-width:600px){
   .vs-gate p{ font-size:15px !important; line-height:2.0 !important; }
 }
+
+/* 手引きを、一つずつの札に */
+.vs-gate .vs-guide{
+  display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+  max-width:30em; margin:0 auto 26px !important;
+}
+.vs-gate .vs-guide-i{
+  display:inline-block; padding:7px 13px;
+  border:1px solid rgba(201,173,130,.34);
+  background:rgba(10,7,6,.55);
+  color:rgba(250,245,236,.95);
+  font-size:14px; line-height:1.5; letter-spacing:.06em; white-space:nowrap;
+  text-shadow:0 1px 8px rgba(0,0,0,.7);
+}
+@media (max-width:600px){
+  .vs-gate .vs-guide{ gap:6px; }
+  .vs-gate .vs-guide-i{ font-size:13.5px; padding:6px 11px; white-space:normal; }
+}
