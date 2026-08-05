@@ -95,3 +95,42 @@ export function apOf(key: string | undefined, lang: Lang, I: I18nData | null) {
   return (o && (o[lang] || o.jp)) || k;
 }
 export const catOf = (c: string, lang: Lang) => (CATS[c] || CATS.other)[lang] || (CATS[c] || CATS.other).jp;
+
+
+/** 日付の中の日本語の曜日「(水)」を、その言語の言い方に置き換えます */
+const DOW: Record<string, Record<Lang, string>> = {
+  '日': { jp: '日', en: 'Sun', fr: 'dim', zh: '日', ko: '일' },
+  '月': { jp: '月', en: 'Mon', fr: 'lun', zh: '一', ko: '월' },
+  '火': { jp: '火', en: 'Tue', fr: 'mar', zh: '二', ko: '화' },
+  '水': { jp: '水', en: 'Wed', fr: 'mer', zh: '三', ko: '수' },
+  '木': { jp: '木', en: 'Thu', fr: 'jeu', zh: '四', ko: '목' },
+  '金': { jp: '金', en: 'Fri', fr: 'ven', zh: '五', ko: '금' },
+  '土': { jp: '土', en: 'Sat', fr: 'sam', zh: '六', ko: '토' },
+};
+export function dateOf(s: string | undefined, lang: Lang): string {
+  const v = String(s || '').trim();
+  if (!v || lang === 'jp') return v;
+  return v
+    .replace(/[（(]\s*([日月火水木金土])\s*[）)]/g, (_m, d) => '(' + (DOW[d]?.[lang] || d) + ')')
+    .replace(/(\d+)年\s*(\d+)月\s*(\d+)日/g, (_m, y, mo, da) => y + '.' + mo + '.' + da)
+    .replace(/(\d+)年\s*(\d+)月/g, (_m, y, mo) => y + '.' + mo);
+}
+
+/** ブログの分類。表にない言葉は、そのまま出します */
+export const BLOG_CATS: Record<string, Record<Lang, string>> = {
+  '雑感': { jp: '雑感', en: 'Musings', fr: 'Réflexions', zh: '随想', ko: '단상' },
+  '試飲': { jp: '試飲', en: 'Tastings', fr: 'Dégustations', zh: '试饮', ko: '시음' },
+  'プリムール': { jp: 'プリムール', en: 'En primeur', fr: 'Primeurs', zh: '期酒', ko: '프리뫼르' },
+  '入荷': { jp: '入荷', en: 'New arrivals', fr: 'Arrivages', zh: '到货', ko: '입고' },
+  'お知らせ': { jp: 'お知らせ', en: 'Notices', fr: 'Annonces', zh: '通知', ko: '공지' },
+  '催し': { jp: '催し', en: 'Events', fr: 'Événements', zh: '活动', ko: '행사' },
+  '造り手': { jp: '造り手', en: 'Producers', fr: 'Vignerons', zh: '生产者', ko: '생산자' },
+  '産地': { jp: '産地', en: 'Regions', fr: 'Régions', zh: '产区', ko: '산지' },
+  '食卓': { jp: '食卓', en: 'At the table', fr: 'À table', zh: '餐桌', ko: '식탁' },
+  '店より': { jp: '店より', en: 'From the shop', fr: 'De la boutique', zh: '来自本店', ko: '가게에서' },
+};
+export const blogCatOf = (c: string | undefined, lang: Lang): string => {
+  const v = String(c || '').trim();
+  if (!v || lang === 'jp') return v;
+  return BLOG_CATS[v]?.[lang] || v;
+};
