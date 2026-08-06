@@ -91,8 +91,10 @@ export function SecretPage() {
     } catch { /* しずかに */ }
 
     /* 包みが未着なら、ここで取り寄せます */
-    let list = boxes.current;
-    if (!list) {
+    let list: string[];
+    if (boxes.current) {
+      list = boxes.current;
+    } else {
       try {
         const r = await apiGet({ action: 'rooms' });
         list = Array.isArray(r?.rooms) ? r.rooms.map((x: any) => String(x.box || '')) : [];
