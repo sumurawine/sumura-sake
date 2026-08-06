@@ -2,27 +2,30 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { Shell } from '@/components/Shell';
 import { T } from '@/components/T';
 import { useSite } from '@/components/Providers';
 import { DOOR_SVG } from '@/lib/doorSvg';
 import { MODERN, passwordWording } from '@/lib/decor';
 import { isModern } from '@/lib/era';
+import { pre } from '@/lib/slug';
+import { apiGet } from '@/lib/api';
+import { unlock, canLock } from '@/lib/roomCrypto';
 import type { Lang } from '@/lib/i18n';
 
-const ROOMS: Record<string, [string, string]> = {
-  a86a7c940fe3e2310fc84c96f941e24a93a9c1f67382dc1b71ce069c74279cf1: ['/room-cellar', 'cellar'],
-  '21025feae1cad394b34b1d49ead42fbb08fa7a0c75876c988ee7b8c7306b8c9a': ['/room-primeur', 'primeur'],
-  b4a1a978cd0c687ad9761fe81d8051edc5eff0b1be680926f9dd91158e06861b: ['/room-note', 'note'],
-  '53772198d0676245365817688d71eb1704040daaf33dfdaf2a528ba56494cf2a': ['/room-game', 'game'],
-};
+/* ゲームコーナーだけは中身がプログラムのため、包めません。
+   ここは今までどおり「合言葉を通った人だけ入れる扉」でございます。 */
+const GAME_HASH = '53772198d0676245365817688d71eb1704040daaf33dfdaf2a528ba56494cf2a';
+
+type Room = { title: string; body: string };
 
 const M: Record<Lang, Record<string, string>> = {
-  jp: { empty: '合言葉を入力してください。', bad: '開きません。合言葉が違うようです。', good: '…鍵が外れました。', locked: '直接は入れません。合言葉をお願いします。', err: 'お使いの環境では開けられません。' },
-  en: { empty: 'Please enter the passphrase.', bad: 'It will not open. That is not the passphrase.', good: '…the lock gives way.', locked: 'You cannot enter directly. The passphrase, please.', err: 'This browser cannot open it.' },
-  fr: { empty: 'Veuillez saisir le mot de passe.', bad: 'Cela ne s’ouvre pas. Ce n’est pas le bon mot.', good: '…la serrure cède.', locked: 'Impossible d’entrer directement. Le mot de passe, s’il vous plaît.', err: 'Ce navigateur ne peut pas l’ouvrir.' },
-  zh: { empty: '请输入暗号。', bad: '打不开。暗号似乎不对。', good: '……锁开了。', locked: '无法直接进入。请说出暗号。', err: '当前环境无法开启。' },
-  ko: { empty: '암호를 입력해 주세요.', bad: '열리지 않습니다. 암호가 다른 것 같습니다.', good: '…자물쇠가 풀렸습니다.', locked: '직접 들어올 수 없습니다. 암호를 말씀해 주세요.', err: '이 환경에서는 열 수 없습니다.' },
+  jp: { empty: '合言葉を入力してください。', bad: '開きません。合言葉が違うようです。', good: '…鍵が外れました。', locked: '直接は入れません。合言葉をお願いします。', err: 'お使いの環境では開けられません。', busy: '…鍵を回しています。', ask: 'この件について問い合わせる', shut: '扉を閉める', net: 'つながりませんでした。少し置いてもう一度お願いいたします。' },
+  en: { empty: 'Please enter the passphrase.', bad: 'It will not open. That is not the passphrase.', good: '…the lock gives way.', locked: 'You cannot enter directly. The passphrase, please.', err: 'This browser cannot open it.', busy: '…turning the key.', ask: 'Enquire about this', shut: 'Close the door', net: 'We could not reach the shop. Please try again shortly.' },
+  fr: { empty: 'Veuillez saisir le mot de passe.', bad: 'Cela ne s’ouvre pas. Ce n’est pas le bon mot.', good: '…la serrure cède.', locked: 'Impossible d’entrer directement. Le mot de passe, s’il vous plaît.', err: 'Ce navigateur ne peut pas l’ouvrir.', busy: '…la clé tourne.', ask: 'Nous écrire à ce sujet', shut: 'Fermer la porte', net: 'Connexion impossible. Merci de réessayer dans un instant.' },
+  zh: { empty: '请输入暗号。', bad: '打不开。暗号似乎不对。', good: '……锁开了。', locked: '无法直接进入。请说出暗号。', err: '当前环境无法开启。', busy: '……正在转动钥匙。', ask: '就此事咨询', shut: '关上门', net: '连接失败，请稍后再试。' },
+  ko: { empty: '암호를 입력해 주세요.', bad: '열리지 않습니다. 암호가 다른 것 같습니다.', good: '…자물쇠가 풀렸습니다.', locked: '직접 들어올 수 없습니다. 암호를 말씀해 주세요.', err: '이 환경에서는 열 수 없습니다.', busy: '…열쇠를 돌리고 있습니다.', ask: '이 건에 대해 문의하기', shut: '문을 닫다', net: '연결하지 못했습니다. 잠시 후 다시 시도해 주세요.' },
 };
 
 async function sha256(s: string) {
@@ -32,7 +35,7 @@ async function sha256(s: string) {
 }
 const norm = (s: string) => {
   let v = String(s || '');
-  try { v = v.normalize('NFKC'); } catch {}
+  try { v = v.normalize('NFKC'); } catch { /* しずかに */ }
   return v.trim().toLowerCase();
 };
 
@@ -41,12 +44,16 @@ export function SecretPage() {
   const router = useRouter();
   const params = useSearchParams();
   const modern = isModern(eraView as any);
+  const p = pre(lang);
 
   const [pw, setPw] = useState('');
   const [msg, setMsg] = useState<{ k: string; cls: string } | null>(null);
   const [shake, setShake] = useState(0);
   const [opening, setOpening] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [room, setRoom] = useState<Room | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const boxes = useRef<string[] | null>(null);
 
   const t = (k: string) => passwordWording((M[lang] || M.jp)[k], eraView);
 
@@ -55,19 +62,87 @@ export function SecretPage() {
   }, [params]);
   useEffect(() => { setMsg((m) => (m ? { ...m } : m)); }, [lang]);
 
+  /* 包みは前もって取り寄せておきます。中身は包まれたままです */
+  useEffect(() => {
+    let dead = false;
+    apiGet({ action: 'rooms' })
+      .then((r) => { if (!dead) boxes.current = Array.isArray(r?.rooms) ? r.rooms.map((x: any) => String(x.box || '')) : []; })
+      .catch(() => { if (!dead) boxes.current = []; });
+    return () => { dead = true; };
+  }, []);
+
   const knock = async () => {
     const v = norm(pw);
     if (!v) { setMsg({ k: 'empty', cls: 'bad' }); setShake((s) => s + 1); return; }
-    if (!(typeof window !== 'undefined' && window.crypto && crypto.subtle)) { setMsg({ k: 'err', cls: 'bad' }); return; }
-    let h = '';
-    try { h = await sha256(v); } catch { setMsg({ k: 'err', cls: 'bad' }); return; }
-    const r = ROOMS[h];
-    if (!r) { setMsg({ k: 'bad', cls: 'bad' }); setShake((s) => s + 1); setPw(''); return; }
-    setMsg({ k: 'good', cls: 'good' });
-    try { sessionStorage.setItem('sumura-room-' + r[1], '1'); } catch {}
-    setOpening(true);
-    setTimeout(() => router.push(r[0]), 950);
+    if (!canLock()) { setMsg({ k: 'err', cls: 'bad' }); return; }
+
+    setBusy(true);
+    setMsg({ k: 'busy', cls: '' });
+
+    /* ゲームコーナーだけは扉のまま */
+    try {
+      if ((await sha256(v)) === GAME_HASH) {
+        setMsg({ k: 'good', cls: 'good' });
+        try { sessionStorage.setItem('sumura-room-game', '1'); } catch { /* しずかに */ }
+        setOpening(true);
+        setTimeout(() => router.push(p + '/room-game'), 950);
+        return;
+      }
+    } catch { /* しずかに */ }
+
+    /* 包みが未着なら、ここで取り寄せます */
+    if (!boxes.current) {
+      try {
+        const r = await apiGet({ action: 'rooms' });
+        boxes.current = Array.isArray(r?.rooms) ? r.rooms.map((x: any) => String(x.box || '')) : [];
+      } catch {
+        setBusy(false); setMsg({ k: 'net', cls: 'bad' }); return;
+      }
+    }
+
+    for (const box of boxes.current) {
+      const out = await unlock(v, box);
+      if (out === null) continue;
+      let got: Room | null = null;
+      try { const o = JSON.parse(out); got = { title: String(o.title || ''), body: String(o.body || '') }; }
+      catch { got = { title: '', body: out }; }
+      setBusy(false);
+      setMsg({ k: 'good', cls: 'good' });
+      setOpening(true);
+      setTimeout(() => setRoom(got), 950);
+      return;
+    }
+
+    setBusy(false);
+    setMsg({ k: 'bad', cls: 'bad' });
+    setShake((s) => s + 1);
+    setPw('');
   };
+
+  const shut = () => {
+    setRoom(null); setOpening(false); setPw(''); setMsg(null);
+  };
+
+  if (room) {
+    return (
+      <Shell>
+        <div className="panel rm-room">
+          {room.title ? <h1 className="rm-room-t">{room.title}</h1> : null}
+          {room.body.split(/\n{2,}/).map((par, i) => (
+            <p key={i} className="rm-room-p">
+              {par.split(/\n/).map((line, j) => (
+                <span key={j}>{j ? <br /> : null}{line}</span>
+              ))}
+            </p>
+          ))}
+          <p className="rm-room-cta">
+            <Link className="btn" href={`${p}/contact?item=${encodeURIComponent(room.title || '鍵のかかった部屋')}`}>{t('ask')}</Link>
+          </p>
+          <p className="rm-room-shut"><button className="btn" onClick={shut}>{t('shut')}</button></p>
+        </div>
+      </Shell>
+    );
+  }
 
   return (
     <Shell>
@@ -106,12 +181,13 @@ export function SecretPage() {
             placeholder="＊＊＊＊＊＊"
             style={{ textAlign: 'center', letterSpacing: 2 }}
             value={pw}
+            disabled={busy}
             onChange={(e) => setPw(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') knock(); }}
           />
         </div>
         <div style={{ marginTop: 12 }}>
-          <button className="btn" id="sd-open" onClick={knock}>
+          <button className="btn" id="sd-open" onClick={knock} disabled={busy}>
             <T k="sc-open" as="span" kind="btn" />
           </button>
         </div>
