@@ -5,7 +5,7 @@ import { useSite } from '@/components/Providers';
 import { pre } from '@/lib/slug';
 import { isMirror, editMode, setEditMode } from '@/lib/overrides';
 
-type Card = { to: string; head: string; say: string; mark: string };
+type Card = { to: string; head: string; say: string; mark: string; raw?: boolean };
 
 /* 控室に並べる札。上から、よく使う順に並べています */
 const CARDS: Card[] = [
@@ -17,6 +17,7 @@ const CARDS: Card[] = [
   { to: '/producers', mark: '匠', head: '造り手の紹介を直す',  say: 'お取り扱いしている生産者の頁です。前書きや案内文を直せます。' },
   { to: '/access',    mark: '道', head: 'アクセスの案内',      say: 'お店までの行き方、地図まわりの文章です。' },
   { to: '/legal',     mark: '法', head: '特定商取引法の表記',  say: '返品・送料・お支払いなどの決まりごとです。' },
+  { to: '/admin-rooms', mark: '鍵', head: '鍵のかかった部屋',   say: '合言葉を知っている方だけが読める部屋です。作る・直す・消す、合言葉の付け替えもここから。', raw: true },
 ];
 
 /** お店の控室。更新はすべてここから始められます */
@@ -33,7 +34,7 @@ export function AdminPage() {
   }, []);
 
   const P = pre(lang);
-  const go = (to: string) => base + P + to;
+  const go = (c: Card) => base + (c.raw ? '' : P) + c.to;
 
   const turn = (v: boolean) => { setEditMode(v); setOn(v); };
 
@@ -76,7 +77,7 @@ export function AdminPage() {
 
       <div className="rm-cards">
         {CARDS.map((c) => (
-          <a key={c.to} href={go(c.to)} className="rm-card">
+          <a key={c.to} href={go(c)} className="rm-card">
             <span className="rm-mark">{c.mark}</span>
             <span className="rm-body">
               <span className="rm-h">{c.head}</span>
