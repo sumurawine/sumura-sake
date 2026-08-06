@@ -86,7 +86,7 @@ export function WinePage({ v, lang }: { v: WineView; lang: Lang }) {
             {!out && buyUrl(v.item.id) ? (
               <a href={buyUrl(v.item.id)} className="mx-btn mx-btn-solid" rel="noopener"><span>{t('buy')}</span></a>
             ) : null}
-            <Link href={`${p}/contact`} className={!out && buyUrl(v.item.id) ? 'mx-btn' : 'mx-btn mx-btn-solid'}><span>{t('ask')}</span></Link>
+            <Link href={`${p}/contact?item=${encodeURIComponent(v.name)}`} className={!out && buyUrl(v.item.id) ? 'mx-btn' : 'mx-btn mx-btn-solid'}><span>{t('ask')}</span></Link>
             <Link href={`${p}/virtual`} className="mx-btn"><span>{t('virtual')}</span></Link>
           </div>
 
