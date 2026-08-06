@@ -91,16 +91,18 @@ export function SecretPage() {
     } catch { /* しずかに */ }
 
     /* 包みが未着なら、ここで取り寄せます */
-    if (!boxes.current) {
+    let list = boxes.current;
+    if (!list) {
       try {
         const r = await apiGet({ action: 'rooms' });
-        boxes.current = Array.isArray(r?.rooms) ? r.rooms.map((x: any) => String(x.box || '')) : [];
+        list = Array.isArray(r?.rooms) ? r.rooms.map((x: any) => String(x.box || '')) : [];
+        boxes.current = list;
       } catch {
         setBusy(false); setMsg({ k: 'net', cls: 'bad' }); return;
       }
     }
 
-    for (const box of boxes.current) {
+    for (const box of list) {
       const out = await unlock(v, box);
       if (out === null) continue;
       let got: Room | null = null;
