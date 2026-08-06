@@ -17,8 +17,19 @@ export function norm(s: string): string {
   return v.trim().toLowerCase();
 }
 
-function b64(buf: ArrayBuffer | Uint8Array): string {
-  const b = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
+/** 受け渡しはすべて ArrayBuffer に揃えます */
+function ab(u: Uint8Array): ArrayBuffer {
+  const out = new ArrayBuffer(u.byteLength);
+  new Uint8Array(out).set(u);
+  return out;
+}
+
+function bytes(text: string): ArrayBuffer {
+  return ab(ENC.encode(text));
+}
+
+function b64(buf: ArrayBuffer): string {
+  const b = new Uint8Array(buf);
   let s = '';
   for (let i = 0; i < b.length; i += 0x8000) {
     s += String.fromCharCode.apply(null, Array.from(b.subarray(i, i + 0x8000)) as any);
@@ -26,15 +37,20 @@ function b64(buf: ArrayBuffer | Uint8Array): string {
   return btoa(s);
 }
 
-function unb64(s: string): Uint8Array {
+function unb64(s: string): ArrayBuffer {
   const raw = atob(s);
-  const b = new Uint8Array(raw.length);
+  const out = new ArrayBuffer(raw.length);
+  const b = new Uint8Array(out);
   for (let i = 0; i < raw.length; i++) b[i] = raw.charCodeAt(i);
-  return b;
+  return out;
 }
 
-async function keyOf(pass: string, salt: Uint8Array) {
-  const seed = await crypto.subtle.importKey('raw', ENC.encode(pass), 'PBKDF2', false, ['deriveKey']);
+function salty(n: number): ArrayBuffer {
+  return ab(crypto.getRandomValues(new Uint8Array(n)));
+}
+
+async function keyOf(pass: string, salt: ArrayBuffer) {
+  const seed = await crypto.subtle.importKey('raw', bytes(pass), 'PBKDF2', false, ['deriveKey']);
   return crypto.subtle.deriveKey(
     { name: 'PBKDF2', salt, iterations: ROUNDS, hash: 'SHA-256' },
     seed,
@@ -51,10 +67,10 @@ export function canLock(): boolean {
 
 /** 包みます */
 export async function lock(pass: string, text: string): Promise<string> {
-  const salt = crypto.getRandomValues(new Uint8Array(16));
-  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const salt = salty(16);
+  const iv = salty(12);
   const k = await keyOf(norm(pass), salt);
-  const box = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, k, ENC.encode(text));
+  const box = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, k, bytes(text));
   return ['v1', b64(salt), b64(iv), b64(box)].join('.');
 }
 
